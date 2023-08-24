@@ -6,12 +6,13 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
-public class CategorySteps {
+public class RegionSteps {
 
-	public static ExtractableResponse<Response> 카테고리_목록_조회_요청() {
+	public static ExtractableResponse<Response> 동네_목록_조회_요청(int cursor) {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)
-			.when().get("/api/categories")
+			.param("cursor", cursor)
+			.when().get("/api/regions")
 			.then().log().all().extract();
 	}
 }

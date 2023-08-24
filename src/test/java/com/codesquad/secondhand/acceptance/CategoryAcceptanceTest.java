@@ -1,10 +1,11 @@
 package com.codesquad.secondhand.acceptance;
 
-import static com.codesquad.secondhand.util.steps.CategorySteps.카테고리_목록을_요청한다;
+import static com.codesquad.secondhand.util.steps.CategorySteps.카테고리_목록_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -24,7 +25,7 @@ public class CategoryAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 카테고리_목록을_조회한다() {
 		// when
-		var response = 카테고리_목록을_요청한다();
+		var response = 카테고리_목록_조회_요청();
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);
@@ -35,7 +36,9 @@ public class CategoryAcceptanceTest extends AcceptanceTest {
 		List<String> titles = response.jsonPath().getList("data.title", String.class);
 		List<String> imageUrls = response.jsonPath().getList("data.imageUrl", String.class);
 
-		assertThat(titles).containsExactly(CategoryFixture.getTitles().toArray(String[]::new));
-		assertThat(imageUrls).containsExactly(CategoryFixture.getImageUrls().toArray(String[]::new));
+		Assertions.assertAll(
+			() -> assertThat(titles).containsExactly(CategoryFixture.getTitles().toArray(String[]::new)),
+			() -> assertThat(imageUrls).containsExactly(CategoryFixture.getImageUrls().toArray(String[]::new))
+		);
 	}
 }

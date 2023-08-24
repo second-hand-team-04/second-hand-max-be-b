@@ -1,28 +1,29 @@
-package com.codesquad.secondhand.category.ui;
+package com.codesquad.secondhand.region.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codesquad.secondhand.category.application.CategoryService;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
+import com.codesquad.secondhand.region.application.RegionService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/regions")
 @RequiredArgsConstructor
-public class CategoryController {
+public class RegionController {
 
-	private final CategoryService categoryService;
+	private final RegionService regionService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponse> showCategories() {
+	public ResponseEntity<CommonResponse> showRegions(@RequestParam int cursor) {
 		CommonResponse commonResponse = CommonResponse.createOK(
-			categoryService.findAll(),
-			ResponseMessage.CATEGORY_FIND_ALL
+			regionService.findAll(cursor),
+			ResponseMessage.REGION_FIND_ALL
 		);
 		return ResponseEntity.ok().body(commonResponse);
 	}
