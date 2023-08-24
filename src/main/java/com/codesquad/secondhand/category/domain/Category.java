@@ -23,6 +23,5 @@ public class Category {
 
 	private String title;
 
-	@Column(name = "image_url")
 	private String imageUrl;
 }
