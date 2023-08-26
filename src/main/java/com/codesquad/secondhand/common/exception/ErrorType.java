@@ -12,7 +12,8 @@ public enum ErrorType {
 
 	// USER_REGION
 	USER_REGION_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 동네가 있습니다."),
-	USER_REGION_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "동네 최대 등록 수를 초과하였습니다."),
+	USER_REGION_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "나의 동네 최대 등록 개수를 초과하였습니다."),
+	USER_REGION_MIN_REMOVE_COUNT(HttpStatus.BAD_REQUEST, "나의 동네 최소 개수입니다."),
 
 	// COMMON
 	NUMBER_FORMAT(HttpStatus.BAD_REQUEST, "숫자만 가능합니다."),

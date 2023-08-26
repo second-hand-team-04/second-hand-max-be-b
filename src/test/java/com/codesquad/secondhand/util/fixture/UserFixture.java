@@ -5,6 +5,8 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.codesquad.secondhand.user.domain.User;
+
 public enum UserFixture {
 
 	유저_만두(1L, "mandu", "만두", "mandu@mandu.com", "test", "http://image.com/mandu.jpg", LocalDateTime.of(2023, Month.APRIL, 20, 10, 14, 10));
@@ -70,5 +72,9 @@ public enum UserFixture {
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
+	}
+
+	public User getUser() {
+		return new User(id, loginId, nickname, email, password, profile, createdAt);
 	}
 }

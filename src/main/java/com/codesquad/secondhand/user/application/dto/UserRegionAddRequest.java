@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserRegionCreateRequest {
+public class UserRegionAddRequest {
 
 	private Long userId;
 	private Long regionId;
 
-	public UserRegionCreateRequest(Long regionId) {
+	public UserRegionAddRequest(Long regionId) {
 		this.regionId = regionId;
 	}
 

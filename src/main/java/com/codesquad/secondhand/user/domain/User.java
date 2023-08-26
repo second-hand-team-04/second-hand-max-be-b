@@ -37,12 +37,28 @@ public class User {
 		myRegions = new MyRegions();
 	}
 
+	public User(Long id, String loginId, String nickname, String email, String password, String profile,
+		LocalDateTime createdAt) {
+		this.id = id;
+		this.loginId = loginId;
+		this.nickname = nickname;
+		this.email = email;
+		this.password = password;
+		this.profile = profile;
+		this.createdAt = createdAt;
+		myRegions = new MyRegions();
+	}
+
 	public List<Region> getRegions() {
 		return myRegions.getRegions();
 	}
 
 	public void addMyRegion(Region region) {
 		myRegions.addUserRegion(new UserRegion(this, region));
+	}
+
+	public void removeMyRegion(Long regionId) {
+		myRegions.removeUserRegion(regionId);
 	}
 
 	public Long getId() {

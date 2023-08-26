@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.codesquad.secondhand.region.domain.Region;
+
 public enum RegionFixture {
 
 	동네_서울_종로구_청운동(1L, "서울특별시 종로구 청운동"),
@@ -59,5 +61,9 @@ public enum RegionFixture {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public Region getRegion() {
+		return new Region(id, title);
 	}
 }

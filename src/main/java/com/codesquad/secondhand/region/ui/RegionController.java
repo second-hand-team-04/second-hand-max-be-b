@@ -22,9 +22,9 @@ public class RegionController {
 
 	@GetMapping
 	public ResponseEntity<CommonResponse> showRegions(@RequestParam(defaultValue = "0") Cursor cursor) {
-		CommonResponse commonResponse = CommonResponse.createOK(
-			regionService.findAll(cursor.getValue()),
-			ResponseMessage.REGION_FIND_ALL);
-		return ResponseEntity.ok().body(commonResponse);
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				regionService.findAll(cursor.getValue()),
+				ResponseMessage.REGION_FIND_ALL));
 	}
 }

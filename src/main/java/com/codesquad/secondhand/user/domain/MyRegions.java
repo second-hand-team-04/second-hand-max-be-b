@@ -10,12 +10,14 @@ import javax.persistence.OneToMany;
 
 import com.codesquad.secondhand.common.exception.userregion.UserRegionDuplicationException;
 import com.codesquad.secondhand.common.exception.userregion.UserRegionMaxAddCountException;
+import com.codesquad.secondhand.common.exception.userregion.UserRegionMinRemoveCountException;
 import com.codesquad.secondhand.region.domain.Region;
 
 @Embeddable
 public class MyRegions {
 
 	private static final int MAX_ADD_REGION_COUNT = 2;
+	private static final int MIN_REMOVE_COUNT = 1;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserRegion> userRegions;
@@ -43,8 +45,26 @@ public class MyRegions {
 	}
 
 	private void validateMaxAddRegionCount() {
-		if (MAX_ADD_REGION_COUNT <= userRegions.size()) {
+		if (userRegions.size() >= MAX_ADD_REGION_COUNT) {
 			throw new UserRegionMaxAddCountException();
 		}
+	}
+
+	public void removeUserRegion(Long regionId) {
+		validateMinRemoveCount();
+		userRegions.remove(findByRegionId(regionId));
+	}
+
+	private void validateMinRemoveCount() {
+		if (userRegions.size() <= MIN_REMOVE_COUNT) {
+			throw new UserRegionMinRemoveCountException();
+		}
+	}
+
+	private UserRegion findByRegionId(Long regionId) {
+		return userRegions.stream()
+			.filter(u -> u.equalsRegion(regionId))
+			.findAny()
+			.orElse(null);
 	}
 }
