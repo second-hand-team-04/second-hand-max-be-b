@@ -21,7 +21,7 @@ public class RegionController {
 	private final RegionService regionService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponse> showRegions(@RequestParam Cursor cursor) {
+	public ResponseEntity<CommonResponse> showRegions(@RequestParam(defaultValue = "0") Cursor cursor) {
 		CommonResponse commonResponse = CommonResponse.createOK(
 			regionService.findAll(cursor.getValue()),
 			ResponseMessage.REGION_FIND_ALL);
