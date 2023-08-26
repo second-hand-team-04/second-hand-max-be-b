@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.codesquad.secondhand.common.exception.region.RegionNotFoundException;
 import com.codesquad.secondhand.region.application.dto.RegionResponse;
 import com.codesquad.secondhand.region.application.dto.RegionSliceResponse;
 import com.codesquad.secondhand.region.domain.Region;
@@ -28,5 +29,9 @@ public class RegionService {
 		Pageable pageable = PageRequest.of(cursor, MAX_REGION_SLICE_SIZE, Sort.by(Order.asc("title")));
 		Slice<Region> regionSlice = regionRepository.findSliceBy(pageable);
 		return RegionSliceResponse.of(regionSlice.hasNext(), RegionResponse.from(regionSlice.getContent()));
+	}
+
+	public Region findByIdOrThrow(Long id) {
+		return regionRepository.findById(id).orElseThrow(RegionNotFoundException::new);
 	}
 }

@@ -30,4 +30,13 @@ public class UserRegion {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "region_id")
 	private Region region;
+
+	public UserRegion(User user, Region region) {
+		this.user = user;
+		this.region = region;
+	}
+
+	public boolean equalsRegion(Region region) {
+		return this.region.equals(region);
+	}
 }

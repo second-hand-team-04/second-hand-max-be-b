@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codesquad.secondhand.common.domain.Cursor;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
-import com.codesquad.secondhand.common.domain.Cursor;
 import com.codesquad.secondhand.region.application.RegionService;
 
 import lombok.RequiredArgsConstructor;

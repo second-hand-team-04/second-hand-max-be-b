@@ -41,6 +41,10 @@ public class User {
 		return myRegions.getRegions();
 	}
 
+	public void addMyRegion(Region region) {
+		myRegions.addUserRegion(new UserRegion(this, region));
+	}
+
 	public Long getId() {
 		return id;
 	}

@@ -1,7 +1,5 @@
 package com.codesquad.secondhand.common.response;
 
-import java.util.Collections;
-
 import org.springframework.http.HttpStatus;
 
 import com.codesquad.secondhand.common.exception.CustomException;
@@ -27,15 +25,6 @@ public class CommonResponse<T> {
 		);
 	}
 
-	public static <T> CommonResponse createNoContent(T data, ResponseMessage responseMessage) {
-		return new CommonResponse(
-			HttpStatus.NO_CONTENT.value(),
-			HttpStatus.NO_CONTENT.getReasonPhrase(),
-			responseMessage.getMessage(),
-			data
-		);
-	}
-
 	public static <T> CommonResponse createCreated(T data, ResponseMessage responseMessage) {
 		return new CommonResponse(
 			HttpStatus.CREATED.value(),
@@ -45,12 +34,30 @@ public class CommonResponse<T> {
 		);
 	}
 
-	public static <T> CommonResponse createNotFound(T data, ResponseMessage responseMessage) {
+	public static <T> CommonResponse createCreated(ResponseMessage responseMessage) {
+		return new CommonResponse(
+			HttpStatus.CREATED.value(),
+			HttpStatus.CREATED.getReasonPhrase(),
+			responseMessage.getMessage(),
+			null
+		);
+	}
+
+	public static <T> CommonResponse createNoContent(ResponseMessage responseMessage) {
+		return new CommonResponse(
+			HttpStatus.NO_CONTENT.value(),
+			HttpStatus.NO_CONTENT.getReasonPhrase(),
+			responseMessage.getMessage(),
+			null
+		);
+	}
+
+	public static <T> CommonResponse createNotFound(ResponseMessage responseMessage) {
 		return new CommonResponse(
 			HttpStatus.NOT_FOUND.value(),
 			HttpStatus.NOT_FOUND.getReasonPhrase(),
 			responseMessage.getMessage(),
-			data
+			null
 		);
 	}
 
@@ -59,7 +66,7 @@ public class CommonResponse<T> {
 			e.getCode(),
 			e.getStatus(),
 			e.getMessage(),
-			Collections.EMPTY_LIST
+			null
 		);
 	}
 
@@ -68,7 +75,7 @@ public class CommonResponse<T> {
 			HttpStatus.INTERNAL_SERVER_ERROR.value(),
 			HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
 			e.getMessage(),
-			Collections.EMPTY_LIST
+			null
 		);
 	}
 }

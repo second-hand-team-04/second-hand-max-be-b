@@ -1,6 +1,7 @@
 package com.codesquad.secondhand.util.fixture;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public enum RegionFixture {
@@ -43,6 +44,13 @@ public enum RegionFixture {
 					"('%s')",
 					r.getTitle()))
 				.collect(Collectors.joining(", ")));
+	}
+
+	public static RegionFixture findById(Long id) {
+		return Arrays.stream(values())
+			.filter(ur -> Objects.equals(ur.getId(), id))
+			.findAny()
+			.orElse(null);
 	}
 
 	public Long getId() {
