@@ -13,7 +13,6 @@ import com.codesquad.secondhand.region.domain.Region;
 import lombok.AllArgsConstructor;
 
 @Embeddable
-@AllArgsConstructor
 public class MyRegions {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
