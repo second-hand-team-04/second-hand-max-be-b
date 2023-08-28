@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.codesquad.secondhand.util.fixture.CategoryFixture;
 import com.codesquad.secondhand.util.fixture.RegionFixture;
+import com.codesquad.secondhand.util.fixture.UserFixture;
 
 @Component
 public class DatabaseLoader {
@@ -19,5 +20,6 @@ public class DatabaseLoader {
 	public void loadData() {
 		em.createNativeQuery(CategoryFixture.createInsertSQL()).executeUpdate();
 		em.createNativeQuery(RegionFixture.createInsertSQL()).executeUpdate();
+		em.createNativeQuery(UserFixture.createInsertSQL()).executeUpdate();
 	}
 }

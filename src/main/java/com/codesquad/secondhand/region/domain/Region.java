@@ -1,5 +1,7 @@
 package com.codesquad.secondhand.region.domain;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,4 +23,8 @@ public class Region {
 	private Long id;
 
 	private String title;
+
+	public boolean equalsId(Long id) {
+		return Objects.equals(this.id, id);
+	}
 }

@@ -20,10 +20,9 @@ public class CategoryController {
 
 	@GetMapping
 	public ResponseEntity<CommonResponse> showCategories() {
-		CommonResponse commonResponse = CommonResponse.createOK(
-			categoryService.findAll(),
-			ResponseMessage.CATEGORY_FIND_ALL
-		);
-		return ResponseEntity.ok().body(commonResponse);
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				categoryService.findAll(),
+				ResponseMessage.CATEGORY_FIND_ALL));
 	}
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codesquad.secondhand.common.domain.Cursor;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
 import com.codesquad.secondhand.region.application.RegionService;
@@ -20,11 +21,10 @@ public class RegionController {
 	private final RegionService regionService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponse> showRegions(@RequestParam int cursor) {
-		CommonResponse commonResponse = CommonResponse.createOK(
-			regionService.findAll(cursor),
-			ResponseMessage.REGION_FIND_ALL
-		);
-		return ResponseEntity.ok().body(commonResponse);
+	public ResponseEntity<CommonResponse> showRegions(@RequestParam(defaultValue = "0") Cursor cursor) {
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				regionService.findAll(cursor.getValue()),
+				ResponseMessage.REGION_FIND_ALL));
 	}
 }

@@ -11,6 +11,7 @@ public class CategorySteps {
 	public static ExtractableResponse<Response> 카테고리_목록_조회_요청() {
 		return RestAssured.given().log().all()
 			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/categories")
 			.then().log().all().extract();
 	}
