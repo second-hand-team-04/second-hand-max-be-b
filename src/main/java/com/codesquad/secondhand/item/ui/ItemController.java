@@ -26,7 +26,7 @@ public class ItemController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
 				itemService.findItemsByCategoryAndRegion(cursor.getValue(), category, region),
-				ResponseMessage.REGION_FIND_ALL));
+				ResponseMessage.ITEM_FIND_BY_REGION_AND_CATEGORY));
 	}
 }
 
