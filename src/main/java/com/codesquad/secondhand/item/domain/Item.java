@@ -9,8 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.region.domain.Region;
@@ -31,15 +31,15 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "region_id")
 	private Region region;
 
