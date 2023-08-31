@@ -47,9 +47,9 @@ public class RegionAcceptanceTest extends AcceptanceTest {
 	 */
 	@ParameterizedTest
 	@MethodSource("providerCursorAndHasMoreAndRegion")
-	void 동네_목록을_조회한다(int cursor, boolean hasMore, List<String> regionTitles) {
+	void 동네_목록을_조회한다(int page, int size, String title, boolean hasMore, List<String> regionTitles) {
 		// when
-		var response = 동네_목록_조회_요청(cursor);
+		var response = 동네_목록_조회_요청(page, size, title);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);
@@ -59,20 +59,19 @@ public class RegionAcceptanceTest extends AcceptanceTest {
 	private static Stream<Arguments> providerCursorAndHasMoreAndRegion() {
 		return Stream.of(
 			Arguments.of(
-				0,
+				1,
+				5,
+				"서울",
 				true,
 				List.of(
-					동네_서울_종로구_궁정동.getTitle(), 동네_서울_종로구_내수동.getTitle(), 동네_서울_종로구_내자동.getTitle(),
-					동네_서울_종로구_누상동.getTitle(), 동네_서울_종로구_누하동.getTitle(), 동네_서울_종로구_당주동.getTitle(),
-					동네_서울_종로구_도렴동.getTitle(), 동네_서울_종로구_사직동.getTitle(), 동네_서울_종로구_세종로.getTitle(),
-					동네_서울_종로구_신교동.getTitle(), 동네_서울_종로구_신문로1가.getTitle(), 동네_서울_종로구_신문로2가.getTitle(),
-					동네_서울_종로구_옥인동.getTitle(), 동네_서울_종로구_적선동.getTitle(), 동네_서울_종로구_창성동.getTitle(),
-					동네_서울_종로구_청운동.getTitle(), 동네_서울_종로구_체부동.getTitle(), 동네_서울_종로구_통의동.getTitle(),
-					동네_서울_종로구_통인동.getTitle(), 동네_서울_종로구_필운동.getTitle()
+					동네_서울_종로구_당주동.getTitle(), 동네_서울_종로구_도렴동.getTitle(), 동네_서울_종로구_사직동.getTitle(),
+					동네_서울_종로구_세종로.getTitle(), 동네_서울_종로구_신교동.getTitle()
 				)
 			),
 			Arguments.of(
-				1,
+				0,
+				20,
+				"효자동",
 				false,
 				List.of(동네_서울_종로구_효자동.getTitle())
 			)
