@@ -18,8 +18,6 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String loginId;
-
 	private String nickname;
 
 	private String email;
@@ -37,10 +35,9 @@ public class User {
 		myRegions = new MyRegions();
 	}
 
-	public User(Long id, String loginId, String nickname, String email, String password, String profile,
+	public User(Long id, String nickname, String email, String password, String profile,
 		LocalDateTime createdAt) {
 		this.id = id;
-		this.loginId = loginId;
 		this.nickname = nickname;
 		this.email = email;
 		this.password = password;
@@ -63,10 +60,6 @@ public class User {
 
 	public Long getId() {
 		return id;
-	}
-
-	public String getLoginId() {
-		return loginId;
 	}
 
 	public String getNickname() {
