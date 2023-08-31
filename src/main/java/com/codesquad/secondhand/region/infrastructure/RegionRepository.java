@@ -8,5 +8,5 @@ import com.codesquad.secondhand.region.domain.Region;
 
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
-	Slice<Region> findSliceBy(Pageable pageable);
+	Slice<Region> findSliceByTitleContainsOrderByTitle(Pageable pageable, String title);
 }
