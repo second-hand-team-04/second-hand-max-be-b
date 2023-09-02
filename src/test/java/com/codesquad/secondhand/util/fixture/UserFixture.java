@@ -1,7 +1,6 @@
 package com.codesquad.secondhand.util.fixture;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -9,7 +8,8 @@ import com.codesquad.secondhand.user.domain.User;
 
 public enum UserFixture {
 
-	유저_만두(1L, "만두", "mandu@mandu.com", "test", "http://image.com/mandu.jpg", LocalDateTime.of(2023, Month.APRIL, 20, 10, 14, 10));
+	유저_만두(1L, "만두", "mandu@mandu.com", "test", "http://image.com/mandu.jpg", LocalDateTime.now()),
+	유저_보노(2L, "보노", "bono@bono.com", "test", "http://image.com/bono.jpg", LocalDateTime.now());
 
 	private final Long id;
 	private final String nickname;

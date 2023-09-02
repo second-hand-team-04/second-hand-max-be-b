@@ -1,28 +1,8 @@
 package com.codesquad.secondhand.acceptance;
 
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내수동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누상동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누하동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_당주동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_도렴동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_사직동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_세종로;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_신교동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_신문로1가;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_신문로2가;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_옥인동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_적선동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_창성동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_체부동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_통의동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_통인동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_필운동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_효자동;
-import static com.codesquad.secondhand.util.steps.RegionSteps.동네_목록_조회_요청;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.*;
+import static com.codesquad.secondhand.util.steps.RegionSteps.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Stream;

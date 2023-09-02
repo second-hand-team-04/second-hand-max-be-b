@@ -5,19 +5,18 @@ import org.springframework.http.HttpStatus;
 public enum ErrorType {
 
 	// USER
-	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저가 존재하지 않습니다."),
+	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
 
 	// REGION
-	REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "숫자만 가능합니다."),
+	REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 동네입니다."),
 
 	// USER_REGION
-	USER_REGION_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 동네가 있습니다."),
-	USER_REGION_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "나의 동네 최대 등록 개수를 초과하였습니다."),
-	USER_REGION_MIN_REMOVE_COUNT(HttpStatus.BAD_REQUEST, "나의 동네 최소 개수입니다."),
+	USER_REGION_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 동네입니다."),
+	USER_REGION_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "동네 등록 수가 최대 제한을 초과했습니다. 동네 등록 요청이 거부되었습니다."),
+	USER_REGION_MIN_REMOVE_COUNT(HttpStatus.BAD_REQUEST, "최소 1개의 동네는 필수입니다. 동네 삭제 요청이 거부되었습니다."),
 
-	// COMMON
-	NUMBER_FORMAT(HttpStatus.BAD_REQUEST, "숫자만 가능합니다."),
-	CURSOR_NOT_POSITIVE(HttpStatus.BAD_REQUEST, "커서는 정수만 가능합니다.");
+	// IMAGE
+	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이미지가 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
