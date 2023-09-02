@@ -26,8 +26,8 @@ public class RegionAcceptanceTest extends AcceptanceTest {
 	 * Then 생성된 동네 목록을 조회할 수 있다.
 	 */
 	@ParameterizedTest
-	@MethodSource("providerCursorAndHasMoreAndRegion")
-	void 동네_목록을_조회한다(int page, int size, String title, boolean hasMore, List<String> regionTitles) {
+	@MethodSource("providerPageableAndRegion")
+	void 동네_목록을_조회한다(int page, int size, boolean hasMore, String title, List<String> regionTitles) {
 		// when
 		var response = 동네_목록_조회_요청(page, size, title);
 
@@ -36,13 +36,13 @@ public class RegionAcceptanceTest extends AcceptanceTest {
 		동네_목록을_조회하여_생성된_동네를_검증(response, hasMore, regionTitles);
 	}
 
-	private static Stream<Arguments> providerCursorAndHasMoreAndRegion() {
+	private static Stream<Arguments> providerPageableAndRegion() {
 		return Stream.of(
 			Arguments.of(
 				1,
 				5,
-				"서울",
 				true,
+				"서울",
 				List.of(
 					동네_서울_종로구_당주동.getTitle(), 동네_서울_종로구_도렴동.getTitle(), 동네_서울_종로구_사직동.getTitle(),
 					동네_서울_종로구_세종로.getTitle(), 동네_서울_종로구_신교동.getTitle()
@@ -51,8 +51,8 @@ public class RegionAcceptanceTest extends AcceptanceTest {
 			Arguments.of(
 				0,
 				20,
-				"효자동",
 				false,
+				"효자동",
 				List.of(동네_서울_종로구_효자동.getTitle())
 			)
 		);

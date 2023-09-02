@@ -5,10 +5,16 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.BatchSize;
+
+import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.region.domain.Region;
 
 @Entity
@@ -24,7 +30,9 @@ public class User {
 
 	private String password;
 
-	private String profile;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_id")
+	private Image image;
 
 	private LocalDateTime createdAt;
 
@@ -35,13 +43,13 @@ public class User {
 		myRegions = new MyRegions();
 	}
 
-	public User(Long id, String nickname, String email, String password, String profile,
+	public User(Long id, String nickname, String email, String password, Image image,
 		LocalDateTime createdAt) {
 		this.id = id;
 		this.nickname = nickname;
 		this.email = email;
 		this.password = password;
-		this.profile = profile;
+		this.image = image;
 		this.createdAt = createdAt;
 		myRegions = new MyRegions();
 	}
@@ -74,8 +82,8 @@ public class User {
 		return password;
 	}
 
-	public String getProfile() {
-		return profile;
+	public Image getImage() {
+		return image;
 	}
 
 	public LocalDateTime getCreatedAt() {

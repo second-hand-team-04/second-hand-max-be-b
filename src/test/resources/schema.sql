@@ -18,12 +18,13 @@ CREATE TABLE `image`
 CREATE TABLE `user`
 (
     `id`         BIGINT             NOT NULL AUTO_INCREMENT,
+    `image_id`   BIGINT             NOT NULL,
     `email`      VARCHAR(40)        NOT NULL,
-    `password`   VARCHAR(150)       NOT NULL,
     `nickname`   VARCHAR(20) UNIQUE NOT NULL,
-    `profile`    VARCHAR(300)       NOT NULL DEFAULT '기본 이미지 url',
+    `password`   VARCHAR(150)       NOT NULL,
     `created_at` TIMESTAMP          NOT NULL DEFAULT now(),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`image_id`) REFERENCES `image` (`id`)
 );
 
 CREATE TABLE `category`

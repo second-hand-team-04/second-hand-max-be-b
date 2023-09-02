@@ -13,6 +13,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
+import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.domain.Item;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

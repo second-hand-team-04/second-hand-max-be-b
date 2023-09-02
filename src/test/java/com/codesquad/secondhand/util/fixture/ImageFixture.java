@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.codesquad.secondhand.Image.domain.Image;
+
 public enum ImageFixture {
 
 	이미지_기본_사용자_프로필(1L, "hhttps://i.ibb.co/wzwLBcq/user-default-profile-image.png"),
@@ -54,6 +56,10 @@ public enum ImageFixture {
 			.orElseThrow()
 			.getImageId();
 		return findById(imageId).getImageUrl();
+	}
+
+	public Image toImage() {
+		return new Image(id, imageUrl);
 	}
 
 	public Long getId() {
