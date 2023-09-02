@@ -52,7 +52,7 @@ public enum RegionFixture {
 		return Arrays.stream(values())
 			.filter(ur -> Objects.equals(ur.getId(), id))
 			.findAny()
-			.orElse(null);
+			.orElseThrow();
 	}
 
 	public Long getId() {

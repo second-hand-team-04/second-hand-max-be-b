@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.item.domain.Item;
-import com.codesquad.secondhand.region.domain.Region;
 
 import lombok.Getter;
 
@@ -16,11 +16,13 @@ public class ItemResponse {
 
 	private String title;
 
-	private Region region;
+	private String region;
 
 	private String status;
 
-	private LocalDateTime postedAt;
+	private String thumbnail;
+
+	private LocalDateTime createdAt;
 
 	private LocalDateTime updatedAt;
 
@@ -30,36 +32,38 @@ public class ItemResponse {
 
 	private Integer numLikes;
 
-	private ItemResponse(Long id, String title, Region region, String status, LocalDateTime postedAt,
+	public ItemResponse(Long id, String title, String region, String status, String thumbnail, LocalDateTime createdAt,
 		LocalDateTime updatedAt, Integer price, Integer numChat, Integer numLikes) {
 		this.id = id;
 		this.title = title;
 		this.region = region;
 		this.status = status;
-		this.postedAt = postedAt;
+		this.thumbnail = thumbnail;
+		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.price = price;
 		this.numChat = numChat;
 		this.numLikes = numLikes;
 	}
 
-	public static ItemResponse from(Item item) {
+	public static ItemResponse of(Item item, Image defaultImage) {
 		return new ItemResponse(
 			item.getId(),
 			item.getTitle(),
-			item.getRegion(),
-			item.getStatus(),
-			item.getPostedAt(),
+			item.getRegion().getTitle(),
+			item.getStatus().getType(),
+			item.getThumbnail(defaultImage).getImageUrl(),
+			item.getCreatedAt(),
 			item.getUpdatedAt(),
 			item.getPrice(),
 			item.getChatCount(),
-			item.getLikeCount()
+			item.getWishlistCount()
 		);
 	}
 
-	public static List<ItemResponse> from(List<Item> items) {
+	public static List<ItemResponse> of(List<Item> items, Image defaultImage) {
 		return items.stream()
-			.map(item -> ItemResponse.from(item))
+			.map(item -> ItemResponse.of(item, defaultImage))
 			.collect(Collectors.toUnmodifiableList());
 	}
 }
