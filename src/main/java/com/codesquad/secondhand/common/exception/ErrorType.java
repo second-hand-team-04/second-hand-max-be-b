@@ -16,7 +16,8 @@ public enum ErrorType {
 	USER_REGION_MIN_REMOVE_COUNT(HttpStatus.BAD_REQUEST, "최소 1개의 동네는 필수입니다. 동네 삭제 요청이 거부되었습니다."),
 
 	// IMAGE
-	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이미지가 없습니다.");
+	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이미지가 없습니다."),
+	IMAGE_INVALID_TYPE(HttpStatus.BAD_REQUEST, "해당 파일은 이미지 타입이 아닙니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

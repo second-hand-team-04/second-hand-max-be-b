@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.codesquad.secondhand.Image.domain.Image;
 
 import lombok.AccessLevel;
@@ -34,6 +36,7 @@ public class ItemImage {
 	@JoinColumn(name = "image_id")
 	private Image image;
 
+	@CreationTimestamp
 	private LocalDateTime createdAt;
 
 	private Boolean isDeleted;

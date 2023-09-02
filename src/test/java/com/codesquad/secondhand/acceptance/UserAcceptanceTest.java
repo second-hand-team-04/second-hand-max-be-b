@@ -1,5 +1,6 @@
 package com.codesquad.secondhand.acceptance;
 
+import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_기본_사용자_프로필;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내수동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
@@ -7,19 +8,35 @@ import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_목록_조회_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
+import com.codesquad.secondhand.Image.application.ImageService;
+import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.util.AcceptanceTest;
 
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.MultiPartSpecification;
 
 public class UserAcceptanceTest extends AcceptanceTest {
+
+	private static final String PROFILE_PATH = String.format("%s/%s", System.getProperty("user.dir"), "src/test/resources/bike.jpg");
+
+	@MockBean
+	private ImageService imageService;
 
 	/**
 	 * Given 회원을 생성하고
@@ -158,6 +175,27 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 * When 나의 동네 삭제 시 해당 회원이 없으면
 	 * Then 요청이 실패된다.
 	 */
+
+	/**
+	 * When 유저를 생성하면
+	 * Then 요청이 성공한다.
+	 */
+	@Test
+	void 유저를_생성한다() throws IOException {
+		// given
+		given(imageService.upload(any())).willReturn(이미지_기본_사용자_프로필.toImage());
+
+		// when
+		MultiPartSpecification file = new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
+			.fileName("profile.jpg")
+			.controlName("profilePicture")
+			.mimeType(MediaType.IMAGE_JPEG_VALUE)
+			.build();
+		var response = 유저_생성_요청(1L, "mandu@mandu.com", "mandu", "test", file);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.CREATED);
+	}
 
 	private void 나의_동네_목록_조회_검증(ExtractableResponse<Response> response, String... expectedTitles) {
 		List<String> actualTitles = response.jsonPath().getList("data.title", String.class);

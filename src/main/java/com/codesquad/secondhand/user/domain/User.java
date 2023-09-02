@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.region.domain.Region;
@@ -34,6 +36,7 @@ public class User {
 	@JoinColumn(name = "image_id")
 	private Image image;
 
+	@CreationTimestamp
 	private LocalDateTime createdAt;
 
 	@Embedded
@@ -52,6 +55,13 @@ public class User {
 		this.image = image;
 		this.createdAt = createdAt;
 		myRegions = new MyRegions();
+	}
+
+	public User(String nickname, String email, String password, Image image) {
+		this.nickname = nickname;
+		this.email = email;
+		this.password = password;
+		this.image = image;
 	}
 
 	public List<Region> getRegions() {
