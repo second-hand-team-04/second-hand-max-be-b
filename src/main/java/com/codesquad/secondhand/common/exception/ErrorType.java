@@ -6,6 +6,12 @@ public enum ErrorType {
 
 	// USER
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
+	USER_LOGIN_INFO_DIFFERENT(HttpStatus.BAD_REQUEST, "이메일이나 비밀번호가 다릅니다."),
+	USER_EMAIL_PROVIDER_DUPLICATION(HttpStatus.BAD_REQUEST,  "중복된 사용자가 있습니다."),
+	USER_NICKNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "닉네임이 중복입니다."),
+
+	// PROVIDER
+	PROVIDER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 공급자입니다."),
 
 	// REGION
 	REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 동네입니다."),
@@ -17,7 +23,11 @@ public enum ErrorType {
 
 	// IMAGE
 	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이미지가 없습니다."),
-	IMAGE_INVALID_TYPE(HttpStatus.BAD_REQUEST, "해당 파일은 이미지 타입이 아닙니다.");
+	IMAGE_INVALID_TYPE(HttpStatus.BAD_REQUEST, "해당 파일은 이미지 타입이 아닙니다."),
+
+	// AUTH
+	AUTHENTICATION(HttpStatus.UNAUTHORIZED, "인증 정보가 잘못 되었습니다.");
+
 
 	private final HttpStatus httpStatus;
 	private final String message;

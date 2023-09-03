@@ -12,11 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.region.domain.Region;
 
 @Entity
@@ -26,15 +25,19 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "provider_id")
+	private Provider provider;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_id")
+	private Image image;
+
 	private String nickname;
 
 	private String email;
 
 	private String password;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "image_id")
-	private Image image;
 
 	@CreationTimestamp
 	private LocalDateTime createdAt;
@@ -46,18 +49,20 @@ public class User {
 		myRegions = new MyRegions();
 	}
 
-	public User(Long id, String nickname, String email, String password, Image image,
+	public User(Long id, Provider provider, Image image, String nickname, String email, String password,
 		LocalDateTime createdAt) {
 		this.id = id;
+		this.provider = provider;
+		this.image = image;
 		this.nickname = nickname;
 		this.email = email;
 		this.password = password;
-		this.image = image;
 		this.createdAt = createdAt;
-		myRegions = new MyRegions();
+		this.myRegions = new MyRegions();
 	}
 
-	public User(String nickname, String email, String password, Image image) {
+	public User(Provider provider, String nickname, String email, String password, Image image) {
+		this.provider = provider;
 		this.nickname = nickname;
 		this.email = email;
 		this.password = password;
@@ -76,8 +81,16 @@ public class User {
 		myRegions.removeUserRegion(regionId);
 	}
 
+	public Account toAccount() {
+		return new Account(id, email, nickname);
+	}
+
 	public Long getId() {
 		return id;
+	}
+
+	public Provider getProvider() {
+		return provider;
 	}
 
 	public String getNickname() {

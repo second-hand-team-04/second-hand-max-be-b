@@ -25,6 +25,10 @@ public class CommonResponse<T> {
 		);
 	}
 
+	public static <T> CommonResponse createOK(ResponseMessage responseMessage) {
+		return createOK(null, responseMessage);
+	}
+
 	public static <T> CommonResponse createCreated(T data, ResponseMessage responseMessage) {
 		return new CommonResponse(
 			HttpStatus.CREATED.value(),
@@ -35,12 +39,7 @@ public class CommonResponse<T> {
 	}
 
 	public static <T> CommonResponse createCreated(ResponseMessage responseMessage) {
-		return new CommonResponse(
-			HttpStatus.CREATED.value(),
-			HttpStatus.CREATED.getReasonPhrase(),
-			responseMessage.getMessage(),
-			null
-		);
+		return createCreated(null, responseMessage);
 	}
 
 	public static <T> CommonResponse createNoContent(ResponseMessage responseMessage) {

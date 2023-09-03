@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS `category`;
 DROP TABLE IF EXISTS `region`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `image`;
+DROP TABLE IF EXISTS `provider`;
 
 CREATE TABLE `image`
 (
@@ -15,16 +16,25 @@ CREATE TABLE `image`
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `provider`
+(
+    `id`        BIGINT AUTO_INCREMENT,
+    `type` VARCHAR(30) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `user`
 (
-    `id`         BIGINT             NOT NULL AUTO_INCREMENT,
-    `image_id`   BIGINT             NOT NULL,
-    `email`      VARCHAR(40)        NOT NULL,
-    `nickname`   VARCHAR(20) UNIQUE NOT NULL,
-    `password`   VARCHAR(150)       NOT NULL,
-    `created_at` TIMESTAMP          NOT NULL DEFAULT now(),
+    `id`            BIGINT             NOT NULL AUTO_INCREMENT,
+    `provider_id`   BIGINT             NOT NULL,
+    `image_id`      BIGINT             NOT NULL,
+    `email`         VARCHAR(40)        NOT NULL,
+    `nickname`      VARCHAR(20) UNIQUE NOT NULL,
+    `password`      VARCHAR(150)       NOT NULL,
+    `created_at`    TIMESTAMP          NOT NULL DEFAULT now(),
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`image_id`) REFERENCES `image` (`id`)
+    FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`),
+    FOREIGN KEY (`image_id`)    REFERENCES `image` (`id`)
 );
 
 CREATE TABLE `category`

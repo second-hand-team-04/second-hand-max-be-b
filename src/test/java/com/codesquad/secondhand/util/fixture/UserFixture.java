@@ -10,18 +10,21 @@ import com.codesquad.secondhand.user.domain.User;
 
 public enum UserFixture {
 
-	유저_만두(1L, 이미지_기본_사용자_프로필.getId(), "만두", "mandu@mandu.com", "test", LocalDateTime.now()),
-	유저_보노(2L, 이미지_기본_사용자_프로필.getId(), "보노", "bono@bono.com", "test", LocalDateTime.now());
+	유저_만두(1L, 1L, 이미지_기본_사용자_프로필.getId(), "만두", "mandu@mandu.com", "test", LocalDateTime.now()),
+	유저_보노(2L, 1L, 이미지_기본_사용자_프로필.getId(), "보노", "bono@bono.com", "test", LocalDateTime.now());
 
 	private final Long id;
+	private final Long providerId;
 	private final Long imageId;
 	private final String nickname;
 	private final String email;
 	private final String password;
 	private final LocalDateTime createdAt;
 
-	UserFixture(Long id, Long imageId, String nickname, String email, String password, LocalDateTime createdAt) {
+	UserFixture(Long id, Long providerId, Long imageId, String nickname, String email, String password,
+		LocalDateTime createdAt) {
 		this.id = id;
+		this.providerId = providerId;
 		this.imageId = imageId;
 		this.nickname = nickname;
 		this.email = email;
@@ -31,10 +34,11 @@ public enum UserFixture {
 
 	public static String createInsertSQL() {
 		return String.format(
-			"INSERT INTO `user`(image_id, email, nickname, password, created_at) VALUES %s",
+			"INSERT INTO `user`(provider_id, image_id, email, nickname, password, created_at) VALUES %s",
 			Arrays.stream(values())
 				.map(u -> String.format(
-					"(%s, '%s', '%s', '%s', '%s')",
+					"(%s, %s, '%s', '%s', '%s', '%s')",
+					u.getProviderId(),
 					u.getImageId(),
 					u.getEmail(),
 					u.getNickname(),
@@ -45,6 +49,10 @@ public enum UserFixture {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Long getProviderId() {
+		return providerId;
 	}
 
 	public String getNickname() {
@@ -68,6 +76,7 @@ public enum UserFixture {
 	}
 
 	public User getUser() {
-		return new User(id, nickname, email, password, ImageFixture.findById(imageId).toImage(), createdAt);
+		return new User(id, ProviderFixture.findById(providerId).toProvider(), ImageFixture.findById(imageId).toImage(),
+			nickname, email, password, createdAt);
 	}
 }

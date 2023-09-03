@@ -10,6 +10,7 @@ import com.codesquad.secondhand.util.fixture.CategoryFixture;
 import com.codesquad.secondhand.util.fixture.ImageFixture;
 import com.codesquad.secondhand.util.fixture.ItemFixture;
 import com.codesquad.secondhand.util.fixture.ItemImageFixture;
+import com.codesquad.secondhand.util.fixture.ProviderFixture;
 import com.codesquad.secondhand.util.fixture.RegionFixture;
 import com.codesquad.secondhand.util.fixture.StatusFixture;
 import com.codesquad.secondhand.util.fixture.UserFixture;
@@ -26,6 +27,7 @@ public class DatabaseLoader {
 		em.createNativeQuery(CategoryFixture.createInsertSQL()).executeUpdate();
 		em.createNativeQuery(RegionFixture.createInsertSQL()).executeUpdate();
 		em.createNativeQuery(ImageFixture.createInsertSQL()).executeUpdate();
+		em.createNativeQuery(ProviderFixture.createInsertSQL()).executeUpdate();
 		em.createNativeQuery(UserFixture.createInsertSQL()).executeUpdate();
 		em.createNativeQuery(StatusFixture.createInsertSQL()).executeUpdate();
 		em.createNativeQuery(ItemFixture.createInsertSQL()).executeUpdate();
