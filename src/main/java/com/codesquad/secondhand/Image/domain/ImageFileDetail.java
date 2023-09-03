@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.codesquad.secondhand.common.exception.image.ImageEmptyException;
 import com.codesquad.secondhand.common.exception.image.ImageInvalidTypeException;
 
 public class ImageFileDetail {
@@ -17,12 +18,16 @@ public class ImageFileDetail {
 	private final MultipartFile multipartFile;
 
 	public ImageFileDetail(MultipartFile multipartFile) {
-		validateImageFile(multipartFile.getContentType());
+		validate(multipartFile);
 		this.multipartFile = multipartFile;
 	}
 
-	private void validateImageFile(String contentType) {
-		if (!IMAGES.contains(contentType)) {
+	private void validate(MultipartFile multipartFile) {
+		if (multipartFile != null && multipartFile.getSize() != 0) {
+			throw new ImageEmptyException();
+		}
+
+		if (!IMAGES.contains(multipartFile.getContentType())) {
 			throw new ImageInvalidTypeException();
 		}
 	}

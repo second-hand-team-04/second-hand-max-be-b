@@ -20,10 +20,10 @@ public class UserCreateRequest {
 	@Email
 	private String email;
 
-	@Pattern(regexp = "^(?=.*[a-zA-Z가-힣])[a-zA-Z가-힣0-9]{2,10}$")
+	@Pattern(regexp = "^(?=.*[a-zA-Z가-힣])[a-zA-Z가-힣0-9]{2,10}$", message = "ㄹ2자 이상 10자 이하 영문 또는 한글 필수 포함이며 숫자는 선택입니다.")
 	private String nickname;
 
-	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,16}$")
+	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,16}$", message = "8자 이상, 16자 이하 영문 + 숫자 + 특수문자 최소 1개 필수입니다.")
 	private String password;
 
 	public UserCreateRequest(Long providerId, String email, String nickname, String password) {

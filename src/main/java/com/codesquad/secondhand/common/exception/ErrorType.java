@@ -24,6 +24,8 @@ public enum ErrorType {
 	// IMAGE
 	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이미지가 없습니다."),
 	IMAGE_INVALID_TYPE(HttpStatus.BAD_REQUEST, "해당 파일은 이미지 타입이 아닙니다."),
+	IMAGE_EMPTY(HttpStatus.BAD_REQUEST, "해당 파일은 비어있거나 없습니다."),
+	MAX_UPLOAD_SIZE(HttpStatus.BAD_REQUEST, "파일 업로드 사이즈가 초과하였습니다."),
 
 	// AUTH
 	AUTHENTICATION(HttpStatus.UNAUTHORIZED, "인증 정보가 잘못 되었습니다.");

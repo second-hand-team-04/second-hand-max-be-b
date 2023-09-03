@@ -69,6 +69,15 @@ public class CommonResponse<T> {
 		);
 	}
 
+	public static <T> CommonResponse createBadRequest(String message) {
+		return new CommonResponse(
+			HttpStatus.BAD_REQUEST.value(),
+			HttpStatus.BAD_REQUEST.getReasonPhrase(),
+			message,
+			null
+		);
+	}
+
 	public static <T> CommonResponse createInternalServer(Exception e) {
 		return new CommonResponse(
 			HttpStatus.INTERNAL_SERVER_ERROR.value(),
