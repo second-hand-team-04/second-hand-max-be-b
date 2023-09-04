@@ -1,17 +1,16 @@
 package com.codesquad.secondhand.util.fixture;
 
-import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_기본_사용자_프로필;
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import com.codesquad.secondhand.user.domain.User;
 
 public enum UserFixture {
 
-	유저_만두(1L, 1L, 이미지_기본_사용자_프로필.getId(), "만두", "mandu@mandu.com", "test", LocalDateTime.now()),
-	유저_보노(2L, 1L, 이미지_기본_사용자_프로필.getId(), "보노", "bono@bono.com", "test", LocalDateTime.now());
+	유저_만두(1L, 공급자_내부.getId(), null, "만두", "mandu@mandu.com", "test1234!", LocalDateTime.now()),
+	유저_보노(2L, 공급자_내부.getId(), null, "보노", "bono@bono.com", "test1234!", LocalDateTime.now()),
+	유저_지구(3L, 공급자_내부.getId(), null, "지구", "earth@earth.com", "test1234!", LocalDateTime.now()),
+	유저_피아(4L, 공급자_내부.getId(), null, "피아", "fia@fia.com", "test1234!", LocalDateTime.now());
 
 	private final Long id;
 	private final Long providerId;
@@ -30,21 +29,6 @@ public enum UserFixture {
 		this.email = email;
 		this.password = password;
 		this.createdAt = createdAt;
-	}
-
-	public static String createInsertSQL() {
-		return String.format(
-			"INSERT INTO `user`(provider_id, image_id, email, nickname, password, created_at) VALUES %s",
-			Arrays.stream(values())
-				.map(u -> String.format(
-					"(%s, %s, '%s', '%s', '%s', '%s')",
-					u.getProviderId(),
-					u.getImageId(),
-					u.getEmail(),
-					u.getNickname(),
-					u.getPassword(),
-					u.getCreatedAt()))
-				.collect(Collectors.joining(", ")));
 	}
 
 	public Long getId() {
@@ -73,10 +57,5 @@ public enum UserFixture {
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
-	}
-
-	public User getUser() {
-		return new User(id, ProviderFixture.findById(providerId).toProvider(), ImageFixture.findById(imageId).toImage(),
-			nickname, email, password, createdAt);
 	}
 }

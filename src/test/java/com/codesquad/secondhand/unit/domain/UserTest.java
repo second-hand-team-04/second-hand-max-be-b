@@ -1,9 +1,12 @@
 package com.codesquad.secondhand.unit.domain;
 
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_신교동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,8 @@ public class UserTest {
 
 	@BeforeEach
 	void init() {
-		user = 유저_만두.getUser();
+		user = new User(1L, 공급자_내부.toProvider(), null, 유저_만두.getNickname(), 유저_만두.getEmail(),
+			유저_만두.getPassword(), LocalDateTime.now());
 		region = 동네_서울_종로구_청운동.getRegion();
 		region2 = 동네_서울_종로구_신교동.getRegion();
 	}

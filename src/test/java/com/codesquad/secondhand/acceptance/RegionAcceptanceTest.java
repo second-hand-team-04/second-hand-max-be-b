@@ -29,7 +29,7 @@ public class RegionAcceptanceTest extends AcceptanceTest {
 	@MethodSource("providerPageableAndRegion")
 	void 동네_목록을_조회한다(int page, int size, boolean hasMore, String title, List<String> regionTitles) {
 		// when
-		var response = 동네_목록_조회_요청(page, size, title);
+		var response = 동네_목록_조회_요청(accessToken, page, size, title);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);

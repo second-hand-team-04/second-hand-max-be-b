@@ -46,13 +46,13 @@ public class ItemResponse {
 		this.numLikes = numLikes;
 	}
 
-	public static ItemResponse of(Item item, Image defaultImage) {
+	public static ItemResponse of(Item item) {
 		return new ItemResponse(
 			item.getId(),
 			item.getTitle(),
 			item.getRegion().getTitle(),
 			item.getStatus().getType(),
-			item.getThumbnail(defaultImage).getImageUrl(),
+			item.getThumbnail(),
 			item.getCreatedAt(),
 			item.getUpdatedAt(),
 			item.getPrice(),
@@ -61,9 +61,9 @@ public class ItemResponse {
 		);
 	}
 
-	public static List<ItemResponse> of(List<Item> items, Image defaultImage) {
+	public static List<ItemResponse> of(List<Item> items) {
 		return items.stream()
-			.map(item -> ItemResponse.of(item, defaultImage))
+			.map(ItemResponse::of)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

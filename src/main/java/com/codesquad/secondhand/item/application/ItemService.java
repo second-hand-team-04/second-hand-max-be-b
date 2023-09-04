@@ -24,6 +24,6 @@ public class ItemService {
 	public ItemSliceResponse findItemsByCategoryAndRegion(Long categoryId, Long regionId, Pageable pageable) {
 		Slice<Item> itemSlice = itemRepository.findByCategoryIdAndRegionId(categoryId, regionId, pageable);
 		return ItemSliceResponse.of(itemSlice.hasNext(),
-			ItemResponse.of(itemSlice.getContent(), imageService.getItemDefaultImage()));
+			ItemResponse.of(itemSlice.getContent()));
 	}
 }

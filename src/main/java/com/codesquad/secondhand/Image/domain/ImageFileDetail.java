@@ -3,6 +3,7 @@ package com.codesquad.secondhand.Image.domain;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ public class ImageFileDetail {
 	}
 
 	private void validate(MultipartFile multipartFile) {
-		if (multipartFile != null && multipartFile.getSize() != 0) {
+		if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
 			throw new ImageEmptyException();
 		}
 

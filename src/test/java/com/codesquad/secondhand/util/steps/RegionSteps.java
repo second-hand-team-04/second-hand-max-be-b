@@ -8,8 +8,9 @@ import io.restassured.response.Response;
 
 public class RegionSteps {
 
-	public static ExtractableResponse<Response> 동네_목록_조회_요청(int page, int size, String title) {
+	public static ExtractableResponse<Response> 동네_목록_조회_요청(String accessToken, int page, int size, String title) {
 		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.param("page", page)

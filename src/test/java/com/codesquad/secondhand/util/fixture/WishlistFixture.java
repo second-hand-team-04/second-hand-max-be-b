@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 public enum WishlistFixture {
 
 	관심목록_유저_만두_상품_PS5(1L, 유저_만두.getId(), 상품_PS5.getId()),
-	관심목록_유저_보노_상품_PS5(2L, 유저_보노.getId(), 상품_PS5.getId()),
-	관심목록_유저_만두_상품_젤다의_전설(3L, 유저_만두.getId(), 상품_젤다의_전설.getId());
+	관심목록_유저_만두_상품_젤다의_전설(2L, 유저_만두.getId(), 상품_젤다의_전설.getId());
 
 	private final Long id;
 	private final Long userId;

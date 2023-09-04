@@ -1,29 +1,31 @@
 package com.codesquad.secondhand.acceptance;
 
-import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_기본_사용자_프로필;
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내수동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누하동;
+import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
+import static com.codesquad.secondhand.util.fixture.UserFixture.유저_지구;
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_목록_조회_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import com.codesquad.secondhand.Image.application.ImageService;
-import com.codesquad.secondhand.Image.domain.Image;
+
 import com.codesquad.secondhand.util.AcceptanceTest;
 
 import io.restassured.builder.MultiPartSpecBuilder;
@@ -35,9 +37,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
 	private static final String PROFILE_PATH = String.format("%s/%s", System.getProperty("user.dir"), "src/test/resources/bike.jpg");
 
-	@MockBean
-	private ImageService imageService;
-
 	/**
 	 * Given 회원을 생성하고
 	 * And 나의 동네를 2개를 등록하고
@@ -47,11 +46,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 나의_동네_목록을_조회한다() {
 		// given
-		나의_동네_등록_요청(동네_서울_종로구_궁정동.getId());
-		나의_동네_등록_요청(동네_서울_종로구_내수동.getId());
+		나의_동네_등록_요청(accessToken, 동네_서울_종로구_궁정동.getId());
+		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내수동.getId());
 
 		// when
-		var response = 나의_동네_목록_조회_요청();
+		var response = 나의_동네_목록_조회_요청(accessToken);
 
 		// then
 		나의_동네_목록_조회_검증(response, 동네_서울_종로구_궁정동.getTitle(), 동네_서울_종로구_내수동.getTitle());
@@ -65,7 +64,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 나의_동네를_생성한다() {
 		// when
-		var response = 나의_동네_등록_요청(동네_서울_종로구_궁정동.getId());
+		var response = 나의_동네_등록_요청(accessToken, 동네_서울_종로구_궁정동.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.CREATED);
@@ -81,7 +80,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	void 나의_동네_등록_시_해당_동네가_없으면_요청이_실패된다() {
 		// when
 		Long 생성되지_않은_동네_아이디 = 10000L;
-		var response = 나의_동네_등록_요청(생성되지_않은_동네_아이디);
+		var response = 나의_동네_등록_요청(accessToken, 생성되지_않은_동네_아이디);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
@@ -96,10 +95,10 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 나의_동네_등록_시_이미_등록된_동네이면_요청이_실패된다() {
 		// given
-		나의_동네_등록_요청(동네_서울_종로구_내자동.getId());
+		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
 
 		// when
-		var response = 나의_동네_등록_요청(동네_서울_종로구_내자동.getId());
+		var response = 나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
@@ -114,11 +113,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 나의_동네_등록_시_이미_등록된_동네가_2개이면_요청이_실패된다() {
 		// given
-		나의_동네_등록_요청(동네_서울_종로구_내자동.getId());
-		나의_동네_등록_요청(동네_서울_종로구_내수동.getId());
+		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
+		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내수동.getId());
 
 		// when
-		var response = 나의_동네_등록_요청(동네_서울_종로구_누하동.getId());
+		var response = 나의_동네_등록_요청(accessToken, 동네_서울_종로구_누하동.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
@@ -140,11 +139,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 나의_동네를_삭제한다() {
 		// given
-		나의_동네_등록_요청(동네_서울_종로구_내자동.getId());
-		나의_동네_등록_요청(동네_서울_종로구_내수동.getId());
+		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
+		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내수동.getId());
 
 		// when
-		var response = 나의_동네_삭제_요청(동네_서울_종로구_내자동.getId());
+		var response = 나의_동네_삭제_요청(accessToken, 동네_서울_종로구_내자동.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
@@ -160,10 +159,10 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 나의_동네_삭제_시_나의_동네가_1개인_경우_요청이_실패된다() {
 		// given
-		나의_동네_등록_요청(동네_서울_종로구_내자동.getId());
+		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
 
 		// when
-		var response = 나의_동네_삭제_요청(동네_서울_종로구_내자동.getId());
+		var response = 나의_동네_삭제_요청(accessToken, 동네_서울_종로구_내자동.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
@@ -171,7 +170,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
 	/**
 	 * TODO 로그인 구현 시 테스트 코드 추가
-	 *
 	 * When 나의 동네 삭제 시 해당 회원이 없으면
 	 * Then 요청이 실패된다.
 	 */
@@ -180,21 +178,37 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 * When 유저를 생성하면
 	 * Then 요청이 성공한다.
 	 */
-	@Test
-	void 유저를_생성한다() throws IOException {
-		// given
-		given(imageService.upload(any())).willReturn(이미지_기본_사용자_프로필.toImage());
-
+	@ParameterizedTest
+	@MethodSource("providerUserAndMultiPartFile")
+	void 유저를_생성한다(Long providerId, String email, String nickname, String password, MultiPartSpecification file) {
 		// when
-		MultiPartSpecification file = new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
-			.fileName("profile.jpg")
-			.controlName("profilePicture")
-			.mimeType(MediaType.IMAGE_JPEG_VALUE)
-			.build();
-		var response = 유저_생성_요청(1L, "mandu@mandu.com", "mandu", "test", file);
+		var response = 유저_생성_요청(providerId, email, nickname, password, file);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.CREATED);
+	}
+
+	private static Stream<Arguments> providerUserAndMultiPartFile() throws FileNotFoundException {
+		return Stream.of(
+			Arguments.of(
+				공급자_내부.getId(),
+				유저_보노.getEmail(),
+				유저_보노.getNickname(),
+				유저_보노.getPassword(),
+				new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
+					.fileName("profile.jpg")
+					.controlName("profilePicture")
+					.mimeType(MediaType.IMAGE_JPEG_VALUE)
+					.build()
+			),
+			Arguments.of(
+				공급자_내부.getId(),
+				유저_지구.getEmail(),
+				유저_지구.getNickname(),
+				유저_지구.getPassword(),
+				null
+			)
+		);
 	}
 
 	private void 나의_동네_목록_조회_검증(ExtractableResponse<Response> response, String... expectedTitles) {
@@ -204,13 +218,13 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	}
 
 	private void 나의_동네_목록_조회_시_등록된_나의_동네를_검증(String regionTitle) {
-		List<String> titles = 나의_동네_목록_조회_요청().jsonPath().getList("data.title", String.class);
+		List<String> titles = 나의_동네_목록_조회_요청(accessToken).jsonPath().getList("data.title", String.class);
 
 		assertThat(titles).contains(regionTitle);
 	}
 
 	private void 나의_동네_목록_조회_시_삭제된_나의_동네를_검증(String regionTitle) {
-		List<String> titles = 나의_동네_목록_조회_요청().jsonPath().getList("data.title", String.class);
+		List<String> titles = 나의_동네_목록_조회_요청(accessToken).jsonPath().getList("data.title", String.class);
 
 		assertThat(titles).doesNotContain(regionTitle);
 	}

@@ -19,7 +19,7 @@ CREATE TABLE `image`
 CREATE TABLE `provider`
 (
     `id`        BIGINT AUTO_INCREMENT,
-    `type` VARCHAR(30) NOT NULL,
+    `type`      VARCHAR(30) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE `user`
 (
     `id`            BIGINT             NOT NULL AUTO_INCREMENT,
     `provider_id`   BIGINT             NOT NULL,
-    `image_id`      BIGINT             NOT NULL,
+    `image_id`      BIGINT             NULL,
     `email`         VARCHAR(40)        NOT NULL,
     `nickname`      VARCHAR(20) UNIQUE NOT NULL,
     `password`      VARCHAR(150)       NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE `wishlist`
 
 CREATE TABLE `item_image`
 (
-    `id`         BIGINT AUTO_INCREMENT,
+    `id`         BIGINT    AUTO_INCREMENT,
     `item_id`    BIGINT    NOT NULL,
     `image_id`   BIGINT    NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT now(),

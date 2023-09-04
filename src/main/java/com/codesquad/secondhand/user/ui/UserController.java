@@ -34,7 +34,7 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<CommonResponse> signUp(@RequestPart @Valid UserCreateRequest request,
-		@RequestPart MultipartFile profilePicture) {
+		@RequestPart(required = false) MultipartFile profilePicture) {
 		request.injectProviderId(ProviderType.LOCAL.getId());
 		userService.signUp(request, profilePicture);
 		return ResponseEntity.status(HttpStatus.CREATED)

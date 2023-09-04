@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.codesquad.secondhand.Image.domain.ImageFileDetail;
 
 @Component
-public class S3Client {
+public class S3Client implements FileClient {
 
 	private static final String BUCKET_FOLDER = "images";
 
@@ -20,6 +20,7 @@ public class S3Client {
 		this.amazonS3 = amazonS3;
 	}
 
+	@Override
 	public String upload(ImageFileDetail imageFileDetail) {
 		String s3Key = imageFileDetail.getUploadFileName(BUCKET_FOLDER);
 		ObjectMetadata objectMetadata = new ObjectMetadata();

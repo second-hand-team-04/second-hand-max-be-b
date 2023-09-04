@@ -1,6 +1,7 @@
 package com.codesquad.secondhand.user.application;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +39,9 @@ public class UserService {
 	@Transactional
 	public void signUp(UserCreateRequest request, MultipartFile profilePicture) {
 		validateDuplication(request, ProviderType.LOCAL.getId());
-		Image image = imageService.upload(profilePicture);
 		Provider provider = providerRepository.findById(request.getProviderId())
 			.orElseThrow(ProviderNotFoundException::new);
+		Image image = getImage(profilePicture);
 		userRepository.save(request.toUser(provider, image));
 	}
 
@@ -52,6 +53,14 @@ public class UserService {
 		if (userRepository.existsByNickname(request.getNickname())) {
 			throw new UserNicknameDuplicationException();
 		}
+	}
+
+	private Image getImage(MultipartFile profilePicture) {
+		if (Objects.nonNull(profilePicture)) {
+			return imageService.upload(profilePicture);
+		}
+
+		return null;
 	}
 
 	public User findByIdOrThrow(Long id) {
