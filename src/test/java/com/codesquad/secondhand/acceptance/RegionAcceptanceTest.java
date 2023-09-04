@@ -44,8 +44,8 @@ public class RegionAcceptanceTest extends AcceptanceTest {
 				true,
 				"서울",
 				List.of(
-					동네_서울_종로구_당주동.getTitle(), 동네_서울_종로구_도렴동.getTitle(), 동네_서울_종로구_사직동.getTitle(),
-					동네_서울_종로구_세종로.getTitle(), 동네_서울_종로구_신교동.getTitle()
+					동네_서울_종로구_누하동.getTitle(), 동네_서울_종로구_당주동.getTitle(), 동네_서울_종로구_도렴동.getTitle(),
+					동네_서울_종로구_사직동.getTitle(), 동네_서울_종로구_세종로.getTitle()
 				)
 			),
 			Arguments.of(

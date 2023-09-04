@@ -41,8 +41,9 @@ public class UserService {
 		validateDuplication(request, ProviderType.LOCAL.getId());
 		Provider provider = providerRepository.findById(request.getProviderId())
 			.orElseThrow(ProviderNotFoundException::new);
-		Image image = getImage(profilePicture);
-		userRepository.save(request.toUser(provider, image));
+		Image image = imageService.uploadOrElseNull(profilePicture);
+		User user = userRepository.save(request.toUser(provider, image));
+		user.addMyRegion(regionService.findByIdOrThrow(Region.YEOKSAM_DONG));
 	}
 
 	private void validateDuplication(UserCreateRequest request, Long providerId) {
@@ -53,14 +54,6 @@ public class UserService {
 		if (userRepository.existsByNickname(request.getNickname())) {
 			throw new UserNicknameDuplicationException();
 		}
-	}
-
-	private Image getImage(MultipartFile profilePicture) {
-		if (Objects.nonNull(profilePicture)) {
-			return imageService.upload(profilePicture);
-		}
-
-		return null;
 	}
 
 	public User findByIdOrThrow(Long id) {

@@ -1,6 +1,7 @@
 package com.codesquad.secondhand.acceptance;
 
 import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내수동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
@@ -47,13 +48,12 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	void 나의_동네_목록을_조회한다() {
 		// given
 		나의_동네_등록_요청(accessToken, 동네_서울_종로구_궁정동.getId());
-		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내수동.getId());
 
 		// when
 		var response = 나의_동네_목록_조회_요청(accessToken);
 
 		// then
-		나의_동네_목록_조회_검증(response, 동네_서울_종로구_궁정동.getTitle(), 동네_서울_종로구_내수동.getTitle());
+		나의_동네_목록_조회_검증(response, 동네_서울_강남구_역삼동.getTitle(), 동네_서울_종로구_궁정동.getTitle());
 	}
 
 	/**
@@ -94,11 +94,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 */
 	@Test
 	void 나의_동네_등록_시_이미_등록된_동네이면_요청이_실패된다() {
-		// given
-		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
-
 		// when
-		var response = 나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
+		var response = 나의_동네_등록_요청(accessToken, 동네_서울_강남구_역삼동.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
@@ -114,7 +111,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	void 나의_동네_등록_시_이미_등록된_동네가_2개이면_요청이_실패된다() {
 		// given
 		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
-		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내수동.getId());
 
 		// when
 		var response = 나의_동네_등록_요청(accessToken, 동네_서울_종로구_누하동.getId());
@@ -140,7 +136,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	void 나의_동네를_삭제한다() {
 		// given
 		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
-		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내수동.getId());
 
 		// when
 		var response = 나의_동네_삭제_요청(accessToken, 동네_서울_종로구_내자동.getId());
@@ -157,11 +152,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 * Then 요청이 실패된다.
 	 */
 	@Test
-	void 나의_동네_삭제_시_나의_동네가_1개인_경우_요청이_실패된다() {
-		// given
-		나의_동네_등록_요청(accessToken, 동네_서울_종로구_내자동.getId());
-
-		// when
+	void 나의_동네_삭제_시_나의_동네가_1개인_경우_요청이_실패된다() {// when
 		var response = 나의_동네_삭제_요청(accessToken, 동네_서울_종로구_내자동.getId());
 
 		// then
@@ -169,10 +160,20 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
-	 * TODO 로그인 구현 시 테스트 코드 추가
 	 * When 나의 동네 삭제 시 해당 회원이 없으면
 	 * Then 요청이 실패된다.
 	 */
+	@Test
+	void 나의_동네_삭제_시_해당_회원이_없으면_요청이_실패된다() {
+		// given
+		String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6OTk5OTksImlhdCI6MTY5MzgxODc2MSwiZXhwIjoxOTUzMDE4NzYxfQ.vOR4rwJ6ynaKLE0KwKy8RvVPEvgS-MTqlBjOfbdUlgg";
+
+		// when
+		var response = 나의_동네_삭제_요청(accessToken, 동네_서울_종로구_내자동.getId());
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
 
 	/**
 	 * When 유저를 생성하면
@@ -187,6 +188,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		// then
 		응답_상태코드_검증(response, HttpStatus.CREATED);
 	}
+
+	// TODO 유저 생성 시 예외 케이스
 
 	private static Stream<Arguments> providerUserAndMultiPartFile() throws FileNotFoundException {
 		return Stream.of(

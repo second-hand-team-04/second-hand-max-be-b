@@ -13,6 +13,9 @@ import com.codesquad.secondhand.common.exception.userregion.UserRegionMaxAddCoun
 import com.codesquad.secondhand.common.exception.userregion.UserRegionMinRemoveCountException;
 import com.codesquad.secondhand.region.domain.Region;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 @Embeddable
 public class MyRegions {
 
@@ -20,11 +23,7 @@ public class MyRegions {
 	private static final int MIN_REMOVE_COUNT = 1;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<UserRegion> userRegions;
-
-	public MyRegions() {
-		userRegions = new ArrayList<>();
-	}
+	private List<UserRegion> userRegions = new ArrayList<>();
 
 	public List<Region> getRegions() {
 		return userRegions.stream()

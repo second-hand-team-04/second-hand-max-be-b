@@ -3,6 +3,7 @@ package com.codesquad.secondhand.Image.application;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,20 +17,18 @@ import com.codesquad.secondhand.Image.infrastructure.ImageRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class ImageService {
 
 	private final ImageRepository imageRepository;
 	private final FileClient fileClient;
 
-	@Transactional
 	public Image upload(MultipartFile multipartFiles) {
 		String imageUrl = fileClient.upload(new ImageFileDetail(multipartFiles));
 		return imageRepository.save(new Image(imageUrl));
 	}
 
-	@Transactional
 	public List<Image> upload(MultipartFile... multipartFiles) {
 		List<Image> images = new ArrayList<>();
 		Arrays.stream(multipartFiles)
@@ -38,5 +37,13 @@ public class ImageService {
 				images.add(new Image(imageUrl));
 			});
 		return imageRepository.saveAll(images);
+	}
+
+	public Image uploadOrElseNull(MultipartFile profilePicture) {
+		if (Objects.nonNull(profilePicture)) {
+			return upload(profilePicture);
+		}
+
+		return null;
 	}
 }

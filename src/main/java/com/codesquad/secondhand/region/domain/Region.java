@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Region {
 
+	public static final long YEOKSAM_DONG = 432L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

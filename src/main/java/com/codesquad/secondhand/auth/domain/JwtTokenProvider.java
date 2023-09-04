@@ -37,8 +37,6 @@ public class JwtTokenProvider {
 
 		return Jwts.builder()
 			.claim("id", account.getId())
-			.claim("email", account.getEmail())
-			.claim("nickname", account.getNickname())
 			.setIssuedAt(now)
 			.setExpiration(validity)
 			.signWith(SignatureAlgorithm.HS256, secretKey)
@@ -51,10 +49,7 @@ public class JwtTokenProvider {
 				.setSigningKey(secretKey)
 				.parseClaimsJws(token)
 				.getBody();
-
-			return new Account(claims.get("id", Long.class),
-				claims.get("email", String.class),
-				claims.get("nickname", String.class));
+			return new Account(claims.get("id", Long.class));
 		} catch (RuntimeException e) {
 			throw new AuthenticationException();
 		}

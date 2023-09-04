@@ -18,7 +18,11 @@ import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.region.domain.Region;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
 	@Id
@@ -43,11 +47,7 @@ public class User {
 	private LocalDateTime createdAt;
 
 	@Embedded
-	private MyRegions myRegions;
-
-	public User() {
-		myRegions = new MyRegions();
-	}
+	private MyRegions myRegions = new MyRegions();
 
 	public User(Long id, Provider provider, Image image, String nickname, String email, String password,
 		LocalDateTime createdAt) {
@@ -58,7 +58,6 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.createdAt = createdAt;
-		this.myRegions = new MyRegions();
 	}
 
 	public User(Provider provider, String nickname, String email, String password, Image image) {
@@ -82,7 +81,7 @@ public class User {
 	}
 
 	public Account toAccount() {
-		return new Account(id, email, nickname);
+		return new Account(id);
 	}
 
 	public Long getId() {
