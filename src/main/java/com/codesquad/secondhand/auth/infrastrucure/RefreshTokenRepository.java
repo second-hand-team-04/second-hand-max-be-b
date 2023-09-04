@@ -1,28 +1,12 @@
 package com.codesquad.secondhand.auth.infrastrucure;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.springframework.stereotype.Repository;
+import com.codesquad.secondhand.auth.domain.RefreshToken;
 
-@Repository
-public class RefreshTokenRepository {
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 
-	private static final Map<Long, String> STORE = new ConcurrentHashMap<>();
+	void deleteByUserId(long userId);
 
-	public void save(long userId, String refreshToken) {
-		STORE.put(userId, refreshToken);
-	}
-
-	public String get(long userId) {
-		return STORE.get(userId);
-	}
-
-	public void remove(long userId) {
-		STORE.remove(userId);
-	}
-
-	public boolean existsByUserId(Long userId) {
-		return STORE.containsKey(userId);
-	}
+	boolean existsByToken(String token);
 }
