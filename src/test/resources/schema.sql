@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS `item`;
 DROP TABLE IF EXISTS `status`;
 DROP TABLE IF EXISTS `user_region`;
 DROP TABLE IF EXISTS `category`;
+DROP TABLE IF EXISTS `refresh_token`;
 DROP TABLE IF EXISTS `region`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `image`;
@@ -109,4 +110,13 @@ CREATE TABLE `item_image`
     PRIMARY KEY (`id`),
     FOREIGN KEY (`image_id`) REFERENCES `image` (`id`),
     FOREIGN KEY (`item_id`) REFERENCES `item` (`id`)
+);
+
+CREATE TABLE `refresh_token`
+(
+    `id`      BIGINT       AUTO_INCREMENT,
+    `user_id` BIGINT       NOT NULL,
+    `token`   VARCHAR(300) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );

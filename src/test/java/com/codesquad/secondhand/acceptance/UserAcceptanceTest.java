@@ -3,9 +3,9 @@ package com.codesquad.secondhand.acceptance;
 import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내수동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누하동;
+import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_지구;
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -189,7 +190,59 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		응답_상태코드_검증(response, HttpStatus.CREATED);
 	}
 
-	// TODO 유저 생성 시 예외 케이스
+	/**
+	 * When 유저를 생성 시 이메일 형식이 올바르지 않을 경우
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 유저_생성_시_이메일_형식이_올바르지_않을_경우_요청이_실패된다() {
+		// when
+		var response = 유저_생성_요청(공급자_내부.getId(), "mandu.com", 유저_보노.getNickname(), 유저_보노.getPassword(), null);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * When 유저를 생성 시 이미 존재하는 이메일인 경우
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 유저_생성_시_이미_존재하는_이메일인_경우_요청이_실패된다() {
+		// when
+		var response = 유저_생성_요청(공급자_내부.getId(), 유저_만두.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(), null);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+
+	/**
+	 * When 유저를 생성 시 비밀번호가 8자 이상 16자 이하로, 영문, 숫자, 특수문자를 최소 1개씩 포함하지 않을 경우
+	 * Then 요청이 실패된다.
+	 */
+	@ParameterizedTest
+	@ValueSource(strings = {"bonotest", "bonotes1", "bonotes@", "1@2@3@4@", "bonobonotest1234!"})
+	void 유저_생성_시_비밀번호가_8자_이상_16자_이하로_영문_숫자_특수문자를_최소_1개씩_포함하지_않을_경우_요청이_실패된다(String password) {
+		// when
+		var response = 유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), password, null);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * When 유저를 생성 시 닉네임이 이미 중복된 경우
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 유저_생성_시_닉네임이_중복인_경우_요청이_실패된다() {
+		// when
+		var response = 유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_만두.getNickname(), 유저_보노.getPassword(), null);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
 
 	private static Stream<Arguments> providerUserAndMultiPartFile() throws FileNotFoundException {
 		return Stream.of(
