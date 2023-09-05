@@ -4,11 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codesquad.secondhand.auth.application.AuthService;
-import com.codesquad.secondhand.auth.application.dto.RefreshTokenRequest;
 import com.codesquad.secondhand.auth.application.dto.SignInRequest;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.common.resolver.AccountPrincipal;
@@ -36,9 +36,9 @@ public class AuthController {
 		return ResponseEntity.ok().body(CommonResponse.createOK(ResponseMessage.SIGN_OUT));
 	}
 
-	@PostMapping("/access-token")
-	public ResponseEntity<CommonResponse> showAccessToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+	@PostMapping("/refresh")
+	public ResponseEntity<CommonResponse> showAccessToken(@RequestHeader("Authorization") String authorizationHeader){
 		return ResponseEntity.ok()
-			.body(CommonResponse.createOK(authService.getAccessToken(refreshTokenRequest), ResponseMessage.SIGN_OUT));
+			.body(CommonResponse.createOK(authService.getAccessToken(authorizationHeader), ResponseMessage.SIGN_OUT));
 	}
 }

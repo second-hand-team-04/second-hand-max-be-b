@@ -2,7 +2,6 @@ package com.codesquad.secondhand.util.steps;
 
 import org.springframework.http.MediaType;
 
-import com.codesquad.secondhand.auth.application.dto.RefreshTokenRequest;
 import com.codesquad.secondhand.auth.application.dto.SignInRequest;
 
 import io.restassured.RestAssured;
@@ -31,10 +30,9 @@ public class AuthSteps {
 
 	public static ExtractableResponse<Response> 액세스_토큰_발급_요청(String refreshToken) {
 		return RestAssured.given().log().all()
+			.auth().oauth2(refreshToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
-			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(new RefreshTokenRequest(refreshToken))
-			.when().post("/api/auth/access-token")
+			.when().post("/api/auth/refresh")
 			.then().log().all().extract();
 	}
 }

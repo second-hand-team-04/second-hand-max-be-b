@@ -74,6 +74,24 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 	/**
 	 * Given 유저를 생성하고
 	 * And 해당 유저가 로그인하고
+	 * When 해당 유저가 로그아웃 시 AccessToken 만료되면
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 로그아웃_시_액세스_토큰이_만료되면_요청이_실패된다() {
+		// given
+		String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiaXNzIjoiZmlzaHByaW5jZS5zaXRlIiwiaWF0IjoxNjkzODkxNjcxLCJleHAiOjE2OTM4OTE2NzF9.yLQPEhpnaed8kQ6ZNusP3dmrAML557YYSKSUAFKY6v4";
+
+		// when
+		var response = 로그아웃_요청(accessToken);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.FORBIDDEN);
+	}
+
+	/**
+	 * Given 유저를 생성하고
+	 * And 해당 유저가 로그인하고
 	 * When AccessToken 발급 요청하면
 	 * Then RefreshToken을 받을 수 있다.
 	 */

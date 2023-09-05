@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.codesquad.secondhand.auth.application.dto.AccessTokenResponse;
-import com.codesquad.secondhand.auth.application.dto.RefreshTokenRequest;
 import com.codesquad.secondhand.auth.application.dto.SignInRequest;
 import com.codesquad.secondhand.auth.application.dto.SignInResponse;
 import com.codesquad.secondhand.auth.domain.Account;
@@ -18,8 +17,10 @@ import com.codesquad.secondhand.auth.domain.ProviderType;
 import com.codesquad.secondhand.auth.domain.RefreshToken;
 import com.codesquad.secondhand.auth.infrastrucure.AuthRepository;
 import com.codesquad.secondhand.auth.infrastrucure.RefreshTokenRepository;
-import com.codesquad.secondhand.common.exception.auth.AuthenticationException;
+import com.codesquad.secondhand.common.exception.ErrorType;
+import com.codesquad.secondhand.common.exception.auth.AuthUnauthorizedException;
 import com.codesquad.secondhand.common.exception.user.UserLoginInfoDifferentException;
+import com.codesquad.secondhand.common.util.AuthorizationHeaderUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -56,13 +57,14 @@ public class AuthService {
 	}
 
 	@Transactional(readOnly = true)
-	public AccessTokenResponse getAccessToken(RefreshTokenRequest refreshTokenRequest) {
-		if (!refreshTokenRepository.existsByToken(refreshTokenRequest.getToken())) {
-			throw new AuthenticationException();
+	public AccessTokenResponse getAccessToken(String authorizationHeader) {
+		try {
+			String refreshToken = AuthorizationHeaderUtil.getRefreshToken(authorizationHeader);
+			Account account = jwtTokenProvider.getAccount(refreshToken);
+			return new AccessTokenResponse(getAccessToken(account));
+		} catch (RuntimeException e) {
+			throw new AuthUnauthorizedException(ErrorType.AUTH_REFRESH_TOKEN_UNAUTHORIZED);
 		}
-
-		Account account = jwtTokenProvider.getAccount(refreshTokenRequest.getToken());
-		return new AccessTokenResponse(getAccessToken(account));
 	}
 
 	@Scheduled(cron = "0 0 0 * * *")

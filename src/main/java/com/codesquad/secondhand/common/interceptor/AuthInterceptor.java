@@ -8,8 +8,15 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.codesquad.secondhand.auth.domain.JwtTokenProvider;
-import com.codesquad.secondhand.common.exception.auth.AuthenticationException;
+import com.codesquad.secondhand.common.exception.ErrorType;
+import com.codesquad.secondhand.common.exception.auth.AuthForbiddenException;
+import com.codesquad.secondhand.common.exception.auth.AuthUnauthorizedException;
+import com.codesquad.secondhand.common.util.AuthorizationHeaderUtil;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -25,16 +32,13 @@ public class AuthInterceptor implements HandlerInterceptor {
 		}
 
 		try {
-			String authorization = request.getHeader("Authorization");
-			if (!"bearer".equalsIgnoreCase(authorization.split(" ")[0])) {
-				throw new AuthenticationException();
-			}
-
-			String token = authorization.split(" ")[1];
+			String token = AuthorizationHeaderUtil.getToken(request);
 			jwtTokenProvider.getAccount(token);
 			return true;
-		} catch (RuntimeException e) {
-			throw new AuthenticationException();
+		} catch (ExpiredJwtException e) {
+			throw new AuthForbiddenException();
+		} catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e2) {
+			throw new AuthUnauthorizedException(ErrorType.AUTH_ACCESS_TOKEN_UNAUTHORIZED);
 		}
 	}
 }

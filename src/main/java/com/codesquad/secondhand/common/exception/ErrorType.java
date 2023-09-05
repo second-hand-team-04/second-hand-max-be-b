@@ -28,7 +28,9 @@ public enum ErrorType {
 	MAX_UPLOAD_SIZE(HttpStatus.BAD_REQUEST, "파일 업로드 사이즈가 초과하였습니다"),
 
 	// AUTH
-	AUTHENTICATION(HttpStatus.UNAUTHORIZED, "인증 정보가 잘못 되었습니다");
+	AUTH_ACCESS_TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Access Token이 유효하지 않습니다"),
+	AUTH_ACCESS_TOKEN_FORBIDDEN(HttpStatus.FORBIDDEN, "Access Token이 만료되었습니다"),
+	AUTH_REFRESH_TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Refresh Token이 만료되었습니다");
 
 
 	private final HttpStatus httpStatus;

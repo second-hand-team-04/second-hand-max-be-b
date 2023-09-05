@@ -7,22 +7,21 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.codesquad.secondhand.common.exception.auth.AuthenticationException;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
-
 	private final long accessKeyExpire;
 	private final long refreshKeyExpire;
 	private final String issuer;
 	private final Key key;
 
-	public JwtTokenProvider(@Value("${jwt.token.secret-key}") String secretKey, @Value("${jwt.token.access-token-expire}") long accessKeyExpire,
-		@Value("${jwt.token.refresh-token-expire}") long refreshKeyExpire, @Value("${jwt.token.issuer}") String issuer) {
+	public JwtTokenProvider(@Value("${jwt.token.secret-key}") String secretKey,
+		@Value("${jwt.token.access-token-expire}") long accessKeyExpire,
+		@Value("${jwt.token.refresh-token-expire}") long refreshKeyExpire,
+		@Value("${jwt.token.issuer}") String issuer) {
 		this.accessKeyExpire = accessKeyExpire;
 		this.refreshKeyExpire = refreshKeyExpire;
 		this.issuer = issuer;
@@ -50,15 +49,15 @@ public class JwtTokenProvider {
 	}
 
 	public Account getAccount(String token) {
-		try {
-			return new Account(getClaims(token).get("id", Long.class));
-		} catch (RuntimeException e) {
-			throw new AuthenticationException();
-		}
+		return new Account(getClaims(token).get("id", Long.class));
 	}
 
 	private Claims getClaims(String token) {
-		return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+		return Jwts.parserBuilder()
+			.setSigningKey(key)
+			.build()
+			.parseClaimsJws(token)
+			.getBody();
 	}
 
 	public boolean isExpired(String token) {

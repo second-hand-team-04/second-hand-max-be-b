@@ -1,5 +1,7 @@
 package com.codesquad.secondhand.common.resolver;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -8,8 +10,15 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.codesquad.secondhand.auth.domain.JwtTokenProvider;
-import com.codesquad.secondhand.common.exception.auth.AuthenticationException;
+import com.codesquad.secondhand.common.exception.ErrorType;
+import com.codesquad.secondhand.common.exception.auth.AuthForbiddenException;
+import com.codesquad.secondhand.common.exception.auth.AuthUnauthorizedException;
+import com.codesquad.secondhand.common.util.AuthorizationHeaderUtil;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -26,13 +35,13 @@ public class AccountPrincipalArgumentResolver implements HandlerMethodArgumentRe
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		String authorization = webRequest.getHeader("Authorization");
-
-		if (!"bearer".equalsIgnoreCase(authorization.split(" ")[0])) {
-			throw new AuthenticationException();
+		try {
+			String token = AuthorizationHeaderUtil.getToken(webRequest.getNativeRequest(HttpServletRequest.class));
+			return jwtTokenProvider.getAccount(token);
+		} catch (ExpiredJwtException e) {
+			throw new AuthForbiddenException();
+		} catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e2) {
+			throw new AuthUnauthorizedException(ErrorType.AUTH_ACCESS_TOKEN_UNAUTHORIZED);
 		}
-
-		String token = authorization.split(" ")[1];
-		return jwtTokenProvider.getAccount(token);
 	}
 }
