@@ -31,25 +31,25 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	 * Then 지역별 카테고리별 상품을 조회할 수 있다.
 	 */
 	@ParameterizedTest
-	@MethodSource("providerCursorAndHasMoreAndRegion")
-	void 전체_상품_목록을_조회한다(int page, int size, Long regionId, Long categoryId, boolean expectedHasMore,
+	@MethodSource("providerPageableAndRegion")
+	void 전체_상품_목록을_조회한다(int page, int size, boolean expectedHasMore, Long regionId, Long categoryId,
 		List<ItemResponse> expectedItemsResponse) {
 		// when
-		var response = 지역별_카테고리별_상품_목록_조회_요청(page, size, regionId, categoryId);
+		var response = 지역별_카테고리별_상품_목록_조회_요청(accessToken, page, size, regionId, categoryId);
 
 		//then
 		응답_상태코드_검증(response, HttpStatus.OK);
 		상품_목록_조회_시_생성된_상품을_검증(response, expectedHasMore, expectedItemsResponse);
 	}
 
-	public static Stream<Arguments> providerCursorAndHasMoreAndRegion() {
+	public static Stream<Arguments> providerPageableAndRegion() {
 		return Stream.of(
 			Arguments.of(
 				0,
 				2,
+				true,
 				동네_서울_종로구_청운동.getId(),
 				카테고리_전체보기.getId(),
-				true,
 				List.of(
 					상품_PS5.toItemResponse(),
 					상품_젤다의_전설.toItemResponse()
@@ -58,11 +58,22 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 			Arguments.of(
 				1,
 				2,
+				false,
 				동네_서울_종로구_청운동.getId(),
 				카테고리_전체보기.getId(),
-				false,
 				List.of(
 					상품_빈티지_일본_경대.toItemResponse()
+				)
+			),
+			Arguments.of(
+				0,
+				2,
+				false,
+				동네_서울_종로구_청운동.getId(),
+				카테고리_게임_취미.getId(),
+				List.of(
+					상품_PS5.toItemResponse(),
+					상품_젤다의_전설.toItemResponse()
 				)
 			)
 		);

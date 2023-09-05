@@ -10,6 +10,7 @@ permissions:
 
 env:
   APPLICATION_FILE_PATH: ./src/main/resources/application.yml
+  APPLICATION_RESOURCES_DIRECTORY_PATH: ./src/main/resources
 
 jobs:
   app-docker-image:
@@ -26,6 +27,7 @@ jobs:
 
       - name: Create application.yml
         run: |
+          mkdir ${{ env.APPLICATION_RESOURCES_DIRECTORY_PATH }}
           touch ${{ env.APPLICATION_FILE_PATH }}
           echo "${{ secrets.APPLICATION }}" > ${{ env.APPLICATION_FILE_PATH }}
         shell: bash

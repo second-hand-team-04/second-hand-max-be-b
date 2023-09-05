@@ -28,7 +28,8 @@ public enum RegionFixture {
 	동네_서울_종로구_내수동(18L, "서울특별시 종로구 내수동"),
 	동네_서울_종로구_세종로(19L, "서울특별시 종로구 세종로"),
 	동네_서울_종로구_신문로1가(20L, "서울특별시 종로구 신문로1가"),
-	동네_서울_종로구_신문로2가(21L, "서울특별시 종로구 신문로2가");
+	동네_서울_종로구_신문로2가(21L, "서울특별시 종로구 신문로2가"),
+	동네_서울_강남구_역삼동(432L, "서울특별시 강남구 역삼동");
 
 	private final Long id;
 	private final String title;
@@ -40,10 +41,11 @@ public enum RegionFixture {
 
 	public static String createInsertSQL() {
 		return String.format(
-			"INSERT INTO region(title) VALUES %s",
+			"INSERT INTO region(id, title) VALUES %s",
 			Arrays.stream(values())
 				.map(r -> String.format(
-					"('%s')",
+					"(%s, '%s')",
+					r.getId(),
 					r.getTitle()))
 				.collect(Collectors.joining(", ")));
 	}

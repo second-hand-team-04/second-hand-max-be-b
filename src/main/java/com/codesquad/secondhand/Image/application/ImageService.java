@@ -1,32 +1,49 @@
 package com.codesquad.secondhand.Image.application;
 
-import static com.codesquad.secondhand.Image.domain.Image.ITEM_DEFAULT_IMAGE_ID;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.Image.domain.ImageFileDetail;
+import com.codesquad.secondhand.Image.infrastructure.FileClient;
 import com.codesquad.secondhand.Image.infrastructure.ImageRepository;
-import com.codesquad.secondhand.common.exception.image.ImageNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class ImageService {
 
 	private final ImageRepository imageRepository;
-	private Image itemDefaultImage;
+	private final FileClient fileClient;
 
-	public Image getItemDefaultImage() {
-		if (Objects.nonNull(itemDefaultImage)) {
-			return itemDefaultImage;
+	public Image upload(MultipartFile multipartFiles) {
+		String imageUrl = fileClient.upload(new ImageFileDetail(multipartFiles));
+		return imageRepository.save(new Image(imageUrl));
+	}
+
+	public List<Image> upload(MultipartFile... multipartFiles) {
+		List<Image> images = new ArrayList<>();
+		Arrays.stream(multipartFiles)
+			.forEach(m -> {
+				String imageUrl = fileClient.upload(new ImageFileDetail(m));
+				images.add(new Image(imageUrl));
+			});
+		return imageRepository.saveAll(images);
+	}
+
+	public Image uploadOrElseNull(MultipartFile profilePicture) {
+		if (Objects.nonNull(profilePicture)) {
+			return upload(profilePicture);
 		}
 
-		return imageRepository.findById(ITEM_DEFAULT_IMAGE_ID)
-			.orElseThrow(ImageNotFoundException::new);
+		return null;
 	}
 }

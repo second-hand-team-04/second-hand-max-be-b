@@ -8,9 +8,10 @@ import io.restassured.response.Response;
 
 public class ItemSteps {
 
-	public static ExtractableResponse<Response> 지역별_카테고리별_상품_목록_조회_요청(int page, int size, long regionId,
-		Long categoryId) {
+	public static ExtractableResponse<Response> 지역별_카테고리별_상품_목록_조회_요청(String accessToken, int page, int size,
+		Long regionId, Long categoryId) {
 		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/items?page={page}&size={size}&region={regionId}&category={categoryId}",
@@ -18,5 +19,4 @@ public class ItemSteps {
 			.then().log().all()
 			.extract();
 	}
-
 }
