@@ -2,6 +2,7 @@ package com.codesquad.secondhand.auth.application;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -38,8 +39,7 @@ public class AuthService {
 				signInRequest.getPassword(), ProviderType.LOCAL.getId())
 			.orElseThrow(UserLoginInfoDifferentException::new)
 			.toAccount();
-		String refreshToken = getRefreshToken(account);
-		return new SignInResponse(getAccessToken(account), refreshToken);
+		return new SignInResponse(getAccessToken(account), getRefreshToken(account));
 	}
 
 	private String getRefreshToken(Account account) {
@@ -51,6 +51,23 @@ public class AuthService {
 	private String getAccessToken(Account account) {
 		return jwtTokenProvider.getAccessToken(Map.of("id", account.getId()));
 	}
+
+	/*
+		public SignInResponse oauthSignIn(String providerName, String code) {
+		// 1. code를 가지고 kakao에서 AccessToken 발급받고
+		OauthClient oauthClient = OauthClientFactory.getOauthClient(providerName);
+		String accessToken = oauthClient.getAcessToken(providerName, code);
+
+		// 2. AccessToken으로 회원정보를 가져온다.
+		OauthUserInfomation oauthUserInfomation = oauthClient.getUserInfomation(accessToken);
+
+		// 3. kakao에서 가져온 회원정보로 회원이 있는지 확인 후
+		Long providerId = ProviderType.findIdByName(providerName);
+		User user = authRepository.findByEmailAndProviderId(oauthUserInfomation.getEmail(), providerId)
+			.orElseGet(() -> userService.signUp(new UserCreateRequest(providerId, oauthUserInfomation.getEmail(),
+				oauthUserInfomation.getNickname(), null), null));
+		return new SignInResponse(getAccessToken(user.toAccount()), getRefreshToken(user.toAccount()));
+	}*/
 
 	public void signOut(long userId) {
 		refreshTokenRepository.deleteByUserId(userId);

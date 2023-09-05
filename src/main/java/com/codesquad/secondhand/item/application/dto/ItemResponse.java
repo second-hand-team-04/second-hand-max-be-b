@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.item.domain.Item;
 
 import lombok.Getter;
@@ -20,7 +19,7 @@ public class ItemResponse {
 
 	private String status;
 
-	private String thumbnail;
+	private String thumbnailUrl;
 
 	private LocalDateTime createdAt;
 
@@ -32,13 +31,13 @@ public class ItemResponse {
 
 	private Integer numLikes;
 
-	public ItemResponse(Long id, String title, String region, String status, String thumbnail, LocalDateTime createdAt,
+	public ItemResponse(Long id, String title, String region, String status, String thumbnailUrl, LocalDateTime createdAt,
 		LocalDateTime updatedAt, Integer price, Integer numChat, Integer numLikes) {
 		this.id = id;
 		this.title = title;
 		this.region = region;
 		this.status = status;
-		this.thumbnail = thumbnail;
+		this.thumbnailUrl = thumbnailUrl;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.price = price;
@@ -52,7 +51,7 @@ public class ItemResponse {
 			item.getTitle(),
 			item.getRegion().getTitle(),
 			item.getStatus().getType(),
-			item.getThumbnail(),
+			item.getThumbnailUrl(),
 			item.getCreatedAt(),
 			item.getUpdatedAt(),
 			item.getPrice(),

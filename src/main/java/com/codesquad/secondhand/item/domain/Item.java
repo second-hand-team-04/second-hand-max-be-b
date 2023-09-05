@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.common.exception.image.ImageNotFoundException;
 import com.codesquad.secondhand.region.domain.Region;
@@ -82,7 +81,7 @@ public class Item {
 		return 0;
 	}
 
-	public String getThumbnail() {
+	public String getThumbnailUrl() {
 		if (images.isEmpty()) {
 			return null;
 		}

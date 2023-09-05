@@ -37,13 +37,14 @@ public class UserService {
 	private final ImageService imageService;
 
 	@Transactional
-	public void signUp(UserCreateRequest request, MultipartFile profilePicture) {
+	public User signUp(UserCreateRequest request, MultipartFile profilePicture) {
 		validateDuplication(request, ProviderType.LOCAL.getId());
 		Provider provider = providerRepository.findById(request.getProviderId())
 			.orElseThrow(ProviderNotFoundException::new);
 		Image image = imageService.uploadOrElseNull(profilePicture);
 		User user = userRepository.save(request.toUser(provider, image));
 		user.addMyRegion(regionService.findByIdOrThrow(Region.YEOKSAM_DONG));
+		return user;
 	}
 
 	private void validateDuplication(UserCreateRequest request, Long providerId) {

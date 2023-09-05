@@ -253,7 +253,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 				유저_보노.getPassword(),
 				new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
 					.fileName("profile.jpg")
-					.controlName("profilePicture")
+					.controlName("image")
 					.mimeType(MediaType.IMAGE_JPEG_VALUE)
 					.build()
 			),

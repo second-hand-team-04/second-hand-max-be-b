@@ -105,8 +105,6 @@ CREATE TABLE `item_image`
     `id`         BIGINT    AUTO_INCREMENT,
     `item_id`    BIGINT    NOT NULL,
     `image_id`   BIGINT    NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT now(),
-    `is_deleted` BOOLEAN   NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`image_id`) REFERENCES `image` (`id`),
     FOREIGN KEY (`item_id`) REFERENCES `item` (`id`)
