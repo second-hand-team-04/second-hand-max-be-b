@@ -35,13 +35,7 @@ public class AccountPrincipalArgumentResolver implements HandlerMethodArgumentRe
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		try {
-			String token = AuthorizationHeaderUtil.getToken(webRequest.getNativeRequest(HttpServletRequest.class));
-			return jwtTokenProvider.getAccount(token);
-		} catch (ExpiredJwtException e) {
-			throw new AuthForbiddenException();
-		} catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e2) {
-			throw new AuthUnauthorizedException(ErrorType.AUTH_ACCESS_TOKEN_UNAUTHORIZED);
-		}
+		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+		return request.getAttribute("account");
 	}
 }

@@ -3,6 +3,7 @@ package com.codesquad.secondhand.common.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -31,9 +32,13 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return true;
 		}
 
+		if (request.getRequestURI().equals("/api/auth") && request.getMethod().equals(HttpMethod.POST.name())) {
+			return true;
+		}
+
 		try {
 			String token = AuthorizationHeaderUtil.getToken(request);
-			jwtTokenProvider.getAccount(token);
+			request.setAttribute("account", jwtTokenProvider.getAccount(token));
 			return true;
 		} catch (ExpiredJwtException e) {
 			throw new AuthForbiddenException();
