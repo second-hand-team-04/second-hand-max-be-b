@@ -1,5 +1,10 @@
 package com.codesquad.secondhand.auth.application;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,10 +37,18 @@ public class AuthService {
 				signInRequest.getPassword(), ProviderType.LOCAL.getId())
 			.orElseThrow(UserLoginInfoDifferentException::new)
 			.toAccount();
+		String refreshToken = getRefreshToken(account);
+		return new SignInResponse(getAccessToken(account), refreshToken);
+	}
 
-		String refreshToken = jwtTokenProvider.refreshToken(account);
+	private String getRefreshToken(Account account) {
+		String refreshToken = jwtTokenProvider.getRefreshToken(Map.of("id", account.getId()));
 		refreshTokenRepository.save(new RefreshToken(account.getId(), refreshToken));
-		return new SignInResponse(jwtTokenProvider.accessToken(account), refreshToken);
+		return refreshToken;
+	}
+
+	private String getAccessToken(Account account) {
+		return jwtTokenProvider.getAccessToken(Map.of("id", account.getId()));
 	}
 
 	public void signOut(long userId) {
@@ -49,6 +62,16 @@ public class AuthService {
 		}
 
 		Account account = jwtTokenProvider.getAccount(refreshTokenRequest.getToken());
-		return new AccessTokenResponse(jwtTokenProvider.accessToken(account));
+		return new AccessTokenResponse(getAccessToken(account));
+	}
+
+	@Scheduled(cron = "0 0 0 * * *")
+	public void deleteAllExpiredRefreshTokens() {
+		List<Long> ids = refreshTokenRepository.findAll()
+			.stream()
+			.filter(r -> jwtTokenProvider.isExpired(r.getToken()))
+			.map(RefreshToken::getId)
+			.collect(Collectors.toUnmodifiableList());
+		refreshTokenRepository.deleteAllByIdInBatch(ids);
 	}
 }

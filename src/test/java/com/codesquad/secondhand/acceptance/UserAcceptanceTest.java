@@ -167,7 +167,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 나의_동네_삭제_시_해당_회원이_없으면_요청이_실패된다() {
 		// given
-		String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6OTk5OTksImlhdCI6MTY5MzgxODc2MSwiZXhwIjoxOTUzMDE4NzYxfQ.vOR4rwJ6ynaKLE0KwKy8RvVPEvgS-MTqlBjOfbdUlgg";
+		String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6OTk5OTksImlzcyI6Im1hbmR1LmNvbSIsImlhdCI6MTY5Mzg3NTEzOSwiZXhwIjoxNjkzODc2OTM5fQ.AhRY9-E01HrYMcyJFI6vemA1d9Zx6jKx6cZCVmqAGTE";
 
 		// when
 		var response = 나의_동네_삭제_요청(accessToken, 동네_서울_종로구_내자동.getId());
