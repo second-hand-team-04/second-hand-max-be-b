@@ -2,6 +2,7 @@ package com.codesquad.secondhand.user.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -106,6 +107,14 @@ public class User {
 
 	public Image getImage() {
 		return image;
+	}
+
+	public String getImageUrl() {
+		if(Objects.isNull(this.image)){
+			return null;
+		}
+
+		return image.getImageUrl();
 	}
 
 	public LocalDateTime getCreatedAt() {

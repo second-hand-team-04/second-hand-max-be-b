@@ -35,7 +35,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	void 전체_상품_목록을_조회한다(int page, int size, boolean expectedHasMore, Long regionId, Long categoryId,
 		List<ItemResponse> expectedItemsResponse) {
 		// when
-		var response = 지역별_카테고리별_상품_목록_조회_요청(accessToken, page, size, regionId, categoryId);
+		var response = 지역별_카테고리별_상품_목록_조회_요청(유저_만두_액세스_토큰, page, size, regionId, categoryId);
 
 		//then
 		응답_상태코드_검증(response, HttpStatus.OK);

@@ -66,4 +66,13 @@ public class UserSteps {
 			.when().delete("/api/users/regions/{id}", regionId)
 			.then().log().all().extract();
 	}
+
+	public static ExtractableResponse<Response> 유저_정보_조회_요청(String accessToken) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/users/info")
+			.then().log().all().extract();
+	}
 }
