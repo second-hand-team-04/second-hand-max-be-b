@@ -62,7 +62,7 @@ public class UserService {
 		validateDuplicationNicknameWithDifferentId(request.getId(), request.getNickname());
 		Image image = imageService.uploadOrElseNull(profileImage);
 		User user = findByIdOrThrow(request.getId());
-		user.updateProfile(request.getNickname(), image);
+		user.updateProfile(request.getNickname(), request.getIsImageChanged(), image);
 	}
 
 	private void validateDuplicationNicknameWithDifferentId(Long id, String nickname) {

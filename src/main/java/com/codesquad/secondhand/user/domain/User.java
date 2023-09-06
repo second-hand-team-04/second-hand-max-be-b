@@ -85,10 +85,15 @@ public class User {
 		return new Account(id);
 	}
 
-	public void updateProfile(String nickname, Image image) {
+	public void updateProfile(String nickname, boolean isImageChanged, Image image) {
 		this.nickname = nickname;
 
-		if (Objects.nonNull(image)) {
+		if (isImageChanged && Objects.isNull(image)) {
+			this.image = null;
+			return;
+		}
+
+		if (isImageChanged) {
 			this.image = image;
 		}
 	}

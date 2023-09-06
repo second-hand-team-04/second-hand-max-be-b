@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
@@ -257,9 +256,10 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 * */
 	@ParameterizedTest
 	@MethodSource("providerUserAndImage")
-	void 유저_정보를_조회한다(Long providerId, String email, String nickname, String password, MultiPartSpecification file) {
+	void 유저_정보를_조회한다(Long providerId, String email, String nickname, String password, MultiPartSpecification image,
+		String expectedImageUrl) {
 		// given
-		유저_생성_요청(providerId, email, nickname, password, file);
+		유저_생성_요청(providerId, email, nickname, password, image);
 		String accessToken = 로그인_요청(email, password).jsonPath().getString("data.accessToken");
 
 		// when
@@ -267,29 +267,33 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);
-		유저_정보_조회_검증(response, 2L, nickname, getImageUrl(file));
-	}
-
-	private String getImageUrl(MultiPartSpecification file) {
-		if (Objects.isNull(file)) {
-			return null;
-		}
-
-		return String.format("http://www.image.com/%s", file.getFileName());
+		유저_정보_조회_검증(response, 2L, nickname, expectedImageUrl);
 	}
 
 	/**
+	 * Given 유저를 생성하면
 	 * When 프로필을 수정하면
 	 * Then 요청이 성공한다.
 	 */
 	@ParameterizedTest
 	@MethodSource("providerNicknameAndImage")
-	void 유저_프로필을_수정한다(String nickname, MultiPartSpecification file) {
+	void 유저_프로필을_수정한다(String nickname, boolean isImageChanged, MultiPartSpecification image, String expectedImageUrl) throws
+		FileNotFoundException {
+		// given
+		유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(),
+			new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
+			.fileName("bono.jpg")
+			.controlName("image")
+			.mimeType(MediaType.IMAGE_JPEG_VALUE)
+			.build());
+		String accessToken = 로그인_요청(유저_보노.getEmail(), 유저_보노.getPassword()).jsonPath().getString("data.accessToken");
+
 		// when
-		var response = 유저_프로필_수정_요청(유저_만두_액세스_토큰, nickname, file);
+		var response = 유저_프로필_수정_요청(accessToken, nickname, isImageChanged, image);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);
+		유저_정보_조회_검증(유저_정보_조회_요청(accessToken), 유저_보노.getId(), nickname, expectedImageUrl);
 	}
 
 	/**
@@ -303,7 +307,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(), null);
 
 		// when
-		var response = 유저_프로필_수정_요청(유저_만두_액세스_토큰, 유저_보노.getNickname(), null);
+		var response = 유저_프로필_수정_요청(유저_만두_액세스_토큰, 유저_보노.getNickname(), false, null);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
@@ -312,28 +316,46 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	private static Stream<Arguments> providerNicknameAndImage() throws FileNotFoundException {
 		return Stream.of(
 			Arguments.of(
-				"변경된만두",
+				"보노보노",
+				true,
 				new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
 					.fileName("profile.jpg")
 					.controlName("image")
 					.mimeType(MediaType.IMAGE_JPEG_VALUE)
-					.build()
+					.build(),
+				"http://www.image.com/profile.jpg"
 			),
 			Arguments.of(
-				유저_만두.getNickname(),
+				유저_보노.getNickname(),
+				true,
 				new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
 					.fileName("profile.jpg")
 					.controlName("image")
 					.mimeType(MediaType.IMAGE_JPEG_VALUE)
-					.build()
+					.build(),
+				"http://www.image.com/profile.jpg"
 			),
 			Arguments.of(
-				"변경된만두",
+				유저_보노.getNickname(),
+				false,
+				new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
+					.fileName("profile.jpg")
+					.controlName("image")
+					.mimeType(MediaType.IMAGE_JPEG_VALUE)
+					.build(),
+				"http://www.image.com/bono.jpg"
+			),
+			Arguments.of(
+				"보노보노",
+				true,
+				null,
 				null
 			),
 			Arguments.of(
-				유저_만두.getNickname(),
-				null
+				유저_보노.getNickname(),
+				false,
+				null,
+				"http://www.image.com/bono.jpg"
 			)
 		);
 	}
@@ -349,13 +371,15 @@ public class UserAcceptanceTest extends AcceptanceTest {
 					.fileName("profile.jpg")
 					.controlName("image")
 					.mimeType(MediaType.IMAGE_JPEG_VALUE)
-					.build()
+					.build(),
+				"http://www.image.com/profile.jpg"
 			),
 			Arguments.of(
 				공급자_내부.getId(),
 				유저_지구.getEmail(),
 				유저_지구.getNickname(),
 				유저_지구.getPassword(),
+				null,
 				null
 			)
 		);

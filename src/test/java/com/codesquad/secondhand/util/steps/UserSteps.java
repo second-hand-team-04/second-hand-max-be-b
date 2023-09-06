@@ -40,12 +40,13 @@ public class UserSteps {
 			.then().log().all().extract();
 	}
 
-	public static ExtractableResponse<Response> 유저_프로필_수정_요청(String accessToken, String nickname, MultiPartSpecification image) {
+	public static ExtractableResponse<Response> 유저_프로필_수정_요청(String accessToken, String nickname, boolean isImageChanged,
+		MultiPartSpecification image) {
 		RequestSpecification request = RestAssured.given().log().all()
 			.auth().oauth2(accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-			.multiPart(new MultiPartSpecBuilder(new UserUpdateRequest(nickname),
+			.multiPart(new MultiPartSpecBuilder(new UserUpdateRequest(nickname, isImageChanged),
 				ObjectMapperType.JACKSON_2)
 				.controlName("request")
 				.mimeType(MediaType.APPLICATION_JSON_VALUE)
