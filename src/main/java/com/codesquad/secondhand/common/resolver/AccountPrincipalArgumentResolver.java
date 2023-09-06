@@ -9,16 +9,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.codesquad.secondhand.auth.domain.JwtTokenProvider;
-import com.codesquad.secondhand.common.exception.ErrorType;
-import com.codesquad.secondhand.common.exception.auth.AuthForbiddenException;
-import com.codesquad.secondhand.common.exception.auth.AuthUnauthorizedException;
-import com.codesquad.secondhand.common.util.AuthorizationHeaderUtil;
+import com.codesquad.secondhand.auth.infrastrucure.oauth.JwtTokenProvider;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 
 @Component

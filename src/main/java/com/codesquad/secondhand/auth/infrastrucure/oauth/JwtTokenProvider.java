@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.auth.domain;
+package com.codesquad.secondhand.auth.infrastrucure.oauth;
 
 import java.security.Key;
 import java.util.Date;
@@ -7,12 +7,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.codesquad.secondhand.auth.domain.Account;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
+
 	private final long accessKeyExpire;
 	private final long refreshKeyExpire;
 	private final String issuer;
@@ -28,15 +31,15 @@ public class JwtTokenProvider {
 		key = Keys.hmacShaKeyFor(secretKey.getBytes());
 	}
 
-	public String getAccessToken(Map<String, Object> claims) {
-		return createToken(claims, accessKeyExpire);
+	public String generateAccessToken(Map<String, Object> claims) {
+		return generateToken(claims, accessKeyExpire);
 	}
 
-	public String getRefreshToken(Map<String, Object> claims) {
-		return createToken(claims, refreshKeyExpire);
+	public String generateRefreshToken(Map<String, Object> claims) {
+		return generateToken(claims, refreshKeyExpire);
 	}
 
-	private String createToken(Map<String, Object> claims, Long expireDate) {
+	private String generateToken(Map<String, Object> claims, Long expireDate) {
 		Date now = new Date();
 		Date expire = new Date(now.getTime() + expireDate);
 		return Jwts.builder()
@@ -48,7 +51,7 @@ public class JwtTokenProvider {
 			.compact();
 	}
 
-	public Account getAccount(String token) {
+	public Account generateAccount(String token) {
 		return new Account(getClaims(token).get("id", Long.class));
 	}
 

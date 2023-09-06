@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.codesquad.secondhand.auth.domain.JwtTokenProvider;
+import com.codesquad.secondhand.auth.infrastrucure.oauth.JwtTokenProvider;
 import com.codesquad.secondhand.common.exception.ErrorType;
 import com.codesquad.secondhand.common.exception.auth.AuthForbiddenException;
 import com.codesquad.secondhand.common.exception.auth.AuthUnauthorizedException;
@@ -38,7 +38,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 		try {
 			String token = AuthorizationHeaderUtil.getToken(request);
-			request.setAttribute("account", jwtTokenProvider.getAccount(token));
+			request.setAttribute("account", jwtTokenProvider.generateAccount(token));
 			return true;
 		} catch (ExpiredJwtException e) {
 			throw new AuthForbiddenException();

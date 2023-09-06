@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import com.codesquad.secondhand.auth.domain.JwtTokenProvider;
+import com.codesquad.secondhand.auth.infrastrucure.oauth.JwtTokenProvider;
 import com.codesquad.secondhand.util.AcceptanceTest;
 
 import io.restassured.response.ExtractableResponse;
@@ -144,14 +144,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 		String refreshToken = response.jsonPath().getString("data.refreshToken");
 
 		Assertions.assertAll(
-			() -> Assertions.assertDoesNotThrow(() -> jwtTokenProvider.getAccount(accessToken)),
-			() -> Assertions.assertDoesNotThrow(() -> jwtTokenProvider.getAccount(refreshToken))
+			() -> Assertions.assertDoesNotThrow(() -> jwtTokenProvider.generateAccount(accessToken)),
+			() -> Assertions.assertDoesNotThrow(() -> jwtTokenProvider.generateAccount(refreshToken))
 		);
 	}
 
 	private void 액세스_토큰이_정상적으로_발급되었는지_검증(ExtractableResponse<Response> response) {
 		String accessToken = response.jsonPath().getString("data.accessToken");
 
-		Assertions.assertDoesNotThrow(() -> jwtTokenProvider.getAccount(accessToken));
+		Assertions.assertDoesNotThrow(() -> jwtTokenProvider.generateAccount(accessToken));
 	}
 }

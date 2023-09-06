@@ -28,10 +28,10 @@ CREATE TABLE `user`
 (
     `id`            BIGINT             NOT NULL AUTO_INCREMENT,
     `provider_id`   BIGINT             NOT NULL,
-    `image_id`      BIGINT             NULL,
+    `image_id`      BIGINT,
     `email`         VARCHAR(40)        NOT NULL,
     `nickname`      VARCHAR(20) UNIQUE NOT NULL,
-    `password`      VARCHAR(150)       NOT NULL,
+    `password`      VARCHAR(150),
     `created_at`    TIMESTAMP          NOT NULL DEFAULT now(),
     PRIMARY KEY (`id`),
     FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`),
