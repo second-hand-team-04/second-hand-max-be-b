@@ -7,6 +7,6 @@ public class FakeS3Client implements FileClient {
 
 	@Override
 	public String upload(ImageFileDetail imageFileDetail) {
-		return "http://www.image.com/image.jpg";
+		return String.format("http://www.image.com/%s", imageFileDetail.getOriginalFileName());
 	}
 }

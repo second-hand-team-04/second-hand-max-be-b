@@ -11,7 +11,8 @@ public enum ResponseMessage {
 	ITEM_FIND_BY_REGION_AND_CATEGORY("상품 목록 조회를 성공하였습니다."),
 	SIGN_UP("회원가입을 성공하였습니다."),
 	SIGN_IN("로그인을 성공하였습니다."),
-	SIGN_OUT("로그아웃을 성공하였습니다.");
+	SIGN_OUT("로그아웃을 성공하였습니다."),
+	USER_INFO("사용자 정보 조회를 성공하였습니다.");
 
 	private final String message;
 

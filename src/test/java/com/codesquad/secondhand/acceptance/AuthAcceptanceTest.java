@@ -65,7 +65,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 로그아웃을_한다() {
 		// when
-		var response = 로그아웃_요청(accessToken);
+		var response = 로그아웃_요청(유저_만두_액세스_토큰);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);

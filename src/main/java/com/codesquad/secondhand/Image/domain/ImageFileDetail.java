@@ -52,4 +52,8 @@ public class ImageFileDetail {
 	public String getUploadFileName(String prefix) {
 		return String.format("%s/%s", prefix, UUID.randomUUID());
 	}
+
+	public String getOriginalFileName() {
+		return multipartFile.getOriginalFilename();
+	}
 }

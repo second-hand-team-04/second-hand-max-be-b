@@ -21,6 +21,7 @@ import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
 import com.codesquad.secondhand.user.application.UserService;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
+import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
 import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,15 @@ public class UserController {
 		userService.removeMyRegion(account.getId(), id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT)
 			.body(CommonResponse.createNoContent(ResponseMessage.MY_REGION_REMOVE));
+	}
+
+	@GetMapping("/info")
+	public ResponseEntity<CommonResponse> showUserInfo(@AccountPrincipal Account account) {
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				UserInfoResponse.from(userService.findByIdOrThrow(account.getId())),
+				ResponseMessage.USER_INFO
+			));
 	}
 }
 
