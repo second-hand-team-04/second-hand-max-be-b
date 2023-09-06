@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.codesquad.secondhand.auth.domain.Account;
-import com.codesquad.secondhand.auth.domain.JwtTokenProvider;
+import com.codesquad.secondhand.auth.infrastrucure.oauth.JwtTokenProvider;
 
 public class JwtTokenProviderTest {
 
@@ -31,20 +31,20 @@ public class JwtTokenProviderTest {
 	@Test
 	void 액세스_토큰을_발급한다() {
 		// when
-		String actual = jwtTokenProvider.getAccessToken(claims);
+		String actual = jwtTokenProvider.generateAccessToken(claims);
 
 		// then
 		Assertions.assertAll(
 			() -> assertThat(actual).isNotBlank(),
 			() -> assertThat(jwtTokenProvider.isExpired(actual)).isFalse(),
-			() -> assertThat(jwtTokenProvider.getAccount(actual).getId()).isEqualTo(1L)
+			() -> assertThat(jwtTokenProvider.generateAccount(actual).getId()).isEqualTo(1L)
 		);
 	}
 
 	@Test
 	void 리프레쉬_토큰을_발급한다() {
 		// when
-		String actual = jwtTokenProvider.getRefreshToken(claims);
+		String actual = jwtTokenProvider.generateRefreshToken(claims);
 
 		// then
 		Assertions.assertAll(
@@ -56,10 +56,10 @@ public class JwtTokenProviderTest {
 	@Test
 	void 토큰으로_계정을_반환한다() {
 		// given
-		String accessToken = jwtTokenProvider.getAccessToken(claims);
+		String accessToken = jwtTokenProvider.generateAccessToken(claims);
 
 		// when
-		Account actual = jwtTokenProvider.getAccount(accessToken);
+		Account actual = jwtTokenProvider.generateAccount(accessToken);
 
 		// then
 		assertThat(actual.getId()).isEqualTo(actual.getId());
@@ -70,13 +70,13 @@ public class JwtTokenProviderTest {
 		// given
 		String secretKey = "test1secretKeytest1secretKeytest1secretKey";
 		JwtTokenProvider jwtTokenProvider2 = new JwtTokenProvider(secretKey, 0L, 0L, "mandu.com");
-		String accessToken = jwtTokenProvider.getAccessToken(claims);
-		String accessToken2 = jwtTokenProvider2.getAccessToken(claims);
+		String accessToken = jwtTokenProvider.generateAccessToken(claims);
+		String accessToken2 = jwtTokenProvider2.generateAccessToken(claims);
 
 		// then
 		Assertions.assertAll(
-			() -> Assertions.assertThrows(RuntimeException.class, () -> jwtTokenProvider2.getAccount(accessToken)),
-			() -> Assertions.assertThrows(RuntimeException.class, () -> jwtTokenProvider2.getAccount(accessToken2))
+			() -> Assertions.assertThrows(RuntimeException.class, () -> jwtTokenProvider2.generateAccount(accessToken)),
+			() -> Assertions.assertThrows(RuntimeException.class, () -> jwtTokenProvider2.generateAccount(accessToken2))
 		);
 
 	}
@@ -85,7 +85,7 @@ public class JwtTokenProviderTest {
 	@MethodSource("providerJwtTokenProviderAndExpected")
 	void 만료된_토큰을_확인한다(JwtTokenProvider jwtTokenProvider, boolean expected) {
 		// given
-		String accessToken = jwtTokenProvider.getAccessToken(claims);
+		String accessToken = jwtTokenProvider.generateAccessToken(claims);
 
 		// when
 		boolean actual = jwtTokenProvider.isExpired(accessToken);
