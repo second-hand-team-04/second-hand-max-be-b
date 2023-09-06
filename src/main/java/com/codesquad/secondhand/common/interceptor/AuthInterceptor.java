@@ -1,5 +1,7 @@
 package com.codesquad.secondhand.common.interceptor;
 
+import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,7 +34,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return true;
 		}
 
-		if (request.getRequestURI().equals("/api/auth") && request.getMethod().equals(HttpMethod.POST.name())) {
+		if (WhiteList.contains(request)) {
 			return true;
 		}
 
@@ -44,6 +46,24 @@ public class AuthInterceptor implements HandlerInterceptor {
 			throw new AuthForbiddenException();
 		} catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e2) {
 			throw new AuthUnauthorizedException(ErrorType.AUTH_ACCESS_TOKEN_UNAUTHORIZED);
+		}
+	}
+
+	enum WhiteList {
+		SIGN_UP("/api/users", HttpMethod.POST),
+		SIGN_IN("/api/auth", HttpMethod.POST);
+
+		private final String url;
+		private final HttpMethod httpMethod;
+
+		WhiteList(String url, HttpMethod httpMethod) {
+			this.url = url;
+			this.httpMethod = httpMethod;
+		}
+		public static boolean contains(HttpServletRequest request) {
+			return Arrays.stream(values())
+				.anyMatch(w -> w.url.equals(request.getRequestURI()) &&
+					w.httpMethod.name().equals(request.getMethod()));
 		}
 	}
 }

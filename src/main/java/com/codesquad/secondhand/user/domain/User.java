@@ -85,6 +85,14 @@ public class User {
 		return new Account(id);
 	}
 
+	public void updateProfile(String nickname, Image image) {
+		this.nickname = nickname;
+
+		if (Objects.nonNull(image)) {
+			this.image = image;
+		}
+	}
+
 	public Long getId() {
 		return id;
 	}

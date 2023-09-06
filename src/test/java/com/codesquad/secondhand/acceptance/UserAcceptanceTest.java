@@ -8,8 +8,13 @@ import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_지구;
-import static com.codesquad.secondhand.util.steps.AuthSteps.*;
-import static com.codesquad.secondhand.util.steps.UserSteps.*;
+import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_목록_조회_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_정보_조회_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_프로필_수정_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.FileInputStream;
@@ -181,7 +186,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 * Then 요청이 성공한다.
 	 */
 	@ParameterizedTest
-	@MethodSource("providerUserAndMultiPartFile")
+	@MethodSource("providerUserAndImage")
 	void 유저를_생성한다(Long providerId, String email, String nickname, String password, MultiPartSpecification file) {
 		// when
 		var response = 유저_생성_요청(providerId, email, nickname, password, file);
@@ -251,7 +256,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 * Then  유저 정보를 조회할 수 있다.
 	 * */
 	@ParameterizedTest
-	@MethodSource("providerUserAndMultiPartFile")
+	@MethodSource("providerUserAndImage")
 	void 유저_정보를_조회한다(Long providerId, String email, String nickname, String password, MultiPartSpecification file) {
 		// given
 		유저_생성_요청(providerId, email, nickname, password, file);
@@ -273,7 +278,67 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		return String.format("http://www.image.com/%s", file.getFileName());
 	}
 
-	private static Stream<Arguments> providerUserAndMultiPartFile() throws FileNotFoundException {
+	/**
+	 * When 프로필을 수정하면
+	 * Then 요청이 성공한다.
+	 */
+	@ParameterizedTest
+	@MethodSource("providerNicknameAndImage")
+	void 유저_프로필을_수정한다(String nickname, MultiPartSpecification file) {
+		// when
+		var response = 유저_프로필_수정_요청(유저_만두_액세스_토큰, nickname, file);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+	}
+
+	/**
+	 * Given 유저를 생성하고
+	 * When 프로필 수정 시 닉네임이 중복인 경우
+	 * Then 요청이 실패된다.
+	 */
+	@Test
+	void 유저_프로필_수정_시_닉네임이_중복인_경우_요청이_실패된다() {
+		// given
+		유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(), null);
+
+		// when
+		var response = 유저_프로필_수정_요청(유저_만두_액세스_토큰, 유저_보노.getNickname(), null);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	private static Stream<Arguments> providerNicknameAndImage() throws FileNotFoundException {
+		return Stream.of(
+			Arguments.of(
+				"변경된만두",
+				new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
+					.fileName("profile.jpg")
+					.controlName("image")
+					.mimeType(MediaType.IMAGE_JPEG_VALUE)
+					.build()
+			),
+			Arguments.of(
+				유저_만두.getNickname(),
+				new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
+					.fileName("profile.jpg")
+					.controlName("image")
+					.mimeType(MediaType.IMAGE_JPEG_VALUE)
+					.build()
+			),
+			Arguments.of(
+				"변경된만두",
+				null
+			),
+			Arguments.of(
+				유저_만두.getNickname(),
+				null
+			)
+		);
+	}
+
+	private static Stream<Arguments> providerUserAndImage() throws FileNotFoundException {
 		return Stream.of(
 			Arguments.of(
 				공급자_내부.getId(),

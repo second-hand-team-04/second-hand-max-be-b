@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 public enum StatusFixture {
 
 	판매중(1L, "판매중"),
-	예약중(2L, "예약중"),
-	거래완료(3L, "거래완료");
+	판매완료(2L, "판매완료"),
+	예약중(3L, "예약중");
 
 	private final Long id;
 	private final String type;
