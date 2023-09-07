@@ -9,11 +9,11 @@ import com.codesquad.secondhand.Image.domain.Image;
 
 public enum ImageFixture {
 
-	이미지_빈티지_일본_경대(1L, "http://image.com/vintage_japanese_dressing_table.jpg"),
-	이미지_빈티지_일본_경대2(2L, "http://image.com/vintage_japanese_dressing_table2.jpg"),
-	이미지_도자기_화병_5종(3L, "http://image.com/five_vases.jpg"),
-	이미지_잎사귀_포스터(4L, "http://image.com/leaf_poster.jpg"),
-	이미지_빈티지_밀크_그래스_램프(5L, "http://image.com/vintage_milk_lamp.jpg");
+	이미지_빈티지_일본_경대(1L, "http://www.image.com/vintage_japanese_dressing_table.jpg"),
+	이미지_빈티지_일본_경대2(2L, "http://www.image.com/vintage_japanese_dressing_table2.jpg"),
+	이미지_도자기_화병_5종(3L, "http://www.image.com/five_vases.jpg"),
+	이미지_잎사귀_포스터(4L, "http://www.image.com/leaf_poster.jpg"),
+	이미지_빈티지_밀크_그래스_램프(5L, "http://www.image.com/vintage_milk_lamp.jpg");
 
 	private final Long id;
 	private final String imageUrl;

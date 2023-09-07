@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public enum ItemImageFixture {
 
 	상품_일본_경대_이미지1(1L, 상품_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대.getId()),
-	상품_일본_경대_이미지2(1L, 상품_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId());
+	상품_일본_경대_이미지2(2L, 상품_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId());
 
 	private final Long id;
 	private final Long itemId;
