@@ -5,8 +5,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.codesquad.secondhand.Image.application.ImageService;
-import com.codesquad.secondhand.Image.infrastructure.ImageRepository;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;
 import com.codesquad.secondhand.item.domain.Item;
