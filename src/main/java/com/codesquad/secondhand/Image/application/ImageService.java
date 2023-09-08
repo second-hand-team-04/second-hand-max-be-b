@@ -13,6 +13,7 @@ import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.Image.domain.ImageFileDetail;
 import com.codesquad.secondhand.Image.infrastructure.FileClient;
 import com.codesquad.secondhand.Image.infrastructure.ImageRepository;
+import com.codesquad.secondhand.common.exception.image.ImageNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,5 +46,22 @@ public class ImageService {
 		}
 
 		return null;
+	}
+
+	public List<Image> findAllByIdOrThrow(List<Long> imageIds) {
+		List<Image> images = imageRepository.findAllById(imageIds);
+
+		if(images.isEmpty()){
+			throw new ImageNotFoundException();
+		}
+
+		return images;
+	}
+
+	public Image findByIdOrThrow(Long id) {
+		if (Objects.isNull(id)) {
+			throw new ImageNotFoundException();
+		}
+		return imageRepository.findById(id).orElseThrow(ImageNotFoundException::new);
 	}
 }

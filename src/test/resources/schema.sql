@@ -74,7 +74,7 @@ CREATE TABLE `item`
 (
     `id`          BIGINT AUTO_INCREMENT,
     `user_id`     BIGINT      NOT NULL,
-    `category_id` BIGINT,
+    `category_id` BIGINT      NOT NULL,
     `region_id`   BIGINT      NOT NULL,
     `status_id`   BIGINT      NOT NULL,
     `title`       VARCHAR(60) NOT NULL,

@@ -30,4 +30,13 @@ public class ItemImage {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_id")
 	private Image image;
+
+	public ItemImage(Item item, Image image) {
+		this.item = item;
+		this.image = image;
+	}
+
+	public static ItemImage of(Item item, Image image) {
+		return new ItemImage(item, image);
+	}
 }
