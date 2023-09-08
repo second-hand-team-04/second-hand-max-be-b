@@ -25,7 +25,7 @@ public class CategoryAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 카테고리_목록을_조회한다() {
 		// when
-		var response = 카테고리_목록_조회_요청();
+		var response = 카테고리_목록_조회_요청(유저_만두_액세스_토큰);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);
@@ -38,7 +38,6 @@ public class CategoryAcceptanceTest extends AcceptanceTest {
 
 		Assertions.assertAll(
 			() -> assertThat(titles).containsExactly(CategoryFixture.getTitles().toArray(String[]::new)),
-			() -> assertThat(imageUrls).containsExactly(CategoryFixture.getImageUrls().toArray(String[]::new))
-		);
+			() -> assertThat(imageUrls).containsExactly(CategoryFixture.getImageUrls().toArray(String[]::new)));
 	}
 }

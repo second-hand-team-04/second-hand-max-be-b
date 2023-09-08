@@ -12,32 +12,27 @@ import java.util.stream.Collectors;
 
 public enum ItemImageFixture {
 
-	상품_일본_경대_이미지1(1L, 상품_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대.getId(), LocalDateTime.now(), false),
-	상품_일본_경대_이미지2(1L, 상품_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId(), LocalDateTime.now(), false);
+	상품_일본_경대_이미지1(1L, 상품_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대.getId()),
+	상품_일본_경대_이미지2(2L, 상품_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId());
 
 	private final Long id;
 	private final Long itemId;
 	private final Long ImageId;
-	private final LocalDateTime createdAt;
-	private final boolean isDeleted;
 
-	ItemImageFixture(Long id, Long itemId, Long imageId, LocalDateTime createdAt, boolean isDeleted) {
+	ItemImageFixture(Long id, Long itemId, Long imageId) {
 		this.id = id;
 		this.itemId = itemId;
 		ImageId = imageId;
-		this.createdAt = createdAt;
-		this.isDeleted = isDeleted;
 	}
 
 	public static String createInsertSQL() {
 		return String.format(
-			"INSERT INTO item_image(item_id, image_id, created_at) VALUES %s",
+			"INSERT INTO item_image(item_id, image_id) VALUES %s",
 			Arrays.stream(values())
 				.map(itemImage -> String.format(
-					"(%s, %s, '%s')",
+					"(%s, %s)",
 					itemImage.getItemId(),
-					itemImage.getImageId(),
-					itemImage.getCreatedAt()))
+					itemImage.getImageId()))
 				.collect(Collectors.joining(", ")));
 	}
 
@@ -57,13 +52,5 @@ public enum ItemImageFixture {
 
 	public Long getImageId() {
 		return ImageId;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public boolean isDeleted() {
-		return isDeleted;
 	}
 }

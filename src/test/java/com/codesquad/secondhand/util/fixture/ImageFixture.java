@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.codesquad.secondhand.Image.domain.Image;
+
 public enum ImageFixture {
 
-	이미지_기본_사용자_프로필(1L, "hhttps://i.ibb.co/wzwLBcq/user-default-profile-image.png"),
-	이미지_기본_상품_썸네일(2L, "https://i.ibb.co/CsRg4q7/item-default-thumbnail-image.png"),
-	이미지_빈티지_일본_경대(3L, "http://image.com/vintage_japanese_dressing_table.jpg"),
-	이미지_빈티지_일본_경대2(4L, "http://image.com/vintage_japanese_dressing_table2.jpg"),
-	이미지_도자기_화병_5종(5L, "http://image.com/five_vases.jpg"),
-	이미지_잎사귀_포스터(6L, "http://image.com/leaf_poster.jpg"),
-	이미지_빈티지_밀크_그래스_램프(7L, "http://image.com/vintage_milk_lamp.jpg");
+	이미지_빈티지_일본_경대(1L, "http://www.image.com/vintage_japanese_dressing_table.jpg"),
+	이미지_빈티지_일본_경대2(2L, "http://www.image.com/vintage_japanese_dressing_table2.jpg"),
+	이미지_도자기_화병_5종(3L, "http://www.image.com/five_vases.jpg"),
+	이미지_잎사귀_포스터(4L, "http://www.image.com/leaf_poster.jpg"),
+	이미지_빈티지_밀크_그래스_램프(5L, "http://www.image.com/vintage_milk_lamp.jpg");
 
 	private final Long id;
 	private final String imageUrl;
@@ -46,7 +46,7 @@ public enum ImageFixture {
 		List<ItemImageFixture> ItemImageFixtures = ItemImageFixture.findAllByItemId(itemId);
 
 		if (ItemImageFixtures.isEmpty()) {
-			return 이미지_기본_상품_썸네일.imageUrl;
+			return null;
 		}
 
 		Long imageId = ItemImageFixtures.stream()
@@ -54,6 +54,10 @@ public enum ImageFixture {
 			.orElseThrow()
 			.getImageId();
 		return findById(imageId).getImageUrl();
+	}
+
+	public Image toImage() {
+		return new Image(id, imageUrl);
 	}
 
 	public Long getId() {

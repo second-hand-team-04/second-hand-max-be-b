@@ -1,5 +1,9 @@
 package com.codesquad.secondhand.util;
 
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
+import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
+import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,9 +30,14 @@ public abstract class AcceptanceTest extends MySqlContainer {
 	@Autowired
 	private DatabaseLoader databaseLoader;
 
+	protected String 유저_만두_액세스_토큰;
+
 	@BeforeEach
 	void setUp() {
 		RestAssured.port = port;
+		databaseLoader.initData();
+		유저_생성_요청(공급자_내부.getId(), 유저_만두.getEmail(), 유저_만두.getNickname(), 유저_만두.getPassword(), null);
+		유저_만두_액세스_토큰 = 로그인_요청(유저_만두.getEmail(), 유저_만두.getPassword()).jsonPath().getString("data.accessToken");
 		databaseLoader.loadData();
 	}
 

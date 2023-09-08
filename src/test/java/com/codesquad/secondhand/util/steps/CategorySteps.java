@@ -8,8 +8,9 @@ import io.restassured.response.Response;
 
 public class CategorySteps {
 
-	public static ExtractableResponse<Response> 카테고리_목록_조회_요청() {
+	public static ExtractableResponse<Response> 카테고리_목록_조회_요청(String accessToken) {
 		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.when().get("/api/categories")

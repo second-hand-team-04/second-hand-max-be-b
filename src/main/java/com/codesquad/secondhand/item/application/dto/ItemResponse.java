@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.item.domain.Item;
 
 import lombok.Getter;
@@ -20,7 +19,7 @@ public class ItemResponse {
 
 	private String status;
 
-	private String thumbnail;
+	private String thumbnailUrl;
 
 	private LocalDateTime createdAt;
 
@@ -32,13 +31,13 @@ public class ItemResponse {
 
 	private Integer numLikes;
 
-	public ItemResponse(Long id, String title, String region, String status, String thumbnail, LocalDateTime createdAt,
+	public ItemResponse(Long id, String title, String region, String status, String thumbnailUrl, LocalDateTime createdAt,
 		LocalDateTime updatedAt, Integer price, Integer numChat, Integer numLikes) {
 		this.id = id;
 		this.title = title;
 		this.region = region;
 		this.status = status;
-		this.thumbnail = thumbnail;
+		this.thumbnailUrl = thumbnailUrl;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.price = price;
@@ -46,13 +45,13 @@ public class ItemResponse {
 		this.numLikes = numLikes;
 	}
 
-	public static ItemResponse of(Item item, Image defaultImage) {
+	public static ItemResponse of(Item item) {
 		return new ItemResponse(
 			item.getId(),
 			item.getTitle(),
 			item.getRegion().getTitle(),
 			item.getStatus().getType(),
-			item.getThumbnail(defaultImage).getImageUrl(),
+			item.getThumbnailUrl(),
 			item.getCreatedAt(),
 			item.getUpdatedAt(),
 			item.getPrice(),
@@ -61,9 +60,9 @@ public class ItemResponse {
 		);
 	}
 
-	public static List<ItemResponse> of(List<Item> items, Image defaultImage) {
+	public static List<ItemResponse> of(List<Item> items) {
 		return items.stream()
-			.map(item -> ItemResponse.of(item, defaultImage))
+			.map(ItemResponse::of)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

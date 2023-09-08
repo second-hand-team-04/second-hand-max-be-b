@@ -13,8 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.common.exception.image.ImageNotFoundException;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
 import com.codesquad.secondhand.user.domain.Wishlist;
@@ -56,8 +59,10 @@ public class Item {
 
 	private int views;
 
+	@CreationTimestamp
 	private LocalDateTime createdAt;
 
+	@UpdateTimestamp
 	private LocalDateTime updatedAt;
 
 	private boolean isDeleted;
@@ -76,10 +81,15 @@ public class Item {
 		return 0;
 	}
 
-	public Image getThumbnail(Image defaultImage) {
+	public String getThumbnailUrl() {
+		if (images.isEmpty()) {
+			return null;
+		}
+
 		return images.stream()
 			.findFirst()
 			.map(ItemImage::getImage)
-			.orElse(defaultImage);
+			.orElseThrow(ImageNotFoundException::new)
+			.getImageUrl();
 	}
 }

@@ -4,9 +4,11 @@ DROP TABLE IF EXISTS `item`;
 DROP TABLE IF EXISTS `status`;
 DROP TABLE IF EXISTS `user_region`;
 DROP TABLE IF EXISTS `category`;
+DROP TABLE IF EXISTS `refresh_token`;
 DROP TABLE IF EXISTS `region`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `image`;
+DROP TABLE IF EXISTS `provider`;
 
 CREATE TABLE `image`
 (
@@ -15,15 +17,25 @@ CREATE TABLE `image`
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `provider`
+(
+    `id`        BIGINT AUTO_INCREMENT,
+    `type`      VARCHAR(30) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `user`
 (
-    `id`         BIGINT             NOT NULL AUTO_INCREMENT,
-    `email`      VARCHAR(40)        NOT NULL,
-    `password`   VARCHAR(150)       NOT NULL,
-    `nickname`   VARCHAR(20) UNIQUE NOT NULL,
-    `profile`    VARCHAR(300)       NOT NULL DEFAULT '기본 이미지 url',
-    `created_at` TIMESTAMP          NOT NULL DEFAULT now(),
-    PRIMARY KEY (`id`)
+    `id`            BIGINT             NOT NULL AUTO_INCREMENT,
+    `provider_id`   BIGINT             NOT NULL,
+    `image_id`      BIGINT,
+    `email`         VARCHAR(40)        NOT NULL,
+    `nickname`      VARCHAR(20) UNIQUE NOT NULL,
+    `password`      VARCHAR(150),
+    `created_at`    TIMESTAMP          NOT NULL DEFAULT now(),
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`),
+    FOREIGN KEY (`image_id`)    REFERENCES `image` (`id`)
 );
 
 CREATE TABLE `category`
@@ -90,12 +102,19 @@ CREATE TABLE `wishlist`
 
 CREATE TABLE `item_image`
 (
-    `id`         BIGINT AUTO_INCREMENT,
+    `id`         BIGINT    AUTO_INCREMENT,
     `item_id`    BIGINT    NOT NULL,
     `image_id`   BIGINT    NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT now(),
-    `is_deleted` BOOLEAN   NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`image_id`) REFERENCES `image` (`id`),
     FOREIGN KEY (`item_id`) REFERENCES `item` (`id`)
+);
+
+CREATE TABLE `refresh_token`
+(
+    `id`      BIGINT       AUTO_INCREMENT,
+    `user_id` BIGINT       NOT NULL,
+    `token`   VARCHAR(300) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
