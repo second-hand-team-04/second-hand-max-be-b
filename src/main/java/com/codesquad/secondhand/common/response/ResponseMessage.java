@@ -13,7 +13,7 @@ public enum ResponseMessage {
 	SIGN_IN("로그인을 성공하였습니다."),
 	SIGN_OUT("로그아웃을 성공하였습니다."),
 	USER_INFO("사용자 정보 조회를 성공하였습니다."),
-	UPDATE_PROFILE("사용자 정보 수정을 성공하였습니다");
+	UPDATE_PROFILE("사용자 정보 수정을 성공하였습니다"),
 	ITEM_CREATE("상품 등록을 성공하였습니다.");
 
 	private final String message;
