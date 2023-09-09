@@ -1,7 +1,6 @@
 package com.codesquad.secondhand.Image.application;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,16 +29,6 @@ public class ImageService {
 		return imageRepository.save(new Image(imageUrl));
 	}
 
-	public List<Image> upload(MultipartFile... multipartFiles) {
-		List<Image> images = new ArrayList<>();
-		Arrays.stream(multipartFiles)
-			.forEach(m -> {
-				String imageUrl = fileClient.upload(new ImageFileDetail(m));
-				images.add(new Image(imageUrl));
-			});
-		return imageRepository.saveAll(images);
-	}
-
 	public Image uploadOrElseNull(MultipartFile profilePicture) {
 		if (Objects.nonNull(profilePicture)) {
 			return upload(profilePicture);
@@ -49,6 +38,10 @@ public class ImageService {
 	}
 
 	public List<Image> findAllByIdOrThrow(List<Long> imageIds) {
+		if (imageIds.isEmpty()) {
+			return Collections.emptyList();
+		}
+
 		List<Image> images = imageRepository.findAllById(imageIds);
 
 		if(images.isEmpty()){

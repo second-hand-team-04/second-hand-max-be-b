@@ -58,4 +58,8 @@ public class ItemCreateRequest {
 	public Item toItem(List<Image> images, Category category, Region region, Status status, User user) {
 		return new Item(title, price, content, images, category, region, status, user);
 	}
+
+	public List<Long> getImageIds() {
+		return Objects.isNull(imageIds) ? Collections.emptyList() : imageIds;
+	}
 }
