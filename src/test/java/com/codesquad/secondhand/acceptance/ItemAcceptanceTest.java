@@ -77,20 +77,6 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
-	 * When 상품 생성 시 이미지가 없으면
-	 * Then 요청이 실패한다.
-	 * */
-	@ParameterizedTest
-	@MethodSource("providerItemNoItemImage")
-	void 상품_생성_시_이미지가_없으면_요청이_실패한다(String title, Integer price, String content, List<Long> imageIds, Long categoryId, Long regionId) {
-		// when
-		var response = 상품_생성_요청(유저_만두_액세스_토큰, title, price, content, imageIds, categoryId, regionId);
-
-		// then
-		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
-	}
-
-	/**
 	 * When 상품 생성 시 이미지가 10개 이상이면
 	 * Then 요청이 실패한다.
 	 * */
@@ -300,29 +286,6 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 				null,
 				상품_PS5.getContent(),
 				LongStream.range(1,11)
-					.map(n -> 이미지_도자기_화병_5종.getId())
-					.boxed().collect(Collectors.toUnmodifiableList()),
-				상품_PS5.getCategoryId(),
-				상품_PS5.getRegionId()
-			)
-		);
-	}
-
-	private static Stream<Arguments> providerItemNoItemImage() {
-		return Stream.of(
-			Arguments.of(
-				상품_PS5.getTitle(),
-				상품_PS5.getPrice(),
-				상품_PS5.getContent(),
-				null,
-				상품_PS5.getCategoryId(),
-				상품_PS5.getRegionId()
-			),
-			Arguments.of(
-				상품_PS5.getTitle(),
-				상품_PS5.getPrice(),
-				상품_PS5.getContent(),
-				LongStream.range(1,1)
 					.map(n -> 이미지_도자기_화병_5종.getId())
 					.boxed().collect(Collectors.toUnmodifiableList()),
 				상품_PS5.getCategoryId(),

@@ -16,7 +16,6 @@ import com.codesquad.secondhand.common.exception.item.ItemImageMaxAddCountExcept
 public class Images {
 
 	private static final int MAX_ADD_IMAGE_COUNT = 10;
-	private static final int MIN_REMOVE_COUNT = 1;
 
 	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ItemImage> itemImages = new ArrayList<>();
