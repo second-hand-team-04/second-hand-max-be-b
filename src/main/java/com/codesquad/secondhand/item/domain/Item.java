@@ -77,7 +77,8 @@ public class Item {
 	@OneToMany(mappedBy = "item")
 	private List<Wishlist> wishlists = new ArrayList<>();
 
-	public Item(String title, Integer price, String content, List<Image> images, Category category, Region region) {
+	public Item(String title, Integer price, String content, List<Image> images, Category category, Region region,
+		Status status, User user) {
 		this.title = title;
 		this.price = price;
 		this.content = content;
@@ -89,6 +90,8 @@ public class Item {
 		);
 		this.category = category;
 		this.region = region;
+		this.status = status;
+		this.user = user;
 	}
 
 	public void addImage(List<Image> images) {

@@ -11,7 +11,9 @@ import org.hibernate.validator.constraints.Length;
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.item.domain.Item;
+import com.codesquad.secondhand.item.domain.Status;
 import com.codesquad.secondhand.region.domain.Region;
+import com.codesquad.secondhand.user.domain.User;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -50,7 +52,7 @@ public class ItemCreateRequest {
 		this.regionId = regionId;
 	}
 
-	public Item toItem(List<Image> images, Category category, Region region) {
-		return new Item(title, price, content, images, category, region);
+	public Item toItem(List<Image> images, Category category, Region region, Status status, User user) {
+		return new Item(title, price, content, images, category, region, status, user);
 	}
 }

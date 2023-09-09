@@ -1,8 +1,6 @@
 package com.codesquad.secondhand.item.application;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,8 +11,6 @@ import com.codesquad.secondhand.Image.application.ImageService;
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.application.CategoryService;
 import com.codesquad.secondhand.category.domain.Category;
-import com.codesquad.secondhand.common.exception.item.ItemImageEmptyException;
-import com.codesquad.secondhand.common.exception.item.StatusNotFoundException;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;
@@ -22,7 +18,6 @@ import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.item.domain.Status;
 import com.codesquad.secondhand.item.domain.StatusType;
 import com.codesquad.secondhand.item.infrastructure.ItemRepository;
-import com.codesquad.secondhand.item.infrastructure.StatusRepository;
 import com.codesquad.secondhand.region.application.RegionService;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.application.UserService;
@@ -40,7 +35,7 @@ public class ItemService {
 	private final CategoryService categoryService;
 	private final RegionService regionService;
 	private final UserService userService;
-	private final StatusRepository statusRepository;
+	private final StatusService statusService;
 
 	public ItemSliceResponse findItemsByCategoryAndRegion(Long categoryId, Long regionId, Pageable pageable) {
 		Slice<Item> itemSlice = itemRepository.findByCategoryIdAndRegionId(categoryId, regionId, pageable);
@@ -57,13 +52,10 @@ public class ItemService {
 			.collect(Collectors.toUnmodifiableList());
 		Category category = categoryService.findByIdOrThrow(request.getCategoryId());
 		Region region = regionService.findByIdOrThrow(request.getRegionId());
+		Status status = statusService.findByIdOrThrow(StatusType.FOR_SALE.getId());
 		User user = userService.findByIdOrThrow(userId);
 
-		Item item = request.toItem(images, category, region);
-
-		item.updateUser(user);
-		item.updateStatus(statusRepository.findById(StatusType.FOR_SALE.getId())
-			.orElseThrow(StatusNotFoundException::new));
+		Item item = request.toItem(images, category, region, status, user);
 
 		itemRepository.save(item);
 	}
