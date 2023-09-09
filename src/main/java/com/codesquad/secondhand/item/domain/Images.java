@@ -19,7 +19,7 @@ public class Images {
 
 	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ItemImage> itemImages = new ArrayList<>();
-
+  
 	public String getThumbnailUrl() {
 		if (itemImages.isEmpty()) {
 			return null;

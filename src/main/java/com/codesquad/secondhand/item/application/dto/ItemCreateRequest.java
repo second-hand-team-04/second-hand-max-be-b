@@ -15,6 +15,7 @@ import com.codesquad.secondhand.item.domain.Status;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
 
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
