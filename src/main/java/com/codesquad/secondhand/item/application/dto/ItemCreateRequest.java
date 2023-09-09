@@ -3,15 +3,18 @@ package com.codesquad.secondhand.item.application.dto;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.item.domain.Item;
+import com.codesquad.secondhand.item.domain.Status;
 import com.codesquad.secondhand.region.domain.Region;
+import com.codesquad.secondhand.user.domain.User;
+
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,7 +34,7 @@ public class ItemCreateRequest {
 	@Length(max = 3000, message = "내용은 최대 3000자 입니다")
 	private String content;
 
-	@NotEmpty(message = "이미지가 최소 1장 이상 포함되어야 합니다")
+	@Size(max = 10, message = "상품 이미지 등록 수가 최대 제한을 초과했습니다. 상품 등록 요청이 거부되었습니다")
 	private List<Long> imageIds;
 
 	@NotNull(message = "상품 카테고리가 선택되지 않았습니다")
@@ -50,7 +53,7 @@ public class ItemCreateRequest {
 		this.regionId = regionId;
 	}
 
-	public Item toItem(List<Image> images, Category category, Region region) {
-		return new Item(title, price, content, images, category, region);
+	public Item toItem(List<Image> images, Category category, Region region, Status status, User user) {
+		return new Item(title, price, content, images, category, region, status, user);
 	}
 }

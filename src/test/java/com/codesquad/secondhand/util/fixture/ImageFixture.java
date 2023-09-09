@@ -13,7 +13,13 @@ public enum ImageFixture {
 	이미지_빈티지_일본_경대2(2L, "http://www.image.com/vintage_japanese_dressing_table2.jpg"),
 	이미지_도자기_화병_5종(3L, "http://www.image.com/five_vases.jpg"),
 	이미지_잎사귀_포스터(4L, "http://www.image.com/leaf_poster.jpg"),
-	이미지_빈티지_밀크_그래스_램프(5L, "http://www.image.com/vintage_milk_lamp.jpg");
+	이미지_빈티지_밀크_그래스_램프(5L, "http://www.image.com/vintage_milk_lamp.jpg"),
+	이미지_LG_그램(6L, "http://www.image.com/LG_gram.jpg"),
+	이미지_젤다의_전설(7L, "http://www.image.com/legend_of_zelda.jpg"),
+	이미지_모자(8L, "http://www.image.com/hat.jpg"),
+	이미지_프린터(9L, "http://www.image.com/printer.jpg"),
+	이미지_키보드(10L, "http://www.image.com/keyboard.jpg"),
+	이미지_슬라이스_치즈(11L, "http://www.image.com/slice_cheese.jpg");
 
 	private final Long id;
 	private final String imageUrl;

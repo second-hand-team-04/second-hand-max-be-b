@@ -16,12 +16,11 @@ import com.codesquad.secondhand.common.exception.item.ItemImageMaxAddCountExcept
 public class Images {
 
 	private static final int MAX_ADD_IMAGE_COUNT = 10;
-	private static final int MIN_REMOVE_COUNT = 1;
 
 	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ItemImage> itemImages = new ArrayList<>();
-
-	public Image getThumbnail() {
+  
+	public String getThumbnailUrl() {
 		if (itemImages.isEmpty()) {
 			return null;
 		}
@@ -29,16 +28,17 @@ public class Images {
 		return itemImages.stream()
 			.findFirst()
 			.map(ItemImage::getImage)
-			.orElseThrow(ImageNotFoundException::new);
+			.orElseThrow(ImageNotFoundException::new)
+			.getImageUrl();
 	}
 
-	public void addItemImage(List<ItemImage> itemImages) {
-		validateMaxAddImageCount(itemImages);
+	public void addImage(List<ItemImage> itemImages) {
+		validateMaxAddImageCount(itemImages.size());
 		this.itemImages.addAll(itemImages);
 	}
 
-	public void addItemImage(ItemImage itemImage) {
-		validateMaxAddImageCount();
+	public void addImage(ItemImage itemImage) {
+		validateMaxAddImageCount(1);
 		this.itemImages.add(itemImage);
 	}
 
@@ -48,18 +48,8 @@ public class Images {
 			.collect(Collectors.toUnmodifiableList());
 	}
 
-	public List<ItemImage> getItemImages() {
-		return itemImages;
-	}
-
-	private void validateMaxAddImageCount() {
-		if (this.itemImages.size() >= MAX_ADD_IMAGE_COUNT) {
-			throw new ItemImageMaxAddCountException();
-		}
-	}
-
-	private void validateMaxAddImageCount(List<ItemImage> itemImages) {
-		if (this.itemImages.size() + itemImages.size() > MAX_ADD_IMAGE_COUNT) {
+	private void validateMaxAddImageCount(int size) {
+		if (size >= MAX_ADD_IMAGE_COUNT) {
 			throw new ItemImageMaxAddCountException();
 		}
 	}
