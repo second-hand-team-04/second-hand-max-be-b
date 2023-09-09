@@ -13,7 +13,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
-import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.domain.Item;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -31,7 +30,7 @@ public class ItemDaoImpl implements ItemDao {
 		List<Item> content = jpaQueryFactory.selectFrom(item)
 			.innerJoin(item.region, region).fetchJoin()
 			.innerJoin(item.status, status).fetchJoin()
-			.leftJoin(item.images, itemImage).fetchJoin()
+			.leftJoin(item.images.itemImages, itemImage).fetchJoin()
 			.leftJoin(itemImage.image, image).fetchJoin()
 			.where(
 				categoryIdEq(categoryId),

@@ -30,8 +30,13 @@ public enum ErrorType {
 	// AUTH
 	AUTH_ACCESS_TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Access Token이 유효하지 않습니다"),
 	AUTH_ACCESS_TOKEN_FORBIDDEN(HttpStatus.FORBIDDEN, "Access Token이 만료되었습니다"),
-	AUTH_REFRESH_TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Refresh Token이 만료되었습니다");
+	AUTH_REFRESH_TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Refresh Token이 만료되었습니다"),
+	CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다"),
 
+	// ITEM
+	STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 판매 상태입니다"),
+	ITEM_IMAGE_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "상품 이미지 등록 수가 최대 제한을 초과했습니다. 상품 등록 요청이 거부되었습니다"),
+	ITEM_IMAGE_EMPTY(HttpStatus.BAD_REQUEST, "이미지가 최소 1장 이상 포함되어야 합니다");
 
 	private final HttpStatus httpStatus;
 	private final String message;
