@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.auth.domain.Account;
@@ -24,6 +27,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
 	@Id
@@ -44,7 +48,7 @@ public class User {
 
 	private String password;
 
-	@CreationTimestamp
+	@CreatedDate
 	private LocalDateTime createdAt;
 
 	@Embedded
@@ -96,6 +100,10 @@ public class User {
 		if (isImageChanged) {
 			this.image = image;
 		}
+	}
+
+	public boolean equalsId(Long id) {
+		return Objects.equals(this.id, id);
 	}
 
 	public Long getId() {

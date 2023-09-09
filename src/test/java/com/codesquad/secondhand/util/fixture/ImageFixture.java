@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.codesquad.secondhand.Image.application.dto.ImageResponse;
 import com.codesquad.secondhand.Image.domain.Image;
 
 public enum ImageFixture {
@@ -48,18 +49,15 @@ public enum ImageFixture {
 			.orElseThrow();
 	}
 
-	public static String findThumbnail(Long itemId) {
-		List<ItemImageFixture> ItemImageFixtures = ItemImageFixture.findAllByItemId(itemId);
+	public static List<ImageResponse> findAllImageResponseByIds(List<Long> ids) {
+		return ids.stream()
+			.distinct()
+			.map(id -> findById(id).toImageResponse())
+			.collect(Collectors.toUnmodifiableList());
+	}
 
-		if (ItemImageFixtures.isEmpty()) {
-			return null;
-		}
-
-		Long imageId = ItemImageFixtures.stream()
-			.findFirst()
-			.orElseThrow()
-			.getImageId();
-		return findById(imageId).getImageUrl();
+	public ImageResponse toImageResponse() {
+		return new ImageResponse(id, imageUrl);
 	}
 
 	public Image toImage() {

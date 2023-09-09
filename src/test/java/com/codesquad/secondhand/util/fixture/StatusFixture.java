@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.codesquad.secondhand.item.application.dto.StatusItemDetailResponse;
+
 public enum StatusFixture {
 
 	판매중(1L, "판매중"),
@@ -35,6 +37,10 @@ public enum StatusFixture {
 			.filter(status -> Objects.equals(status.getId(), id))
 			.findAny()
 			.orElseThrow();
+	}
+
+	public StatusItemDetailResponse toStatusItemDetailResponse() {
+		return new StatusItemDetailResponse(type);
 	}
 
 	public Long getId() {

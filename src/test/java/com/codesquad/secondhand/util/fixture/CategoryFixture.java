@@ -2,7 +2,10 @@ package com.codesquad.secondhand.util.fixture;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.codesquad.secondhand.category.application.dto.CategoryItemDetailResponse;
 
 public enum CategoryFixture {
 
@@ -50,6 +53,13 @@ public enum CategoryFixture {
 				.collect(Collectors.joining(", ")));
 	}
 
+	public static CategoryFixture findById(Long id) {
+		return Arrays.stream(values())
+			.filter(c -> Objects.equals((c.getId()), id))
+			.findAny()
+			.orElseThrow();
+	}
+
 	public static List<String> getTitles() {
 		return Arrays.stream(values())
 			.map(CategoryFixture::getTitle)
@@ -60,6 +70,14 @@ public enum CategoryFixture {
 		return Arrays.stream(values())
 			.map(CategoryFixture::getImageUrl)
 			.collect(Collectors.toUnmodifiableList());
+	}
+
+	public static CategoryItemDetailResponse findCategoryItemDetailResponseById(Long id) {
+		return findById(id).toCategoryItemDetailResponse();
+	}
+
+	public CategoryItemDetailResponse toCategoryItemDetailResponse() {
+		return new CategoryItemDetailResponse(title);
 	}
 
 	public Long getId() {

@@ -32,8 +32,8 @@ public class DatabaseLoader {
 	@Transactional
 	public void loadData() {
 		em.createNativeQuery(ImageFixture.createInsertSQL()).executeUpdate();
-		em.createNativeQuery(ItemFixture.createInsertSQL()).executeUpdate();
-		em.createNativeQuery(ItemImageFixture.createInsertSQL()).executeUpdate();
-		em.createNativeQuery(WishlistFixture.createInsertSQL()).executeUpdate();
+		//em.createNativeQuery(ItemFixture.createInsertSQL()).executeUpdate();
+		//em.createNativeQuery(ItemImageFixture.createInsertSQL()).executeUpdate();
+		//em.createNativeQuery(WishlistFixture.createInsertSQL()).executeUpdate();
 	}
 }

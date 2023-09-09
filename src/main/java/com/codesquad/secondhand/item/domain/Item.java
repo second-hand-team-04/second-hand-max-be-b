@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,8 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
@@ -32,6 +34,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 public class Item {
 
 	@Id
@@ -62,10 +65,10 @@ public class Item {
 
 	private int views;
 
-	@CreationTimestamp
+	@CreatedDate
 	private LocalDateTime createdAt;
 
-	@UpdateTimestamp
+	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
 	private boolean isDeleted;
@@ -103,8 +106,17 @@ public class Item {
 		}
 	}
 
+	public void increaseViewCount() {
+		views++;
+	}
+
 	public int getWishlistCount() {
 		return wishlists.size();
+	}
+
+	public boolean isMyWishlisted(Long accountUserId) {
+		return wishlists.stream()
+			.anyMatch(w -> w.getUser().equalsId(accountUserId));
 	}
 
 	public int getChatCount() {
@@ -112,10 +124,10 @@ public class Item {
 	}
 
 	public String getThumbnailUrl() {
-		if (!images.getImages().isEmpty()) {
-			return images.getThumbnailUrl();
-		}
+		return images.getThumbnailUrl();
+	}
 
-		return null;
+	public List<Image> getImages() {
+		return images.getImages();
 	}
 }

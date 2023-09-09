@@ -24,6 +24,16 @@ public class ItemSteps {
 			.extract();
 	}
 
+	public static ExtractableResponse<Response> 상품_상세_조회_요청(String accessToken, long itemId) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/items/{id}", itemId)
+			.then().log().all()
+			.extract();
+	}
+
 	public static ExtractableResponse<Response> 상품_생성_요청(String accessToken, String title, Integer price, String content, List<Long> imageIds, Long categoryId, Long regionID) {
 		return RestAssured.given().log().all()
 			.auth().oauth2(accessToken)
