@@ -21,7 +21,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
-import com.codesquad.secondhand.common.exception.item.ItemImageEmptyException;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
 import com.codesquad.secondhand.user.domain.Wishlist;
@@ -82,37 +81,25 @@ public class Item {
 		this.title = title;
 		this.price = price;
 		this.content = content;
-		//FIXME 리팩토링 필요
-		this.images.addItemImage(
-			images.stream()
-				.map(image -> ItemImage.of(this, image))
-				.collect(Collectors.toUnmodifiableList())
-		);
 		this.category = category;
 		this.region = region;
 		this.status = status;
 		this.user = user;
+		addImage(images);
 	}
 
 	public void addImage(List<Image> images) {
-		if (Objects.nonNull(images)) {
-			this.images.addItemImage(
-				images.stream()
-					.map(image -> ItemImage.of(this, image))
-					.collect(Collectors.toList())
-			);
+		if (Objects.nonNull(images) && !images.isEmpty()) {
+			List<ItemImage> itemImages = images.stream()
+				.map(image -> ItemImage.of(this, image))
+				.collect(Collectors.toUnmodifiableList());
+			this.images.addImage(itemImages);
 		}
 	}
 
 	public void addImage(Image image) {
 		if (Objects.nonNull(image)) {
-			this.images.addItemImage(ItemImage.of(this, image));
-		}
-	}
-
-	public void updateStatus(Status status) {
-		if(Objects.nonNull(status) && StatusType.existsById(status.getId())){
-			this.status = status;
+			this.images.addImage(ItemImage.of(this, image));
 		}
 	}
 
@@ -125,18 +112,10 @@ public class Item {
 	}
 
 	public String getThumbnailUrl() {
-		if(!images.getItemImages().isEmpty()) {
-			return images.getThumbnail().getImageUrl();
+		if (!images.getImages().isEmpty()) {
+			return images.getThumbnailUrl();
 		}
 
 		return null;
-	}
-
-	public List<ItemImage> getImages() {
-		return images.getItemImages();
-	}
-
-	public void updateUser(User user) {
-		this.user = user;
 	}
 }

@@ -45,11 +45,7 @@ public class ItemService {
 
 	@Transactional
 	public void create(Long userId, ItemCreateRequest request) {
-		//FIXME 이미지 id 중복 허용?
-		//FIXME 이미지 DB에서 조회하기 전에 이미지 갯수부터 검증
-		List<Image> images = request.getImageIds().stream()
-			.map(imageService::findByIdOrThrow)
-			.collect(Collectors.toUnmodifiableList());
+		List<Image> images = imageService.findAllByIdOrThrow(request.getImageIds());
 		Category category = categoryService.findByIdOrThrow(request.getCategoryId());
 		Region region = regionService.findByIdOrThrow(request.getRegionId());
 		Status status = statusService.findByIdOrThrow(StatusType.FOR_SALE.getId());

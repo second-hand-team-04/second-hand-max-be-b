@@ -2,9 +2,7 @@ package com.codesquad.secondhand.acceptance;
 
 import static com.codesquad.secondhand.util.fixture.CategoryFixture.*;
 import static com.codesquad.secondhand.util.fixture.ImageFixture.*;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_PS5;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_빈티지_일본_경대;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_젤다의_전설;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.*;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.*;
 import static com.codesquad.secondhand.util.steps.ItemSteps.*;
 import static org.assertj.core.api.Assertions.*;
@@ -70,7 +68,8 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 상품_생성_시_가격이_없어도_요청이_성공한다() {
 		// when
-		var response = 상품_생성_요청(유저_만두_액세스_토큰, 상품_PS5.getTitle(), null, 상품_PS5.getContent(), List.of(이미지_잎사귀_포스터.getId()), 카테고리_게임_취미.getId(), 동네_서울_강남구_역삼동.getId());
+		var response = 상품_생성_요청(유저_만두_액세스_토큰, 상품_PS5.getTitle(), null, 상품_PS5.getContent(),
+			List.of(이미지_잎사귀_포스터.getId()), 카테고리_게임_취미.getId(), 동네_서울_강남구_역삼동.getId());
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.CREATED);
@@ -84,8 +83,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	void 상품_생성_시_이미지가_10개_이상이면_요청이_실패한다() {
 		// when
 		var response = 상품_생성_요청(유저_만두_액세스_토큰, 상품_PS5.getTitle(), null, 상품_PS5.getContent(),
-			LongStream.range(1,12)
-				.map(l -> 이미지_잎사귀_포스터.getId())
+			LongStream.range(1, 12)
 				.boxed().collect(Collectors.toUnmodifiableList()),
 			카테고리_게임_취미.getId(), 동네_서울_강남구_역삼동.getId());
 
@@ -176,7 +174,8 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	 * */
 	@ParameterizedTest
 	@MethodSource("providerItemNoTitle")
-	void 상품_생성_시_제목이_없으면_요청이_실패한다(String title, Integer price, String content, List<Long> imageIds, Long categoryId, Long regionId) {
+	void 상품_생성_시_제목이_없으면_요청이_실패한다(String title, Integer price, String content, List<Long> imageIds, Long categoryId,
+		Long regionId) {
 		// when
 		var response = 상품_생성_요청(유저_만두_액세스_토큰, title, price, content, imageIds, categoryId, regionId);
 
@@ -207,7 +206,8 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	 * */
 	@ParameterizedTest
 	@MethodSource("providerItemNoContents")
-	void 상품_생성_시_내용이_없으면_요청이_실패한다(String title, Integer price, String content, List<Long> imageIds, Long categoryId, Long regionId) {
+	void 상품_생성_시_내용이_없으면_요청이_실패한다(String title, Integer price, String content, List<Long> imageIds, Long categoryId,
+		Long regionId) {
 		// when
 		var response = 상품_생성_요청(유저_만두_액세스_토큰, title, price, content, imageIds, categoryId, regionId);
 
@@ -275,7 +275,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 				상품_PS5.getTitle(),
 				상품_PS5.getPrice(),
 				상품_PS5.getContent(),
-				LongStream.range(1,11)
+				LongStream.range(1, 11)
 					.map(n -> 이미지_도자기_화병_5종.getId())
 					.boxed().collect(Collectors.toUnmodifiableList()),
 				상품_PS5.getCategoryId(),
@@ -285,7 +285,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 				상품_PS5.getTitle(),
 				null,
 				상품_PS5.getContent(),
-				LongStream.range(1,11)
+				LongStream.range(1, 11)
 					.map(n -> 이미지_도자기_화병_5종.getId())
 					.boxed().collect(Collectors.toUnmodifiableList()),
 				상품_PS5.getCategoryId(),
