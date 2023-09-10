@@ -13,7 +13,7 @@ import lombok.Getter;
 public class ImageResponse {
 
 	private Long id;
-	private String url;
+	private String imageUrl;
 
 	public static List<ImageResponse> from(List<Image> images) {
 		return images.stream()

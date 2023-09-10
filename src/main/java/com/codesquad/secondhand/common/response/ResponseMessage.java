@@ -16,7 +16,8 @@ public enum ResponseMessage {
 	UPDATE_PROFILE("사용자 정보 수정을 성공하였습니다"),
 	ITEM_CREATE("상품 등록을 성공하였습니다."),
 	ITEM_DETAIL_FIND("상품 조회를 성공하였습니다"),
-	USER_FIND_MY_TRANSACTION_BY_STATUS("판매내역 조회를 성공하였습니다");
+	USER_FIND_MY_TRANSACTION_BY_STATUS("판매내역 조회를 성공하였습니다"),
+	IMAGE_UPLOAD("이미지 등록을 성공하였습니다");
 
 	private final String message;
 

@@ -68,6 +68,11 @@ public enum ImageFixture {
 		return id;
 	}
 
+	public String getFileName() {
+		int index = imageUrl.lastIndexOf("/");
+		return imageUrl.substring(index + 1);
+	}
+
 	public String getImageUrl() {
 		return imageUrl;
 	}

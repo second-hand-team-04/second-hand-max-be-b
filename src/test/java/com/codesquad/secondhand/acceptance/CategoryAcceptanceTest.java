@@ -18,7 +18,8 @@ import io.restassured.response.Response;
 public class CategoryAcceptanceTest extends AcceptanceTest {
 
 	/**
-	 * Given 카테고리를 생성하고
+	 * Given 동네들, 카테고리들, 유저를 생성하고
+	 * And 카테고리를 생성하고
 	 * When 카테고리 목록을 조회하면
 	 * Then 생성된 카테고리들을 조회할 수 있다.
 	 */

@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,11 +22,13 @@ import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.region.domain.Region;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class User {
 
 	@Id
@@ -106,39 +107,11 @@ public class User {
 		return Objects.equals(this.id, id);
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public Provider getProvider() {
-		return provider;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public Image getImage() {
-		return image;
-	}
-
 	public String getImageUrl() {
 		if(Objects.isNull(this.image)){
 			return null;
 		}
 
 		return image.getImageUrl();
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
 	}
 }

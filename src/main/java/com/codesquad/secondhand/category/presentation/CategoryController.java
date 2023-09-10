@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.category.ui;
+package com.codesquad.secondhand.category.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

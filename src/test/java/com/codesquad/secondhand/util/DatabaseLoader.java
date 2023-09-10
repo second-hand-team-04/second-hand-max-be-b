@@ -7,13 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.codesquad.secondhand.util.fixture.CategoryFixture;
-import com.codesquad.secondhand.util.fixture.ImageFixture;
-import com.codesquad.secondhand.util.fixture.ItemFixture;
-import com.codesquad.secondhand.util.fixture.ItemImageFixture;
 import com.codesquad.secondhand.util.fixture.ProviderFixture;
 import com.codesquad.secondhand.util.fixture.RegionFixture;
 import com.codesquad.secondhand.util.fixture.StatusFixture;
-import com.codesquad.secondhand.util.fixture.WishlistFixture;
 
 @Component
 public class DatabaseLoader {
@@ -27,13 +23,5 @@ public class DatabaseLoader {
 		em.createNativeQuery(RegionFixture.createInsertSQL()).executeUpdate();
 		em.createNativeQuery(ProviderFixture.createInsertSQL()).executeUpdate();
 		em.createNativeQuery(StatusFixture.createInsertSQL()).executeUpdate();
-	}
-
-	@Transactional
-	public void loadData() {
-		em.createNativeQuery(ImageFixture.createInsertSQL()).executeUpdate();
-		//em.createNativeQuery(ItemFixture.createInsertSQL()).executeUpdate();
-		//em.createNativeQuery(ItemImageFixture.createInsertSQL()).executeUpdate();
-		//em.createNativeQuery(WishlistFixture.createInsertSQL()).executeUpdate();
 	}
 }

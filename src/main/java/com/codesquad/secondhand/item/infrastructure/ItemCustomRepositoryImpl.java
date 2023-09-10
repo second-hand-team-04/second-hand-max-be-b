@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class ItemDaoImpl implements ItemDao {
+public class ItemCustomRepositoryImpl implements ItemCustomRepository {
 
 	private final JPAQueryFactory jpaQueryFactory;
 
