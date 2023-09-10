@@ -20,6 +20,8 @@ import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;
+import com.codesquad.secondhand.item.application.dto.ItemUpdateStatusRequest;
+import com.codesquad.secondhand.item.application.dto.ItemUpdateStatusResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
 import com.codesquad.secondhand.item.domain.Item;
@@ -53,10 +55,14 @@ public class ItemService {
 
 	@Transactional
 	public ItemDetailResponse findById(Long id, Account account) {
-		Item item = itemRepository.findDetailById(id)
-			.orElseThrow(ItemNotFoundException::new);
+		Item item = findByIdOrElseThrow(id);
 		item.increaseViewCount();
 		return ItemDetailResponse.from(item, account);
+	}
+
+	public Item findByIdOrElseThrow(Long id) {
+		return itemRepository.findDetailById(id)
+			.orElseThrow(ItemNotFoundException::new);
 	}
 
 	@Transactional
@@ -70,6 +76,14 @@ public class ItemService {
 		Item item = request.toItem(images, category, region, status, user);
 
 		itemRepository.save(item);
+	}
+
+	@Transactional
+	public ItemUpdateStatusResponse updateStatus(ItemUpdateStatusRequest itemUpdateStatusRequest) {
+		Item item = findByIdOrElseThrow(itemUpdateStatusRequest.getId());
+		Status status = statusService.findByIdOrThrow(itemUpdateStatusRequest.getStatus());
+		item.updateStatus(itemUpdateStatusRequest.getUserId(), status);
+		return new ItemUpdateStatusResponse(itemUpdateStatusRequest.getId());
 	}
 
 	public MyTransactionSliceResponse findAllMyTransactionByStatus(Long userId, List<Long> statusIds,

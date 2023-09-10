@@ -11,17 +11,21 @@ import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_빈티지
 import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_삼천리_자전거;
 import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_젤다의_전설;
 import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_코렐_접시;
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
 import static com.codesquad.secondhand.util.fixture.StatusFixture.판매중;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
+import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
+import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
 import static com.codesquad.secondhand.util.steps.ImageSteps.이미지_업로드_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.상품_상세_조회_요청;
+import static com.codesquad.secondhand.util.steps.ItemSteps.상품_상태_수정_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.상품_생성_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.지역별_카테고리별_상품_목록_조회_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -42,6 +46,7 @@ import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.util.AcceptanceTest;
 import com.codesquad.secondhand.util.fixture.CategoryFixture;
 import com.codesquad.secondhand.util.fixture.ImageFixture;
+import com.codesquad.secondhand.util.fixture.StatusFixture;
 import com.codesquad.secondhand.util.fixture.UserFixture;
 
 import io.restassured.response.ExtractableResponse;
@@ -87,7 +92,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	@Test
 	void 상품을_상세_조회한다() {
 		// given
-		상품_생성();
+		상품_빈티지_일본_경대_생성();
 
 		// when
 		var response = 상품_상세_조회_요청(유저_만두_액세스_토큰, 상품_빈티지_일본_경대.getId());
@@ -256,6 +261,75 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들, 상품을 생성하고
+	 *  When 상품 상태를 수정하면
+	 *  Then 상품 상세 조회 시 상태를 확인 할 수 있다.
+	 */
+	@Test
+	void 상품_상태를_수정한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+
+		// when
+		var response = 상품_상태_수정_요청(유저_만두_액세스_토큰, 1L, 2L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		상품_상세_조회_시_상품_상태를_검증(1L, 2);
+	}
+
+	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들, 상품을 생성하고
+	 *  And 다른 유저를 생성 후 로그인하고
+	 *  When 본인이 등록한 판매 상품인 아닌 상품 상태를 수정하면
+	 *  Then 요청이 실패한다.
+	 */
+	@Test
+	void 본인이_등록한_판매_상품인_아닌_상품_상태를_수정하면_요청이_실패한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+		String 유저_보노_액세스_토큰 = 유저_보노_생성_후_로그인();
+
+		// when
+		var response = 상품_상태_수정_요청(유저_보노_액세스_토큰, 1L, 2L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들, 상품을 생성하고
+	 *  And 다른 유저를 생성 후 로그인하고
+	 *  When 존재하지 않는 상태로 상품 상태를 수정하면
+	 *  Then 요청이 실패한다.
+	 */
+	@Test
+	void 존재하지_않는_상태로_상품_상태를_수정하면_요청이_실패한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+
+		// when
+		var response = 상품_상태_수정_요청(유저_만두_액세스_토큰, 1L, 9999L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
+	 *  When 존재하지 않는 상품의 상태를 수정하면
+	 *  Then 요청이 실패한다.
+	 */
+	@Test
+	void 존재하지_않는_상품의_상태를_수정하면_요청이_실패한다() {
+		// when
+		var response = 상품_상태_수정_요청(유저_만두_액세스_토큰, 1L, 2L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
 	public static Stream<Arguments> providerPageableAndRegion() {
 		return Stream.of(
 			Arguments.of(
@@ -401,7 +475,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 			.isEqualTo(expected);
 	}
 
-	private void 상품_생성() {
+	private void 상품_빈티지_일본_경대_생성() {
 		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_빈티지_일본_경대.getTitle(), 상품_빈티지_일본_경대.getPrice(),
 			상품_빈티지_일본_경대.getContent(), List.of(이미지_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId()),
 			상품_빈티지_일본_경대.getCategoryId(), 상품_빈티지_일본_경대.getRegionId());
@@ -484,5 +558,16 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_PS5.getTitle(), null, "a".repeat(3001),
 			List.of(이미지_잎사귀_포스터.getId()), 카테고리_게임_취미.getId(), 동네_서울_강남구_역삼동.getId());
 		return 상품_생성_요청(유저_만두_액세스_토큰, itemCreateRequest);
+	}
+
+	private void 상품_상세_조회_시_상품_상태를_검증(long itemId, long statusId) {
+		String actual = 상품_상세_조회_요청(유저_만두_액세스_토큰, itemId).jsonPath().getString("data.status");
+
+		assertThat(actual).isEqualTo(StatusFixture.findById(statusId).getType());
+	}
+
+	private String 유저_보노_생성_후_로그인() {
+		유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(), null);
+		return 로그인_요청(유저_보노.getEmail(), 유저_보노.getPassword()).jsonPath().getString("data.accessToken");
 	}
 }

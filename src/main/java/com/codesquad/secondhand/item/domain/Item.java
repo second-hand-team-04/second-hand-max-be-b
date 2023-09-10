@@ -23,6 +23,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.common.exception.item.ItemUnauthorizedUpdateException;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
 import com.codesquad.secondhand.user.domain.Wishlist;
@@ -108,6 +109,14 @@ public class Item {
 
 	public void increaseViewCount() {
 		views++;
+	}
+
+	public void updateStatus(Long userId, Status status) {
+		if (!user.equalsId(userId)) {
+			throw new ItemUnauthorizedUpdateException();
+		}
+
+		this.status = status;
 	}
 
 	public int getWishlistCount() {
