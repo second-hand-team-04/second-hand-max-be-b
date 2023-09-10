@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.auth.ui;
+package com.codesquad.secondhand.auth.presentation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

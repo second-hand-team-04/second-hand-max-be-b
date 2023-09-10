@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.user.ui;
+package com.codesquad.secondhand.user.presentation;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.item.ui;
+package com.codesquad.secondhand.item.presentation;
 
 import javax.validation.Valid;
 

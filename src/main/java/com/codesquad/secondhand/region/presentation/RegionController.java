@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.region.ui;
+package com.codesquad.secondhand.region.presentation;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
