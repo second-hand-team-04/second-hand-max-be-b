@@ -5,7 +5,7 @@ import org.springframework.data.domain.Slice;
 
 import com.codesquad.secondhand.item.domain.Item;
 
-public interface ItemDao {
+public interface ItemCustomRepository {
 
 	Slice<Item> findByCategoryIdAndRegionId(Long categoryId, Long regionId, Pageable pageable);
 }
