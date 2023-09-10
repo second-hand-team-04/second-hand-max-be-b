@@ -1,21 +1,15 @@
 package com.codesquad.secondhand.acceptance;
 
-import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누하동;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_지구;
-import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_목록_조회_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.유저_정보_조회_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.유저_프로필_수정_요청;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.codesquad.secondhand.util.fixture.ImageFixture.*;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.*;
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.*;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.*;
+import static com.codesquad.secondhand.util.fixture.StatusFixture.*;
+import static com.codesquad.secondhand.util.fixture.UserFixture.*;
+import static com.codesquad.secondhand.util.steps.AuthSteps.*;
+import static com.codesquad.secondhand.util.steps.ItemSteps.*;
+import static com.codesquad.secondhand.util.steps.UserSteps.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,6 +25,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
+import com.codesquad.secondhand.item.application.dto.MyTransactionResponse;
 import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
 import com.codesquad.secondhand.util.AcceptanceTest;
 
@@ -41,7 +37,8 @@ import io.restassured.specification.MultiPartSpecification;
 
 public class UserAcceptanceTest extends AcceptanceTest {
 
-	private static final String PROFILE_PATH = String.format("%s/%s", System.getProperty("user.dir"), "src/test/resources/bike.jpg");
+	private static final String PROFILE_PATH = String.format("%s/%s", System.getProperty("user.dir"),
+		"src/test/resources/bike.jpg");
 
 	/**
 	 * Given 유저을 생성하고
@@ -75,6 +72,33 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		응답_상태코드_검증(response, HttpStatus.CREATED);
 		나의_동네_목록_조회_시_등록된_나의_동네를_검증(동네_서울_종로구_궁정동.getTitle());
 	}
+
+	/**
+	 * Given 상품을 생성하고
+	 * When  나의 판매내역 조회 시
+	 * Then  생성된 상품이 나의 판매내역에 조회된다.
+	 * */
+	@ParameterizedTest
+	@MethodSource("providerPageableAndStatus")
+	void 나의_판매내역을_조회한다(int page, int size, boolean expectedHasMore, List<Long> statusIds,
+		List<MyTransactionResponse> expectedMyTransactionResponses) throws InterruptedException {
+		// given
+		상품들_생성_요청();
+
+		// when
+		var response = 유저_나의_판매내역_조회_요청(유저_만두_액세스_토큰, page, size, statusIds);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		나의_판매내역_조회_시_조회된_상품_검증(response, expectedHasMore, expectedMyTransactionResponses);
+	}
+
+	/**
+	 * TODO  상품 상태 변경 기능 구현 후 테스트 코드 추가
+	 * Given 상품을 생성하고
+	 * When  판매완료로 변경 시
+	 * Then  판매완료로 변경된 상품이 나의 판매내역 조회의 판매완료 상태에 조회된다.
+	 * */
 
 	/**
 	 * Given 유저을 생성하고
@@ -220,7 +244,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
 	}
 
-
 	/**
 	 * When 유저를 생성 시 비밀번호가 8자 이상 16자 이하로, 영문, 숫자, 특수문자를 최소 1개씩 포함하지 않을 경우
 	 * Then 요청이 실패된다.
@@ -277,15 +300,16 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 */
 	@ParameterizedTest
 	@MethodSource("providerNicknameAndImage")
-	void 유저_프로필을_수정한다(String nickname, boolean isImageChanged, MultiPartSpecification image, String expectedImageUrl) throws
+	void 유저_프로필을_수정한다(String nickname, boolean isImageChanged, MultiPartSpecification image,
+		String expectedImageUrl) throws
 		FileNotFoundException {
 		// given
 		유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(),
 			new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
-			.fileName("bono.jpg")
-			.controlName("image")
-			.mimeType(MediaType.IMAGE_JPEG_VALUE)
-			.build());
+				.fileName("bono.jpg")
+				.controlName("image")
+				.mimeType(MediaType.IMAGE_JPEG_VALUE)
+				.build());
 		String accessToken = 로그인_요청(유저_보노.getEmail(), 유저_보노.getPassword()).jsonPath().getString("data.accessToken");
 
 		// when
@@ -385,6 +409,44 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		);
 	}
 
+	private static Stream<Arguments> providerPageableAndStatus() {
+		return Stream.of(
+			Arguments.of(
+				0,
+				10,
+				false,
+				List.of(판매중.getId(), 예약중.getId()),
+				List.of(
+					상품_삼천리_자전거.toMyTransactionResponse(null),
+					상품_코렐_접시.toMyTransactionResponse(null),
+					상품_젤다의_전설.toMyTransactionResponse(null),
+					상품_PS5.toMyTransactionResponse(null),
+					상품_빈티지_일본_경대.toMyTransactionResponse(이미지_빈티지_일본_경대.getImageUrl()))
+			),
+			Arguments.of(
+				0,
+				2,
+				true,
+				List.of(판매중.getId(), 예약중.getId()),
+				List.of(
+					상품_삼천리_자전거.toMyTransactionResponse(null),
+					상품_코렐_접시.toMyTransactionResponse(null))
+			),
+			Arguments.of(
+				0,
+				10,
+				false,
+				null,
+				List.of(
+					상품_삼천리_자전거.toMyTransactionResponse(null),
+					상품_코렐_접시.toMyTransactionResponse(null),
+					상품_젤다의_전설.toMyTransactionResponse(null),
+					상품_PS5.toMyTransactionResponse(null),
+					상품_빈티지_일본_경대.toMyTransactionResponse(이미지_빈티지_일본_경대.getImageUrl()))
+			)
+		);
+	}
+
 	private void 나의_동네_목록_조회_검증(ExtractableResponse<Response> response, String... expectedTitles) {
 		List<String> actualTitles = response.jsonPath().getList("data.title", String.class);
 
@@ -411,6 +473,39 @@ public class UserAcceptanceTest extends AcceptanceTest {
 			() -> assertThat(actualResponse.getUserId()).isEqualTo(expectedId),
 			() -> assertThat(actualResponse.getNickname()).isEqualTo(expectedNickname),
 			() -> assertThat(actualResponse.getImageUrl()).isEqualTo(expectedImageUrl)
+		);
+	}
+
+	private void 상품들_생성_요청() throws InterruptedException {
+		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(
+			상품_빈티지_일본_경대.getTitle(), 상품_빈티지_일본_경대.getPrice(),
+			상품_빈티지_일본_경대.getContent(), List.of(이미지_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId()),
+			상품_빈티지_일본_경대.getCategoryId(), 상품_빈티지_일본_경대.getRegionId()));
+		Thread.sleep(1000);
+		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_PS5.getTitle(), 상품_PS5.getPrice(),
+			상품_PS5.getContent(), null, 상품_PS5.getCategoryId(), 상품_PS5.getRegionId()));
+		Thread.sleep(1000);
+		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_젤다의_전설.getTitle(), 상품_젤다의_전설.getPrice(),
+			상품_젤다의_전설.getContent(), null, 상품_젤다의_전설.getCategoryId(), 상품_젤다의_전설.getRegionId()));
+		Thread.sleep(1000);
+		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_코렐_접시.getTitle(), 상품_코렐_접시.getPrice(),
+			상품_코렐_접시.getContent(), null, 상품_코렐_접시.getCategoryId(), 상품_코렐_접시.getRegionId()));
+		Thread.sleep(1000);
+		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_삼천리_자전거.getTitle(), 상품_삼천리_자전거.getPrice(),
+			상품_삼천리_자전거.getContent(), null, 상품_삼천리_자전거.getCategoryId(), 상품_삼천리_자전거.getRegionId()));
+	}
+
+	private void 나의_판매내역_조회_시_조회된_상품_검증(ExtractableResponse<Response> response, boolean expectedHasMore,
+		List<MyTransactionResponse> expectedMyTransactionResponses) {
+		boolean actualHasMore = response.jsonPath().getBoolean("data.hasMore");
+		List<MyTransactionResponse> actualTransactionResponses = response.jsonPath()
+			.getList("data.items", MyTransactionResponse.class);
+
+		Assertions.assertAll(
+			() -> assertThat(actualHasMore).isEqualTo(expectedHasMore),
+			() -> assertThat(actualTransactionResponses).usingRecursiveComparison()
+				.ignoringFields("updatedAt")
+				.isEqualTo(expectedMyTransactionResponses)
 		);
 	}
 }
