@@ -2,6 +2,9 @@ package com.codesquad.secondhand.Image.domain;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -54,6 +57,6 @@ public class ImageFileDetail {
 	}
 
 	public String getOriginalFileName() {
-		return multipartFile.getOriginalFilename();
+		return URLDecoder.decode(multipartFile.getOriginalFilename(), StandardCharsets.UTF_8);
 	}
 }

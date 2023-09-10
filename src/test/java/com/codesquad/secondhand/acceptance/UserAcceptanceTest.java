@@ -1,15 +1,32 @@
 package com.codesquad.secondhand.acceptance;
 
-import static com.codesquad.secondhand.util.fixture.ImageFixture.*;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.*;
-import static com.codesquad.secondhand.util.fixture.ProviderFixture.*;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.*;
-import static com.codesquad.secondhand.util.fixture.StatusFixture.*;
-import static com.codesquad.secondhand.util.fixture.UserFixture.*;
-import static com.codesquad.secondhand.util.steps.AuthSteps.*;
-import static com.codesquad.secondhand.util.steps.ItemSteps.*;
-import static com.codesquad.secondhand.util.steps.UserSteps.*;
-import static org.assertj.core.api.Assertions.*;
+import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_빈티지_일본_경대;
+import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_빈티지_일본_경대2;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_PS5;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_빈티지_일본_경대;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_삼천리_자전거;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_젤다의_전설;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_코렐_접시;
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누하동;
+import static com.codesquad.secondhand.util.fixture.StatusFixture.예약중;
+import static com.codesquad.secondhand.util.fixture.StatusFixture.판매중;
+import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
+import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
+import static com.codesquad.secondhand.util.fixture.UserFixture.유저_지구;
+import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
+import static com.codesquad.secondhand.util.steps.ItemSteps.상품_생성_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_목록_조회_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_나의_판매내역_조회_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_정보_조회_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.유저_프로필_수정_요청;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,9 +53,6 @@ import io.restassured.response.Response;
 import io.restassured.specification.MultiPartSpecification;
 
 public class UserAcceptanceTest extends AcceptanceTest {
-
-	private static final String PROFILE_PATH = String.format("%s/%s", System.getProperty("user.dir"),
-		"src/test/resources/bike.jpg");
 
 	/**
 	 * Given 유저을 생성하고

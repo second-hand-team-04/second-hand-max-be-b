@@ -15,22 +15,29 @@ import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
 import static com.codesquad.secondhand.util.fixture.StatusFixture.판매중;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
+import static com.codesquad.secondhand.util.steps.ImageSteps.이미지_업로드_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.상품_상세_조회_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.상품_생성_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.지역별_카테고리별_상품_목록_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import com.codesquad.secondhand.Image.application.dto.ImageResponse;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
@@ -41,10 +48,28 @@ import com.codesquad.secondhand.util.fixture.CategoryFixture;
 import com.codesquad.secondhand.util.fixture.ImageFixture;
 import com.codesquad.secondhand.util.fixture.UserFixture;
 
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.MultiPartSpecification;
 
 public class ItemAcceptanceTest extends AcceptanceTest {
+
+	@BeforeEach
+	void init() throws FileNotFoundException {
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대.getFileName()));
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대2.getFileName()));
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_도자기_화병_5종.getFileName()));
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_잎사귀_포스터.getFileName()));
+	}
+
+	private MultiPartSpecification createFile(String fileName) throws FileNotFoundException {
+		return new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
+			.fileName(URLEncoder.encode(fileName, StandardCharsets.UTF_8))
+			.controlName("image")
+			.mimeType(MediaType.IMAGE_JPEG_VALUE)
+			.build();
+	}
 
 	/**
 	 * Given 지역과 카테고리가 상이한 상품을 여러 개 생성하고

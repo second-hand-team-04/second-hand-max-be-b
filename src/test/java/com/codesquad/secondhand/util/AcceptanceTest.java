@@ -24,6 +24,8 @@ import io.restassured.response.Response;
 @Sql(value = "classpath:schema.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public abstract class AcceptanceTest extends MySqlContainer {
 
+	protected static final String PROFILE_PATH = String.format("%s/%s", System.getProperty("user.dir"), "src/test/resources/bike.jpg");
+
 	@LocalServerPort
 	private int port;
 
@@ -38,7 +40,6 @@ public abstract class AcceptanceTest extends MySqlContainer {
 		databaseLoader.initData();
 		유저_생성_요청(공급자_내부.getId(), 유저_만두.getEmail(), 유저_만두.getNickname(), 유저_만두.getPassword(), null);
 		유저_만두_액세스_토큰 = 로그인_요청(유저_만두.getEmail(), 유저_만두.getPassword()).jsonPath().getString("data.accessToken");
-		databaseLoader.loadData();
 	}
 
 	protected void 응답_상태코드_검증(ExtractableResponse<Response> response, HttpStatus httpStatus) {

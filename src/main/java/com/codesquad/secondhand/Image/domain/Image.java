@@ -16,9 +16,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Image {
 
-	public static final long USER_PROFILE_DEFAULT_IMAGE_ID = 1L;
-	public static final long ITEM_DEFAULT_IMAGE_ID = 2L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
