@@ -25,6 +25,7 @@ import io.restassured.specification.MultiPartSpecification;
 public class ImageAcceptanceTest extends AcceptanceTest {
 
 	/**
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * When 이미지 파일을 업로드하면
 	 * Then 업로드된 이미지 주소를 확인할 수 있다.
 	 */
@@ -39,6 +40,7 @@ public class ImageAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * When 비어있는 이미지 파일을 업로드하면
 	 * Then 요청이 실패한다.
 	 */
@@ -53,6 +55,7 @@ public class ImageAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * When 이미지 타입이 아닌 파일을 업로드하면
 	 * Then 요청이 실패한다.
 	 */

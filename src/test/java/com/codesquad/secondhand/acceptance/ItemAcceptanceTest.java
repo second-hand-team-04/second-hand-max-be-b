@@ -21,10 +21,7 @@ import static com.codesquad.secondhand.util.steps.ItemSteps.상품_생성_요청
 import static com.codesquad.secondhand.util.steps.ItemSteps.지역별_카테고리별_상품_목록_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -37,7 +34,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import com.codesquad.secondhand.Image.application.dto.ImageResponse;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
@@ -48,37 +44,29 @@ import com.codesquad.secondhand.util.fixture.CategoryFixture;
 import com.codesquad.secondhand.util.fixture.ImageFixture;
 import com.codesquad.secondhand.util.fixture.UserFixture;
 
-import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import io.restassured.specification.MultiPartSpecification;
 
 public class ItemAcceptanceTest extends AcceptanceTest {
 
 	@BeforeEach
-	void init() throws FileNotFoundException {
+	void init() {
 		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대.getFileName()));
 		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대2.getFileName()));
 		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_도자기_화병_5종.getFileName()));
 		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_잎사귀_포스터.getFileName()));
 	}
 
-	private MultiPartSpecification createFile(String fileName) throws FileNotFoundException {
-		return new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
-			.fileName(URLEncoder.encode(fileName, StandardCharsets.UTF_8))
-			.controlName("image")
-			.mimeType(MediaType.IMAGE_JPEG_VALUE)
-			.build();
-	}
-
 	/**
-	 * Given 지역과 카테고리가 상이한 상품을 여러 개 생성하고
+	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
+	 * And 지역과 카테고리가 상이한 상품을 여러 개 생성하고
 	 * When 지역별 카테고리별 상품을 조회하면
 	 * Then 지역별 카테고리별 상품을 조회할 수 있다.
 	 */
 	@ParameterizedTest
 	@MethodSource("providerPageableAndRegion")
-	void 전체_상품_목록을_조회한다(int page, int size, boolean expectedHasMore, Long regionId, Long categoryId, List<ItemResponse> expectedItemsResponse) throws InterruptedException {
+	void 전체_상품_목록을_조회한다(int page, int size, boolean expectedHasMore, Long regionId, Long categoryId,
+		List<ItemResponse> expectedItemsResponse) throws InterruptedException {
 		// given
 		상품들_생성_요청();
 
@@ -91,7 +79,8 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
-	 * Given 상품을 생성하고
+	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
+	 * And  상품을 생성하고
 	 * When 상품 상세 조회하면
 	 * Then 생성된 상품을 상세 조회 할 수 있다.
 	 */
@@ -109,6 +98,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 * When  상품을 생성하면
 	 * Then  요청이 성공한다.
 	 */
@@ -124,6 +114,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 * When 상품 생성 시 이미지가 10개 이상이면
 	 * Then 요청이 실패한다.
 	 */
@@ -137,6 +128,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 * When 상품 생성 시 업로드 되어 있지 않은 이미지이면
 	 * Then 요청이 실패한다.
 	 */
@@ -150,6 +142,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 *  When 상품 생성 시 동네가 없으면
 	 *  Then 요청이 실패한다.
 	 */
@@ -163,6 +156,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 *  When 상품 생성 시 존재하지 않는 동네이면
 	 *  Then 요청이 실패한다.
 	 */
@@ -189,6 +183,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 *  When 상품 생성 시 존재하지 않는 카테고리면
 	 *  Then 요청이 실패한다.
 	 */
@@ -202,6 +197,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 *  When 상품 생성 시 제목이 없으면
 	 *  Then 요청이 실패한다.
 	 */
@@ -217,6 +213,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 *  When 상품 생성 시 제목이 60자를 초과하면
 	 *  Then 요청이 실패한다.
 	 */
@@ -230,6 +227,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 *  When 상품 생성 시 내용이 없으면
 	 *  Then 요청이 실패한다.
 	 */
@@ -245,6 +243,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 *  When 상품 생성 시 내용이 3000자를 넘으면
 	 *  Then 요청이 실패한다.
 	 */
@@ -372,13 +371,13 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 			상품_PS5.getContent(), null, 상품_PS5.getCategoryId(), 상품_PS5.getRegionId()));
 		Thread.sleep(1000);
 		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_젤다의_전설.getTitle(), 상품_젤다의_전설.getPrice(),
-			상품_젤다의_전설.getContent(),  null, 상품_젤다의_전설.getCategoryId(), 상품_젤다의_전설.getRegionId()));
+			상품_젤다의_전설.getContent(), null, 상품_젤다의_전설.getCategoryId(), 상품_젤다의_전설.getRegionId()));
 		Thread.sleep(1000);
 		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_코렐_접시.getTitle(), 상품_코렐_접시.getPrice(),
-			상품_코렐_접시.getContent(),  null, 상품_코렐_접시.getCategoryId(), 상품_코렐_접시.getRegionId()));
+			상품_코렐_접시.getContent(), null, 상품_코렐_접시.getCategoryId(), 상품_코렐_접시.getRegionId()));
 		Thread.sleep(1000);
 		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_삼천리_자전거.getTitle(), 상품_삼천리_자전거.getPrice(),
-			상품_삼천리_자전거.getContent(),  null, 상품_삼천리_자전거.getCategoryId(), 상품_삼천리_자전거.getRegionId()));
+			상품_삼천리_자전거.getContent(), null, 상품_삼천리_자전거.getCategoryId(), 상품_삼천리_자전거.getRegionId()));
 	}
 
 	private void 상품_목록_조회_시_생성된_상품을_검증(ExtractableResponse<Response> response, boolean expectedHasMore,
@@ -414,15 +413,20 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		상품_상세_조회_시_생성된_상품을_검증(response, 상품_빈티지_일본_경대.toItemDetailResponse(1, 0, 0, expectedImage));
 	}
 
-	private ExtractableResponse<Response> 상품_생성(String title, Integer price, String content, List<Long> imageIds, Long categoryId, Long regionId) {
-		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(title, price, content, imageIds, categoryId, regionId);
+	private ExtractableResponse<Response> 상품_생성(String title, Integer price, String content, List<Long> imageIds,
+		Long categoryId, Long regionId) {
+		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(title, price, content, imageIds, categoryId,
+			regionId);
 		return 상품_생성_요청(유저_만두_액세스_토큰, itemCreateRequest);
 	}
 
-	private void 상품_상세_조회_시_생성된_상품을_검증한다(String title, Integer price, String content, List<Long> imageIds, Long categoryId) {
+	private void 상품_상세_조회_시_생성된_상품을_검증한다(String title, Integer price, String content, List<Long> imageIds,
+		Long categoryId) {
 		ItemDetailResponse expected = new ItemDetailResponse(1L, title, content, price, 0, 0, 1,
-			false, null, 판매중.toStatusItemDetailResponse(), CategoryFixture.findCategoryItemDetailResponseById(categoryId),
-			UserFixture.findUserItemDetailResponseById(유저_만두.getId()), ImageFixture.findAllImageResponseByIds(imageIds));
+			false, null, 판매중.toStatusItemDetailResponse(),
+			CategoryFixture.findCategoryItemDetailResponseById(categoryId),
+			UserFixture.findUserItemDetailResponseById(유저_만두.getId()),
+			ImageFixture.findAllImageResponseByIds(imageIds));
 
 		상품_상세_조회_시_생성된_상품을_검증(상품_상세_조회_요청(유저_만두_액세스_토큰, 1), expected);
 	}
