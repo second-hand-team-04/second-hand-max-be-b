@@ -24,7 +24,7 @@ public class MyTransactionReponse {
 			item.getId(),
 			item.getTitle(),
 			item.getRegion().getTitle(),
-			item.getCreatedAt(),
+			item.getUpdatedAt(),
 			item.getPrice(),
 			item.getThumbnailUrl()
 		);
