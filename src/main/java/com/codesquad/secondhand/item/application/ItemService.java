@@ -54,14 +54,15 @@ public class ItemService {
 	}
 
 	@Transactional
-	public ItemDetailResponse findById(Long id, Account account) {
-		Item item = findByIdOrElseThrow(id);
+	public ItemDetailResponse findDetailById(Long id, Account account) {
+		Item item = itemRepository.findDetailById(id)
+			.orElseThrow(ItemNotFoundException::new);
 		item.increaseViewCount();
 		return ItemDetailResponse.from(item, account);
 	}
 
 	public Item findByIdOrElseThrow(Long id) {
-		return itemRepository.findDetailById(id)
+		return itemRepository.findById(id)
 			.orElseThrow(ItemNotFoundException::new);
 	}
 

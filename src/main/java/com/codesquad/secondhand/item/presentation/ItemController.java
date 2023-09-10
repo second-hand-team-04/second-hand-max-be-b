@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codesquad.secondhand.auth.domain.Account;
@@ -52,7 +51,7 @@ public class ItemController {
 	public ResponseEntity<CommonResponse> showItemDetail(@PathVariable Long id, @AccountPrincipal Account account) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				itemService.findById(id, account),
+				itemService.findDetailById(id, account),
 				ResponseMessage.ITEM_DETAIL_FIND));
 	}
 
