@@ -1,6 +1,9 @@
 package com.codesquad.secondhand.item.application;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -17,6 +20,8 @@ import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;
+import com.codesquad.secondhand.item.application.dto.MyTransactionReponse;
+import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
 import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.item.domain.Status;
 import com.codesquad.secondhand.item.domain.StatusType;
@@ -65,5 +70,16 @@ public class ItemService {
 		Item item = request.toItem(images, category, region, status, user);
 
 		itemRepository.save(item);
+	}
+
+	public MyTransactionSliceResponse findAllMyTransactionByStatus(Long userId, List<Long> statusIds,
+		Pageable pageable) {
+		if (Objects.isNull(statusIds) || statusIds.isEmpty()) {
+			statusIds = Arrays.stream(StatusType.values())
+				.map(StatusType::getId)
+				.collect(Collectors.toUnmodifiableList());
+		}
+		Slice<Item> itemSlice = itemRepository.findByUserAndStatusIn(userId, statusIds, pageable);
+		return MyTransactionSliceResponse.of(itemSlice.hasNext(), MyTransactionReponse.of(itemSlice.getContent()));
 	}
 }

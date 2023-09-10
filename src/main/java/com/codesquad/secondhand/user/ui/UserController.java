@@ -1,7 +1,10 @@
 package com.codesquad.secondhand.user.ui;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +24,7 @@ import com.codesquad.secondhand.auth.domain.ProviderType;
 import com.codesquad.secondhand.common.resolver.AccountPrincipal;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
+import com.codesquad.secondhand.item.application.ItemService;
 import com.codesquad.secondhand.user.application.UserService;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
 import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
@@ -34,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
+	private final ItemService itemService;
 
 	@PostMapping
 	public ResponseEntity<CommonResponse> signUp(@RequestPart @Valid UserCreateRequest request,
@@ -84,6 +90,16 @@ public class UserController {
 			.body(CommonResponse.createOK(
 				UserInfoResponse.from(userService.findByIdOrThrow(account.getId())),
 				ResponseMessage.USER_INFO
+			));
+	}
+
+	@GetMapping("/transactions")
+	public ResponseEntity<CommonResponse> showMySalesByStatus(@AccountPrincipal Account account,
+		@RequestParam(required = false) List<Long> status, Pageable pageable) {
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				itemService.findAllMyTransactionByStatus(account.getId(), status, pageable),
+				ResponseMessage.USER_FIND_MY_TRANSACTION_BY_STATUS
 			));
 	}
 }
