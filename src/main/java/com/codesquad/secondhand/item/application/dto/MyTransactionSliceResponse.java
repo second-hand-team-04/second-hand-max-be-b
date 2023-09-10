@@ -10,11 +10,11 @@ import lombok.Getter;
 public class MyTransactionSliceResponse {
 
 	private boolean hasMore;
-	private List<MyTransactionReponse> items;
+	private List<MyTransactionResponse> items;
 
-	public static MyTransactionSliceResponse of(boolean hasMore, List<MyTransactionReponse> myTransactionReponses) {
+	public static MyTransactionSliceResponse of(boolean hasMore, List<MyTransactionResponse> myTransactionResponse) {
 		return new MyTransactionSliceResponse(
-			hasMore, myTransactionReponses
+			hasMore, myTransactionResponse
 		);
 	}
 }

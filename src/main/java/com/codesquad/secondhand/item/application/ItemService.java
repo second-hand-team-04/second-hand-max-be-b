@@ -20,7 +20,7 @@ import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;
-import com.codesquad.secondhand.item.application.dto.MyTransactionReponse;
+import com.codesquad.secondhand.item.application.dto.MyTransactionResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
 import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.item.domain.Status;
@@ -80,6 +80,6 @@ public class ItemService {
 				.collect(Collectors.toUnmodifiableList());
 		}
 		Slice<Item> itemSlice = itemRepository.findByUserAndStatusIn(userId, statusIds, pageable);
-		return MyTransactionSliceResponse.of(itemSlice.hasNext(), MyTransactionReponse.of(itemSlice.getContent()));
+		return MyTransactionSliceResponse.of(itemSlice.hasNext(), MyTransactionResponse.of(itemSlice.getContent()));
 	}
 }

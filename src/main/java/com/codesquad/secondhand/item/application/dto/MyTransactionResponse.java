@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class MyTransactionReponse {
+public class MyTransactionResponse {
 	private Long id;
 	private String title;
 	private String region;
@@ -19,8 +19,8 @@ public class MyTransactionReponse {
 	private Integer price;
 	private String thumbnail;
 
-	public static MyTransactionReponse of(Item item) {
-		return new MyTransactionReponse(
+	public static MyTransactionResponse of(Item item) {
+		return new MyTransactionResponse(
 			item.getId(),
 			item.getTitle(),
 			item.getRegion().getTitle(),
@@ -30,9 +30,9 @@ public class MyTransactionReponse {
 		);
 	}
 
-	public static List<MyTransactionReponse> of(List<Item> items) {
+	public static List<MyTransactionResponse> of(List<Item> items) {
 		return items.stream()
-			.map(MyTransactionReponse::of)
+			.map(MyTransactionResponse::of)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }
