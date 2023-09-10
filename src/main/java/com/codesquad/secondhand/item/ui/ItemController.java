@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,14 @@ public class ItemController {
 			.body(CommonResponse.createOK(
 				itemService.findItemsByCategoryAndRegion(category, region, pageable),
 				ResponseMessage.ITEM_FIND_BY_REGION_AND_CATEGORY));
+	}
+
+	@GetMapping("{id}")
+	public ResponseEntity<CommonResponse> showItemDetail(@PathVariable Long id, @AccountPrincipal Account account) {
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				itemService.findById(id, account),
+				ResponseMessage.ITEM_DETAIL_FIND));
 	}
 
 	@PostMapping

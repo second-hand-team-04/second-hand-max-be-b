@@ -1,6 +1,8 @@
 package com.codesquad.secondhand.item.application.dto;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -55,5 +57,9 @@ public class ItemCreateRequest {
 
 	public Item toItem(List<Image> images, Category category, Region region, Status status, User user) {
 		return new Item(title, price, content, images, category, region, status, user);
+	}
+
+	public List<Long> getImageIds() {
+		return Objects.isNull(imageIds) ? Collections.emptyList() : imageIds;
 	}
 }

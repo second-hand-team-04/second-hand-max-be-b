@@ -9,9 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.codesquad.secondhand.Image.application.ImageService;
 import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.category.application.CategoryService;
 import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.common.exception.item.ItemNotFoundException;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
+import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;
 import com.codesquad.secondhand.item.domain.Item;
@@ -41,6 +44,14 @@ public class ItemService {
 		Slice<Item> itemSlice = itemRepository.findByCategoryIdAndRegionId(categoryId, regionId, pageable);
 		return ItemSliceResponse.of(itemSlice.hasNext(),
 			ItemResponse.of(itemSlice.getContent()));
+	}
+
+	@Transactional
+	public ItemDetailResponse findById(Long id, Account account) {
+		Item item = itemRepository.findDetailById(id)
+			.orElseThrow(ItemNotFoundException::new);
+		item.increaseViewCount();
+		return ItemDetailResponse.from(item, account);
 	}
 
 	@Transactional
