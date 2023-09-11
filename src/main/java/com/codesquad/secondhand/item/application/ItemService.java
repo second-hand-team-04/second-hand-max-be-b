@@ -97,4 +97,10 @@ public class ItemService {
 		Slice<Item> itemSlice = itemRepository.findByUserAndStatusIn(userId, statusIds, pageable);
 		return MyTransactionSliceResponse.of(itemSlice.hasNext(), MyTransactionResponse.of(itemSlice.getContent()));
 	}
+
+	@Transactional
+	public void delete(Long id, Long userId) {
+		Item item = findByIdOrElseThrow(id);
+		item.delete(userId);
+	}
 }

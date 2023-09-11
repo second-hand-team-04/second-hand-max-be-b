@@ -23,7 +23,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
-import com.codesquad.secondhand.common.exception.item.ItemUnauthorizedUpdateException;
+import com.codesquad.secondhand.common.exception.item.ItemUnauthorizedException;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
 import com.codesquad.secondhand.user.domain.Wishlist;
@@ -112,11 +112,19 @@ public class Item {
 	}
 
 	public void updateStatus(Long userId, Status status) {
-		if (!user.equalsId(userId)) {
-			throw new ItemUnauthorizedUpdateException();
-		}
-
+		validateUnauthorizedException(userId);
 		this.status = status;
+	}
+
+	private void validateUnauthorizedException(Long userId) {
+		if (!user.equalsId(userId)) {
+			throw new ItemUnauthorizedException();
+		}
+	}
+
+	public void delete(Long userId) {
+		validateUnauthorizedException(userId);
+		this.isDeleted = true;
 	}
 
 	public int getWishlistCount() {

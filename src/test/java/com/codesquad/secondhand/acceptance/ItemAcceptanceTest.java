@@ -19,6 +19,7 @@ import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
 import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
 import static com.codesquad.secondhand.util.steps.ImageSteps.이미지_업로드_요청;
+import static com.codesquad.secondhand.util.steps.ItemSteps.상품_삭제_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.상품_상세_조회_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.상품_상태_수정_요청;
 import static com.codesquad.secondhand.util.steps.ItemSteps.상품_생성_요청;
@@ -40,6 +41,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
 import com.codesquad.secondhand.Image.application.dto.ImageResponse;
+import com.codesquad.secondhand.common.exception.ErrorType;
+import com.codesquad.secondhand.common.response.ResponseMessage;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
@@ -330,6 +333,59 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
 	}
 
+	/**
+	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
+	 * And 상품을 생성하고
+	 * When 상품을 삭제하면
+	 * Then 상품 상세 조회 시 조회 할 수가 없다.
+	 */
+	@Test
+	void 상품을_삭제한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+
+		// when
+		var response = 상품_삭제_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		상품_상셰_조회_시_삭제된_상품을_검증(1L);
+	}
+
+	/**
+	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
+	 * When 존재하지 않는 상품을 삭제하면
+	 * Then 요청이 실패한다.
+	 */
+	@Test
+	void 존재하지_않는_상품을_삭제하면_요청이_실패한다() {
+		// when
+		var response = 상품_삭제_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
+	 * And 다른 유저를 생성 후 로그인하고
+	 * And 상품을 생성하고
+	 * When 본인이 등록한 판매 상품인 아닌 상품을 삭제하면
+	 * Then 요청이 실패한다.
+	 */
+	@Test
+	void 본인이_등록한_판매_상품이_아닌_상품을_삭제하면_요청이_실패한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+		String 유저_보노_액세스_토큰 = 유저_보노_생성_후_로그인();
+
+		// when
+		var response = 상품_삭제_요청(유저_보노_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
 	public static Stream<Arguments> providerPageableAndRegion() {
 		return Stream.of(
 			Arguments.of(
@@ -569,5 +625,15 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	private String 유저_보노_생성_후_로그인() {
 		유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(), null);
 		return 로그인_요청(유저_보노.getEmail(), 유저_보노.getPassword()).jsonPath().getString("data.accessToken");
+	}
+
+	private void 상품_상셰_조회_시_삭제된_상품을_검증(long itemId) {
+		var response = 상품_상세_조회_요청(유저_만두_액세스_토큰, itemId);
+		String message = response.jsonPath().getString("message");
+
+		Assertions.assertAll(
+			() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+			() -> assertThat(message).isEqualTo(ErrorType.ITEM_NOT_FOUND.getMessage())
+		);
 	}
 }
