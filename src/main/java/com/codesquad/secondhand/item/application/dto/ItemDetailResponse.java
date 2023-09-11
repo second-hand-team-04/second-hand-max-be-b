@@ -24,7 +24,7 @@ public class ItemDetailResponse {
 	private int numChat;
 	private int numLikes;
 	private int numViews;
-	private boolean isWishlisted;
+	private boolean isLiked;
 	private LocalDateTime updatedAt;
 	private StatusItemDetailResponse status;
 	private CategoryItemDetailResponse category;
@@ -69,8 +69,8 @@ public class ItemDetailResponse {
 		return numViews;
 	}
 
-	public boolean getIsWishlisted() {
-		return isWishlisted;
+	public boolean getIsLiked() {
+		return isLiked;
 	}
 
 	public LocalDateTime getUpdatedAt() {
