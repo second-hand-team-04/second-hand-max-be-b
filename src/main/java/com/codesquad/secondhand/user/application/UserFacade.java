@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.codesquad.secondhand.Image.application.ImageService;
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.application.ImageService;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.item.application.ItemService;
 import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
 import com.codesquad.secondhand.region.application.RegionService;

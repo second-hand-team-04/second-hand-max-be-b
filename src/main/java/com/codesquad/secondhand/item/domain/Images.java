@@ -8,7 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.common.exception.image.ImageNotFoundException;
 import com.codesquad.secondhand.common.exception.item.ItemImageMaxAddCountException;
 

@@ -1,7 +1,7 @@
 package com.codesquad.secondhand.util;
 
-import com.codesquad.secondhand.Image.domain.ImageFileDetail;
-import com.codesquad.secondhand.Image.infrastructure.FileClient;
+import com.codesquad.secondhand.image.domain.ImageFileDetail;
+import com.codesquad.secondhand.image.infrastructure.FileClient;
 
 public class FakeS3Client implements FileClient {
 

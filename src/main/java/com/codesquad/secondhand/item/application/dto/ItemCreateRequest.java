@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.item.domain.Status;

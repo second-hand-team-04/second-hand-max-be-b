@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.region.domain.Region;
 

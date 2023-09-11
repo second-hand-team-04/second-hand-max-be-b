@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import org.springframework.http.MediaType;
 
-import com.codesquad.secondhand.Image.application.dto.ImageUploadRequest;
+import com.codesquad.secondhand.image.application.dto.ImageUploadRequest;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.MultiPartSpecBuilder;

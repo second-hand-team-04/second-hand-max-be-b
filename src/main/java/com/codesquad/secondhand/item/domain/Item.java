@@ -21,7 +21,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.common.exception.item.ItemNotMyRegionException;
 import com.codesquad.secondhand.common.exception.item.ItemUnauthorizedException;

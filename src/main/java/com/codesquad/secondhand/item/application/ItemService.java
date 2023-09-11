@@ -7,7 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.common.exception.item.ItemNotFoundException;
@@ -22,7 +22,6 @@ import com.codesquad.secondhand.item.application.dto.MyTransactionResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
 import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.item.domain.Status;
-import com.codesquad.secondhand.item.infrastructure.ItemImageRepository;
 import com.codesquad.secondhand.item.infrastructure.ItemRepository;
 import com.codesquad.secondhand.region.domain.Region;
 

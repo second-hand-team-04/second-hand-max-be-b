@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.Image.application;
+package com.codesquad.secondhand.image.application;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.codesquad.secondhand.Image.domain.Image;
-import com.codesquad.secondhand.Image.domain.ImageFileDetail;
-import com.codesquad.secondhand.Image.infrastructure.FileClient;
-import com.codesquad.secondhand.Image.infrastructure.ImageRepository;
+import com.codesquad.secondhand.image.domain.Image;
+import com.codesquad.secondhand.image.domain.ImageFileDetail;
+import com.codesquad.secondhand.image.infrastructure.FileClient;
+import com.codesquad.secondhand.image.infrastructure.ImageRepository;
 import com.codesquad.secondhand.common.exception.image.ImageNotFoundException;
 
 import lombok.RequiredArgsConstructor;

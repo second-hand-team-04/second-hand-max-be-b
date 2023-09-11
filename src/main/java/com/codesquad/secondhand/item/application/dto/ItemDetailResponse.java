@@ -3,7 +3,7 @@ package com.codesquad.secondhand.item.application.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.codesquad.secondhand.Image.application.dto.ImageResponse;
+import com.codesquad.secondhand.image.application.dto.ImageResponse;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.category.application.dto.CategoryItemDetailResponse;
 import com.codesquad.secondhand.category.domain.Category;

@@ -1,6 +1,6 @@
 package com.codesquad.secondhand.item.infrastructure;
 
-import static com.codesquad.secondhand.Image.domain.QImage.*;
+import static com.codesquad.secondhand.image.domain.QImage.*;
 import static com.codesquad.secondhand.item.domain.QItem.*;
 import static com.codesquad.secondhand.item.domain.QItemImage.*;
 import static com.codesquad.secondhand.item.domain.QStatus.*;
