@@ -82,8 +82,8 @@ public class User {
 		myRegions.addUserRegion(new UserRegion(this, region));
 	}
 
-	public void removeMyRegion(Long regionId) {
-		myRegions.removeUserRegion(regionId);
+	public void removeMyRegion(Region region) {
+		myRegions.removeUserRegion(region);
 	}
 
 	public Account toAccount() {
@@ -108,7 +108,7 @@ public class User {
 	}
 
 	public String getImageUrl() {
-		if(Objects.isNull(this.image)){
+		if (Objects.isNull(this.image)) {
 			return null;
 		}
 

@@ -1,10 +1,9 @@
 package com.codesquad.secondhand.unit.domain;
 
-import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_신교동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.*;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.*;
+import static com.codesquad.secondhand.util.fixture.UserFixture.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
 
@@ -77,7 +76,7 @@ public class MyRegionsTest {
 		myRegions.addUserRegion(userRegion2);
 
 		// when
-		myRegions.removeUserRegion(region.getId());
+		myRegions.removeUserRegion(region);
 
 		// then
 		assertThat(myRegions.getRegions()).doesNotContain(region);
@@ -90,6 +89,6 @@ public class MyRegionsTest {
 
 		// then
 		Assertions.assertThrows(UserRegionMinRemoveCountException.class,
-			() -> myRegions.removeUserRegion(region.getId()));
+			() -> myRegions.removeUserRegion(region));
 	}
 }
