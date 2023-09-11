@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codesquad.secondhand.auth.domain.Account;
@@ -52,7 +52,7 @@ public class ItemController {
 	public ResponseEntity<CommonResponse> showItemDetail(@PathVariable Long id, @AccountPrincipal Account account) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				itemService.findById(id, account),
+				itemService.findDetailById(id, account),
 				ResponseMessage.ITEM_DETAIL_FIND));
 	}
 
@@ -63,8 +63,14 @@ public class ItemController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
 				itemService.updateStatus(itemUpdateStatusRequest),
-				ResponseMessage.ITEM_CREATE
-			));
+				ResponseMessage.ITEM_CREATE));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<CommonResponse> delete(@PathVariable Long id, @AccountPrincipal Account account) {
+		itemService.delete(id, account.getId());
+		return ResponseEntity.status(HttpStatus.NO_CONTENT)
+			.body(CommonResponse.createNoContent(ResponseMessage.ITEM_CREATE));
 	}
 }
 

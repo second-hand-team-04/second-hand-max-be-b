@@ -83,7 +83,7 @@ CREATE TABLE `item`
     `views`       INT         NOT NULL DEFAULT 0,
     `created_at`  TIMESTAMP   NOT NULL DEFAULT now(),
     `updated_at`  TIMESTAMP   NOT NULL DEFAULT now(),
-    `is_deleted`  BOOLEAN              DEFAULT 0,
+    `is_deleted`  BOOLEAN     NOT NULL DEFAULT false,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
     FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),

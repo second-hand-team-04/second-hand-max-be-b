@@ -54,14 +54,15 @@ public class ItemService {
 	}
 
 	@Transactional
-	public ItemDetailResponse findById(Long id, Account account) {
-		Item item = findByIdOrElseThrow(id);
+	public ItemDetailResponse findDetailById(Long id, Account account) {
+		Item item = itemRepository.findDetailById(id)
+			.orElseThrow(ItemNotFoundException::new);
 		item.increaseViewCount();
 		return ItemDetailResponse.from(item, account);
 	}
 
 	public Item findByIdOrElseThrow(Long id) {
-		return itemRepository.findDetailById(id)
+		return itemRepository.findById(id)
 			.orElseThrow(ItemNotFoundException::new);
 	}
 
@@ -95,5 +96,11 @@ public class ItemService {
 		}
 		Slice<Item> itemSlice = itemRepository.findByUserAndStatusIn(userId, statusIds, pageable);
 		return MyTransactionSliceResponse.of(itemSlice.hasNext(), MyTransactionResponse.of(itemSlice.getContent()));
+	}
+
+	@Transactional
+	public void delete(Long id, Long userId) {
+		Item item = findByIdOrElseThrow(id);
+		item.delete(userId);
 	}
 }
