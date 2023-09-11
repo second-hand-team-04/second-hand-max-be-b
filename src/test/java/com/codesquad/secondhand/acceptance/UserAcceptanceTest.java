@@ -12,6 +12,7 @@ import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누하동;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
 import static com.codesquad.secondhand.util.fixture.StatusFixture.예약중;
 import static com.codesquad.secondhand.util.fixture.StatusFixture.판매중;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
@@ -99,6 +100,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	void 나의_판매내역을_조회한다(int page, int size, boolean expectedHasMore, List<Long> statusIds,
 		List<MyTransactionResponse> expectedMyTransactionResponses) throws InterruptedException {
 		// given
+		나의_동네_청운동_궁정동_수정();
 		상품들_생성_요청();
 
 		// when
@@ -320,13 +322,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		String expectedImageUrl) throws
 		FileNotFoundException {
 		// given
-		유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(),
-			new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
-				.fileName("bono.jpg")
-				.controlName("image")
-				.mimeType(MediaType.IMAGE_JPEG_VALUE)
-				.build());
-		String accessToken = 로그인_요청(유저_보노.getEmail(), 유저_보노.getPassword()).jsonPath().getString("data.accessToken");
+		String accessToken = 유저_보노_생성_및_로그인_요청();
 
 		// when
 		var response = 유저_프로필_수정_요청(accessToken, nickname, isImageChanged, image);
@@ -492,6 +488,16 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		);
 	}
 
+	private String 유저_보노_생성_및_로그인_요청() throws FileNotFoundException {
+		유저_생성_요청(공급자_내부.getId(), 유저_보노.getEmail(), 유저_보노.getNickname(), 유저_보노.getPassword(),
+			new MultiPartSpecBuilder(new FileInputStream(PROFILE_PATH))
+				.fileName("bono.jpg")
+				.controlName("image")
+				.mimeType(MediaType.IMAGE_JPEG_VALUE)
+				.build());
+		return 로그인_요청(유저_보노.getEmail(), 유저_보노.getPassword()).jsonPath().getString("data.accessToken");
+	}
+
 	private void 상품들_생성_요청() throws InterruptedException {
 		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대.getFileName()));
 		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대2.getFileName()));
@@ -511,6 +517,12 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		Thread.sleep(1000);
 		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_삼천리_자전거.getTitle(), 상품_삼천리_자전거.getPrice(),
 			상품_삼천리_자전거.getContent(), null, 상품_삼천리_자전거.getCategoryId(), 상품_삼천리_자전거.getRegionId()));
+	}
+
+	private void 나의_동네_청운동_궁정동_수정() {
+		나의_동네_등록_요청(유저_만두_액세스_토큰, 동네_서울_종로구_청운동.getId());
+		나의_동네_삭제_요청(유저_만두_액세스_토큰, 동네_서울_강남구_역삼동.getId());
+		나의_동네_등록_요청(유저_만두_액세스_토큰, 동네_서울_종로구_궁정동.getId());
 	}
 
 	private void 나의_판매내역_조회_시_조회된_상품_검증(ExtractableResponse<Response> response, boolean expectedHasMore,

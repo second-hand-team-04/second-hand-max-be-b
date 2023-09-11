@@ -14,6 +14,8 @@ import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;
+import com.codesquad.secondhand.item.application.dto.ItemUpdateRequest;
+import com.codesquad.secondhand.item.application.dto.ItemUpdateResponse;
 import com.codesquad.secondhand.item.application.dto.ItemUpdateStatusRequest;
 import com.codesquad.secondhand.item.application.dto.ItemUpdateStatusResponse;
 import com.codesquad.secondhand.item.domain.Status;
@@ -36,6 +38,7 @@ public class ItemFacade {
 	private final RegionService regionService;
 	private final StatusService statusService;
 	private final UserService userService;
+	private final ItemImageService itemImageService;
 
 	@Transactional(readOnly = true)
 	public ItemSliceResponse findItemsByCategoryAndRegion(Long category, Long region, Pageable pageable) {
@@ -55,13 +58,21 @@ public class ItemFacade {
 		itemService.create(request.toItem(images, category, region, status, user));
 	}
 
-	public ItemUpdateStatusResponse updateStatus(ItemUpdateStatusRequest itemUpdateStatusRequest) {
-		Status status = statusService.findByIdOrThrow(itemUpdateStatusRequest.getStatus());
-		return itemService.updateStatus(itemUpdateStatusRequest, status);
+	public ItemUpdateStatusResponse updateStatus(ItemUpdateStatusRequest request) {
+		Status status = statusService.findByIdOrThrow(request.getStatus());
+		return itemService.updateStatus(request, status);
+	}
+
+	public ItemUpdateResponse update(ItemUpdateRequest request) {
+		List<Image> images = imageService.findAllByIdOrThrow(request.getImageIds());
+		Category category = categoryService.findByIdOrThrow(request.getCategoryId());
+		Region region = regionService.findByIdOrThrow(request.getRegionId());
+		return itemService.update(request, images, category, region);
 	}
 
 	public void delete(Long id, Long userId) {
 		itemService.delete(id, userId);
+		itemImageService.deleteByItemId(id);
 	}
 }
 

@@ -42,6 +42,13 @@ public class Images {
 		this.itemImages.add(itemImage);
 	}
 
+	public void removeAll(List<Image> images) {
+		List<ItemImage> removeItemImages = this.itemImages.stream()
+			.filter(ii -> images.contains(ii.getImage()))
+			.collect(Collectors.toUnmodifiableList());
+		this.itemImages.removeAll(removeItemImages);
+	}
+
 	public List<Image> getImages() {
 		return itemImages.stream()
 			.map(ItemImage::getImage)
@@ -52,5 +59,9 @@ public class Images {
 		if (size >= MAX_ADD_IMAGE_COUNT) {
 			throw new ItemImageMaxAddCountException();
 		}
+	}
+
+	public void clear() {
+		this.itemImages.clear();
 	}
 }

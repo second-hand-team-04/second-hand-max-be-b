@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 public class UserRegionAddRequest {
 
 	private Long userId;
-	private Long regionId;
+	private Long id;
 
-	public UserRegionAddRequest(Long regionId) {
-		this.regionId = regionId;
+	public UserRegionAddRequest(Long id) {
+		this.id = id;
 	}
 
 	public void injectUserId(Long userId) {

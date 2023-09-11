@@ -50,6 +50,10 @@ public enum ImageFixture {
 	}
 
 	public static List<ImageResponse> findAllImageResponseByIds(List<Long> ids) {
+		if (Objects.isNull(ids) || ids.isEmpty()) {
+			return null;
+		}
+
 		return ids.stream()
 			.distinct()
 			.map(id -> findById(id).toImageResponse())

@@ -23,6 +23,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.codesquad.secondhand.Image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.common.exception.item.ItemNotMyRegionException;
 import com.codesquad.secondhand.common.exception.item.ItemUnauthorizedException;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
@@ -112,18 +113,18 @@ public class Item {
 	}
 
 	public void updateStatus(Long userId, Status status) {
-		validateUnauthorizedException(userId);
+		validateUnauthorized(userId);
 		this.status = status;
 	}
 
-	private void validateUnauthorizedException(Long userId) {
+	private void validateUnauthorized(Long userId) {
 		if (!user.equalsId(userId)) {
 			throw new ItemUnauthorizedException();
 		}
 	}
 
 	public void delete(Long userId) {
-		validateUnauthorizedException(userId);
+		validateUnauthorized(userId);
 		this.isDeleted = true;
 	}
 
@@ -134,6 +135,50 @@ public class Item {
 	public boolean isMyWishlisted(Long accountUserId) {
 		return wishlists.stream()
 			.anyMatch(w -> w.getUser().equalsId(accountUserId));
+	}
+
+	public void update(String title, Integer price, String content, Long userId, List<Image> images, Category category, Region region) {
+		validateUnauthorized(userId);
+		validateUpdateRegion(region);
+		this.title = title;
+		this.price = price;
+		this.content = content;
+		this.category = category;
+		this.region = region;
+		updateImage(images);
+	}
+
+	public void validateUpdateRegion(Region region) {
+		if (user.getRegions()
+			.stream()
+			.noneMatch(r -> r.equals(region))) {
+			throw new ItemNotMyRegionException();
+		}
+	}
+
+	private void updateImage(List<Image> images) {
+		if (Objects.isNull(images) || images.isEmpty()) {
+			this.images.clear();
+			return;
+		}
+
+		List<Image> originalImages = this.images.getImages();
+		removeImagesForUpdate(images, originalImages);
+		addImagesForUpdate(images, originalImages);
+	}
+
+	private void addImagesForUpdate(List<Image> images, List<Image> originalImages) {
+		List<Image> addImages = images.stream()
+			.filter(i -> !originalImages.contains(i))
+			.collect(Collectors.toUnmodifiableList());
+		addImage(addImages);
+	}
+
+	private void removeImagesForUpdate(List<Image> images, List<Image> originalImages) {
+		List<Image> removeImages = originalImages.stream()
+			.filter(i -> !images.contains(i))
+			.collect(Collectors.toUnmodifiableList());
+		this.images.removeAll(removeImages);
 	}
 
 	public int getChatCount() {
