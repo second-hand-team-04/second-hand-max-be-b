@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.codesquad.secondhand.Image.application.ImageService;
+import com.codesquad.secondhand.Image.application.ImageFacade;
 import com.codesquad.secondhand.Image.application.dto.ImageUploadRequest;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
@@ -19,14 +19,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ImageController {
 
-	private final ImageService imageService;
+	private final ImageFacade imageFacade;
 
 	@PostMapping
 	public ResponseEntity<CommonResponse> upload(@RequestPart ImageUploadRequest request,
 		@RequestPart MultipartFile image) {
 		return ResponseEntity.ok()
-			.body(CommonResponse.createOK(
-				imageService.upload(image),
+			.body(CommonResponse.createOK(imageFacade.upload(image),
 				ResponseMessage.IMAGE_UPLOAD));
 	}
 }

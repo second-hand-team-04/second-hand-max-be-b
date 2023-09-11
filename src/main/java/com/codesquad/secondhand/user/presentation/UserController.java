@@ -24,10 +24,9 @@ import com.codesquad.secondhand.auth.domain.ProviderType;
 import com.codesquad.secondhand.common.resolver.AccountPrincipal;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
-import com.codesquad.secondhand.item.application.ItemService;
-import com.codesquad.secondhand.user.application.UserService;
+import com.codesquad.secondhand.region.application.RegionFacade;
+import com.codesquad.secondhand.user.application.UserFacade;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
-import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
 import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
 import com.codesquad.secondhand.user.application.dto.UserUpdateRequest;
 
@@ -38,14 +37,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserService userService;
-	private final ItemService itemService;
+	private final UserFacade userFacade;
+	private final RegionFacade regionFacade;
 
 	@PostMapping
 	public ResponseEntity<CommonResponse> signUp(@RequestPart @Valid UserCreateRequest request,
 		@RequestPart(required = false) MultipartFile image) {
 		request.injectProviderId(ProviderType.LOCAL.getId());
-		userService.signUp(request, image);
+		userFacade.signUp(request, image);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(CommonResponse.createCreated(ResponseMessage.SIGN_UP));
 	}
@@ -54,7 +53,7 @@ public class UserController {
 	public ResponseEntity<CommonResponse> updateProfile(@RequestPart @Valid UserUpdateRequest request,
 		@RequestPart(required = false) MultipartFile image, @AccountPrincipal Account account) {
 		request.injectId(account.getId());
-		userService.updateProfile(request, image);
+		userFacade.updateProfile(request, image);
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(ResponseMessage.UPDATE_PROFILE));
 	}
@@ -63,7 +62,7 @@ public class UserController {
 	public ResponseEntity<CommonResponse> showMyRegions(@AccountPrincipal Account account) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				userService.findUserRegions(account.getId()),
+				userFacade.findUserRegions(account.getId()),
 				ResponseMessage.MY_REGION_FIND_ALL));
 	}
 
@@ -71,7 +70,7 @@ public class UserController {
 	public ResponseEntity<CommonResponse> addMyRegion(@RequestBody UserRegionAddRequest request,
 		@AccountPrincipal Account account) {
 		request.injectUserId(account.getId());
-		userService.addMyRegion(request);
+		userFacade.addMyRegion(request);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(CommonResponse.createCreated(ResponseMessage.MY_REGION_ADD));
 	}
@@ -79,7 +78,7 @@ public class UserController {
 	@DeleteMapping("/regions/{id}")
 	public ResponseEntity<CommonResponse> removeMyRegion(@PathVariable Long id,
 		@AccountPrincipal Account account) {
-		userService.removeMyRegion(account.getId(), id);
+		userFacade.removeMyRegion(account.getId(), id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT)
 			.body(CommonResponse.createNoContent(ResponseMessage.MY_REGION_REMOVE));
 	}
@@ -88,7 +87,7 @@ public class UserController {
 	public ResponseEntity<CommonResponse> showUserInfo(@AccountPrincipal Account account) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				UserInfoResponse.from(userService.findByIdOrThrow(account.getId())),
+				userFacade.findByIdOrThrow(account.getId()),
 				ResponseMessage.USER_INFO
 			));
 	}
@@ -98,7 +97,7 @@ public class UserController {
 		@RequestParam(required = false) List<Long> status, Pageable pageable) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				itemService.findAllMyTransactionByStatus(account.getId(), status, pageable),
+				userFacade.findAllMyTransactionByStatus(account.getId(), status, pageable),
 				ResponseMessage.USER_FIND_MY_TRANSACTION_BY_STATUS
 			));
 	}

@@ -1,12 +1,13 @@
 package com.codesquad.secondhand.item.infrastructure;
 
-import static com.codesquad.secondhand.Image.domain.QImage.image;
-import static com.codesquad.secondhand.item.domain.QItem.item;
-import static com.codesquad.secondhand.item.domain.QItemImage.itemImage;
-import static com.codesquad.secondhand.item.domain.QStatus.status;
-import static com.codesquad.secondhand.region.domain.QRegion.region;
+import static com.codesquad.secondhand.Image.domain.QImage.*;
+import static com.codesquad.secondhand.item.domain.QItem.*;
+import static com.codesquad.secondhand.item.domain.QItemImage.*;
+import static com.codesquad.secondhand.item.domain.QStatus.*;
+import static com.codesquad.secondhand.region.domain.QRegion.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -35,7 +36,7 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
 			.where(
 				categoryIdEq(categoryId),
 				item.region.id.eq(regionId),
-				item.isDeleted.eq(false)
+				item.isDeleted.isFalse()
 			)
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1)
@@ -60,5 +61,31 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
 		}
 
 		return false;
+	}
+
+	@Override
+	public Slice<Item> findAllMyTransactionByStatus(Long userId, List<Long> statusIds, Pageable pageable) {
+		List<Item> content = jpaQueryFactory.selectFrom(item)
+			.innerJoin(item.region, region).fetchJoin()
+			.leftJoin(item.images.itemImages, itemImage).fetchJoin()
+			.leftJoin(itemImage.image, image).fetchJoin()
+			.where(
+				item.user.id.eq(userId),
+				item.isDeleted.isFalse(),
+				statusIdIn(statusIds)
+			)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize() + 1)
+			.orderBy(item.updatedAt.desc(), itemImage.id.asc())
+			.fetch();
+		return new SliceImpl<>(content, pageable, getHasNext(pageable.getPageSize(), content));
+	}
+
+	private BooleanExpression statusIdIn(List<Long> statusIds) {
+		if (Objects.isNull(statusIds) || statusIds.isEmpty()) {
+			return null;
+		}
+
+		return item.status.id.in(statusIds);
 	}
 }

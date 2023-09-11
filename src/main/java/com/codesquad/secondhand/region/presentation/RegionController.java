@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
-import com.codesquad.secondhand.region.application.RegionService;
+import com.codesquad.secondhand.region.application.RegionFacade;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,14 +18,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegionController {
 
-	private final RegionService regionService;
+	private final RegionFacade regionFacade;
 
 	@GetMapping
 	public ResponseEntity<CommonResponse> showRegions(Pageable pageable,
 		@RequestParam(defaultValue = "") String title) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				regionService.findAllByTitle(pageable, title),
+				regionFacade.findAllByTitle(pageable, title),
 				ResponseMessage.REGION_FIND_ALL));
 	}
 }

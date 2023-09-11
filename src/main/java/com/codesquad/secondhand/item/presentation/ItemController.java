@@ -19,7 +19,7 @@ import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.common.resolver.AccountPrincipal;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
-import com.codesquad.secondhand.item.application.ItemService;
+import com.codesquad.secondhand.item.application.ItemFacade;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemUpdateStatusRequest;
 
@@ -30,20 +30,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ItemController {
 
-	private final ItemService itemService;
+	private final ItemFacade itemFacade;
 
 	@GetMapping
 	public ResponseEntity<CommonResponse> showHome(Pageable pageable,
 		@RequestParam Long category, @RequestParam Long region) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				itemService.findItemsByCategoryAndRegion(category, region, pageable),
+				itemFacade.findItemsByCategoryAndRegion(category, region, pageable),
 				ResponseMessage.ITEM_FIND_BY_REGION_AND_CATEGORY));
 	}
 
 	@PostMapping
-	public ResponseEntity<CommonResponse> create(@AccountPrincipal Account account, @Valid @RequestBody ItemCreateRequest request) {
-		itemService.create(account.getId(), request);
+	public ResponseEntity<CommonResponse> create(@AccountPrincipal Account account,
+		@Valid @RequestBody ItemCreateRequest request) {
+		request.injectUserId(account.getId());
+		itemFacade.create(request);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(CommonResponse.createCreated(ResponseMessage.ITEM_CREATE));
 	}
@@ -52,7 +54,7 @@ public class ItemController {
 	public ResponseEntity<CommonResponse> showItemDetail(@PathVariable Long id, @AccountPrincipal Account account) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				itemService.findDetailById(id, account),
+				itemFacade.findDetailById(id, account),
 				ResponseMessage.ITEM_DETAIL_FIND));
 	}
 
@@ -62,13 +64,13 @@ public class ItemController {
 		itemUpdateStatusRequest.injectIdAndUserId(id, account.getId());
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				itemService.updateStatus(itemUpdateStatusRequest),
+				itemFacade.updateStatus(itemUpdateStatusRequest),
 				ResponseMessage.ITEM_CREATE));
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CommonResponse> delete(@PathVariable Long id, @AccountPrincipal Account account) {
-		itemService.delete(id, account.getId());
+		itemFacade.delete(id, account.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT)
 			.body(CommonResponse.createNoContent(ResponseMessage.ITEM_CREATE));
 	}

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codesquad.secondhand.auth.application.AuthService;
+import com.codesquad.secondhand.auth.application.AuthFacade;
 import com.codesquad.secondhand.auth.application.TokenService;
 import com.codesquad.secondhand.auth.application.dto.SignInRequest;
 import com.codesquad.secondhand.auth.domain.Account;
@@ -27,18 +27,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-	private final AuthService authService;
+	private final AuthFacade authFacade;
 	private final TokenService tokenService;
 
 	@PostMapping
 	public ResponseEntity<CommonResponse> signIn(@RequestBody SignInRequest signInRequest) {
 		return ResponseEntity.ok()
-			.body(CommonResponse.createOK(authService.signIn(signInRequest), ResponseMessage.SIGN_IN));
+			.body(CommonResponse.createOK(authFacade.signIn(signInRequest), ResponseMessage.SIGN_IN));
 	}
 
 	@DeleteMapping
 	public ResponseEntity<CommonResponse> signOut(@AccountPrincipal Account account) {
-		authService.signOut(account.getId());
+		authFacade.signOut(account.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT)
 			.body(CommonResponse.createNoContent(ResponseMessage.SIGN_OUT));
 	}
@@ -47,12 +47,13 @@ public class AuthController {
 	public ResponseEntity<CommonResponse> oauthSignIn(@PathVariable("provider-name") String providerName,
 		@RequestParam String code) {
 		return ResponseEntity.ok()
-			.body(CommonResponse.createOK(authService.oauthSignIn(providerName, code), ResponseMessage.SIGN_IN));
+			.body(CommonResponse.createOK(authFacade.oauthSignIn(providerName, code), ResponseMessage.SIGN_IN));
 	}
 
 	@PostMapping("/refresh")
 	public ResponseEntity<CommonResponse> showAccessToken(@RequestHeader("Authorization") String authorizationHeader) {
 		return ResponseEntity.ok()
-			.body(CommonResponse.createOK(tokenService.generateAccessToken(authorizationHeader), ResponseMessage.SIGN_OUT));
+			.body(CommonResponse.createOK(tokenService.generateAccessToken(authorizationHeader),
+				ResponseMessage.SIGN_OUT));
 	}
 }
