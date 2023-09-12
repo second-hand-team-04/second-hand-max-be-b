@@ -35,11 +35,15 @@ public enum ErrorType {
 	AUTH_REFRESH_TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Refresh Token이 만료되었습니다"),
 	CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다"),
 
-	// ITEM,
+	// ITEM
 	STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 판매 상태입니다"),
 	ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다"),
 	ITEM_IMAGE_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "상품 이미지 등록 수가 최대 제한을 초과했습니다. 상품 등록 요청이 거부되었습니다"),
-	ITEM_IMAGE_EMPTY(HttpStatus.BAD_REQUEST, "이미지가 최소 1장 이상 포함되어야 합니다");
+	ITEM_IMAGE_EMPTY(HttpStatus.BAD_REQUEST, "이미지가 최소 1장 이상 포함되어야 합니다"),
+
+	// USER_WISHLIST
+	USER_WISHLIST_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 상품이 관심 목록에 없습니다"),
+	USER_WISHLIST_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 관심 목록에 등록된 상품입니다");
 
 	private final HttpStatus httpStatus;
 	private final String message;

@@ -172,4 +172,8 @@ public class Item {
 	public List<Image> getImages() {
 		return images.getImages();
 	}
+
+	public boolean equalsId(Long id) {
+		return Objects.equals(this.id, id);
+	}
 }

@@ -3,6 +3,7 @@ package com.codesquad.secondhand.user.application;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,8 +12,11 @@ import com.codesquad.secondhand.image.application.ImageService;
 import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.item.application.ItemService;
 import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
+import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.region.application.RegionService;
 import com.codesquad.secondhand.region.domain.Region;
+import com.codesquad.secondhand.user.application.dto.MyWishlistResponse;
+import com.codesquad.secondhand.user.application.dto.MyWishlistSliceResponse;
 import com.codesquad.secondhand.user.application.dto.MyRegionResponse;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
 import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
@@ -75,5 +79,21 @@ public class UserFacade {
 	@Transactional(readOnly = true)
 	public MyTransactionSliceResponse findAllMyTransactionByStatus(Long id, List<Long> status, Pageable pageable) {
 		return itemService.findAllMyTransactionByStatus(id, status, pageable);
+	}
+
+	public void addMyWishlist(Long id, Long itemId) {
+		Item item = itemService.findByIdOrElseThrow(itemId);
+		userService.addMyWishlist(id, item);
+	}
+
+	public void removeMyWishlist(Long id, Long itemId) {
+		Item item = itemService.findByIdOrElseThrow(itemId);
+		userService.removeMyWishlist(id, item);
+	}
+
+	@Transactional(readOnly = true)
+	public MyWishlistSliceResponse findMyWishlistByCategory(Long id, Long categoryId, Pageable pageable) {
+		Slice<Item> itemSlice = itemService.findByUserIdAndCategoryId(id, categoryId, pageable);
+		return MyWishlistSliceResponse.of(itemSlice.hasNext(), MyWishlistResponse.from(itemSlice.getContent()));
 	}
 }

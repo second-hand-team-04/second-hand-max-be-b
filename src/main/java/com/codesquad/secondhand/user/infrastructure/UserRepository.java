@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.codesquad.secondhand.user.application.UserService;
 import com.codesquad.secondhand.user.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {

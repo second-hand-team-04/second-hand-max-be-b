@@ -32,7 +32,12 @@ public enum ResponseMessage {
 	USER_FIND_MY_TRANSACTION_BY_STATUS("판매내역 조회를 성공하였습니다"),
 
 	// image
-	IMAGE_UPLOAD("이미지 등록을 성공하였습니다");
+	IMAGE_UPLOAD("이미지 등록을 성공하였습니다"),
+
+	// wishlist
+	USER_WISHLIST_FIND("관심목록 조회를 성공하였습니다"),
+	USER_WISHLIST_ADD("관심목록 추가를 성공하였습니다"),
+	USER_WISHLIST_REMOVE("관심목록 삭제를 성공하였습니다");
 
 	private final String message;
 

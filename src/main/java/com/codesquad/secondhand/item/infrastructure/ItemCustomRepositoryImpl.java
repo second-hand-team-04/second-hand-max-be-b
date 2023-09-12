@@ -5,6 +5,7 @@ import static com.codesquad.secondhand.item.domain.QItem.*;
 import static com.codesquad.secondhand.item.domain.QItemImage.*;
 import static com.codesquad.secondhand.item.domain.QStatus.*;
 import static com.codesquad.secondhand.region.domain.QRegion.*;
+import static com.codesquad.secondhand.user.domain.QWishlist.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,26 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
 			.where(
 				categoryIdEq(categoryId),
 				item.region.id.eq(regionId),
+				item.isDeleted.isFalse()
+			)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize() + 1)
+			.orderBy(item.updatedAt.desc(), itemImage.id.asc())
+			.fetch();
+
+		return new SliceImpl<>(content, pageable, getHasNext(pageable.getPageSize(), content));
+	}
+
+	@Override
+	public Slice<Item> findByUserIdAndCategoryId(Long userId, Long categoryId, Pageable pageable) {
+		List<Item> content = jpaQueryFactory.selectFrom(item)
+			.innerJoin(item.wishlists, wishlist)
+			.innerJoin(item.status, status).fetchJoin()
+			.leftJoin(item.images.itemImages, itemImage).fetchJoin()
+			.leftJoin(itemImage.image, image).fetchJoin()
+			.where(
+				wishlist.user.id.eq(userId),
+				categoryIdEq(categoryId),
 				item.isDeleted.isFalse()
 			)
 			.offset(pageable.getOffset())

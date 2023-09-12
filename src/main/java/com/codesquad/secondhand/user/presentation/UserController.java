@@ -24,6 +24,7 @@ import com.codesquad.secondhand.auth.domain.ProviderType;
 import com.codesquad.secondhand.common.resolver.AccountPrincipal;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
+import com.codesquad.secondhand.region.application.RegionFacade;
 import com.codesquad.secondhand.user.application.UserFacade;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
 import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
@@ -36,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserFacade userFacade;;
+	private final UserFacade userFacade;
 
 	@PostMapping
 	public ResponseEntity<CommonResponse> signUp(@RequestPart @Valid UserCreateRequest request,
@@ -106,6 +107,30 @@ public class UserController {
 				userFacade.findAllMyTransactionByStatus(account.getId(), status, pageable),
 				ResponseMessage.USER_FIND_MY_TRANSACTION_BY_STATUS
 			));
+	}
+
+	@GetMapping("/wishlist")
+	public ResponseEntity<CommonResponse> showMyWishlists(@AccountPrincipal Account account,
+		@RequestParam(required = false) Long categoryId, Pageable pageable) {
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				userFacade.findMyWishlistByCategory(account.getId(), categoryId, pageable),
+				ResponseMessage.USER_WISHLIST_FIND
+			));
+	}
+
+	@PostMapping("/wishlist/{itemId}")
+	public ResponseEntity<CommonResponse> addWishlist(@AccountPrincipal Account account, @PathVariable Long itemId) {
+		userFacade.addMyWishlist(account.getId(), itemId);
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(CommonResponse.createCreated(ResponseMessage.USER_WISHLIST_ADD));
+	}
+
+	@DeleteMapping("/wishlist/{itemId}")
+	public ResponseEntity<CommonResponse> deleteWishlist(@AccountPrincipal Account account, @PathVariable Long itemId) {
+		userFacade.removeMyWishlist(account.getId(), itemId);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT)
+			.body(CommonResponse.createNoContent(ResponseMessage.USER_WISHLIST_REMOVE));
 	}
 }
 

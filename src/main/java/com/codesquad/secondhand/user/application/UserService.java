@@ -9,6 +9,7 @@ import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.common.exception.user.UserEmailAndProviderDuplicationException;
 import com.codesquad.secondhand.common.exception.user.UserNicknameDuplicationException;
 import com.codesquad.secondhand.common.exception.user.UserNotFoundException;
+import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.region.application.dto.RegionResponse;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.application.dto.MyRegionResponse;
@@ -81,5 +82,19 @@ public class UserService {
 	public void removeMyRegion(Long userId, Region region) {
 		User user = findByIdOrThrow(userId);
 		user.removeMyRegion(region);
+	}
+
+	@Transactional
+	public void addMyWishlist(Long id, Item item) {
+		User user = findByIdOrThrow(id);
+
+		user.addMyWishlist(item);
+	}
+
+	@Transactional
+	public void removeMyWishlist(Long id, Item item) {
+		User user = findByIdOrThrow(id);
+
+		user.removeWishlist(item);
 	}
 }
