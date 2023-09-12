@@ -11,6 +11,7 @@ import com.codesquad.secondhand.common.exception.user.UserNicknameDuplicationExc
 import com.codesquad.secondhand.common.exception.user.UserNotFoundException;
 import com.codesquad.secondhand.region.application.dto.RegionResponse;
 import com.codesquad.secondhand.region.domain.Region;
+import com.codesquad.secondhand.user.application.dto.MyRegionResponse;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
 import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
 import com.codesquad.secondhand.user.application.dto.UserUpdateRequest;
@@ -30,7 +31,7 @@ public class UserService {
 	@Transactional
 	public User signUp(UserCreateRequest request, Provider provider, Image image, Region region) {
 		validateDuplication(request, provider.getId());
-		User user = userRepository.save(request.toUser(provider, image));
+		User user = userRepository.save(request.toUser(provider, image, region));
 		user.addMyRegion(region);
 		return user;
 	}
@@ -63,10 +64,11 @@ public class UserService {
 			.orElseThrow(UserNotFoundException::new);
 	}
 
-	public List<RegionResponse> findUserRegions(Long id) {
+	public MyRegionResponse findUserRegions(Long id) {
 		User user = userRepository.findWithMyRegionsById(id)
 			.orElseThrow(UserNotFoundException::new);
-		return RegionResponse.from(user.getRegions());
+		List<RegionResponse> regionResponses = RegionResponse.from(user.getRegions());
+		return MyRegionResponse.of(user.getSelectedRegion(), regionResponses);
 	}
 
 	@Transactional

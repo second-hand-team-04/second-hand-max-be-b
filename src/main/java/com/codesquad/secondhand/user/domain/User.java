@@ -45,6 +45,10 @@ public class User {
 	@JoinColumn(name = "image_id")
 	private Image image;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "selected_region_id")
+	private Region selectedRegion;
+
 	private String nickname;
 
 	private String email;
@@ -57,23 +61,20 @@ public class User {
 	@Embedded
 	private MyRegions myRegions = new MyRegions();
 
-	public User(Long id, Provider provider, Image image, String nickname, String email, String password,
-		LocalDateTime createdAt) {
+	public User(Long id, Provider provider, Image image, Region selectedRegion, String nickname, String email,
+		String password, LocalDateTime createdAt) {
 		this.id = id;
 		this.provider = provider;
 		this.image = image;
+		this.selectedRegion = selectedRegion;
 		this.nickname = nickname;
 		this.email = email;
 		this.password = password;
 		this.createdAt = createdAt;
 	}
 
-	public User(Provider provider, String nickname, String email, String password, Image image) {
-		this.provider = provider;
-		this.nickname = nickname;
-		this.email = email;
-		this.password = password;
-		this.image = image;
+	public User(Provider provider, String nickname, String email, String password, Image image, Region region) {
+		this(null, provider, image, region, nickname, email, password, null);
 	}
 
 	public List<Region> getRegions() {
@@ -103,6 +104,11 @@ public class User {
 		if (isImageChanged) {
 			this.image = image;
 		}
+	}
+
+	public void updateSelectedRegion(Region region) {
+		validateNotIncludeMyRegion(region);
+		this.selectedRegion = region;
 	}
 
 	public void validatePermission(User user) {

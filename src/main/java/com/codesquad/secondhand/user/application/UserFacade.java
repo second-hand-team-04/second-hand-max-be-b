@@ -12,13 +12,14 @@ import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.item.application.ItemService;
 import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
 import com.codesquad.secondhand.region.application.RegionService;
-import com.codesquad.secondhand.region.application.dto.RegionResponse;
 import com.codesquad.secondhand.region.domain.Region;
+import com.codesquad.secondhand.user.application.dto.MyRegionResponse;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
 import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
 import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
 import com.codesquad.secondhand.user.application.dto.UserUpdateRequest;
 import com.codesquad.secondhand.user.domain.Provider;
+import com.codesquad.secondhand.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,18 +47,24 @@ public class UserFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public UserInfoResponse findByIdOrThrow(Long id) {
+	public UserInfoResponse findById(Long id) {
 		return UserInfoResponse.from(userService.findByIdOrThrow(id));
 	}
 
 	@Transactional(readOnly = true)
-	public List<RegionResponse> findUserRegions(Long id) {
+	public MyRegionResponse findMyRegions(Long id) {
 		return userService.findUserRegions(id);
 	}
 
 	public void addMyRegion(UserRegionAddRequest request) {
 		Region region = regionService.findByIdOrThrow(request.getId());
 		userService.addMyRegion(request, region);
+	}
+
+	public void selectedMyRegion(Long userId, Long regionId) {
+		User user = userService.findByIdOrThrow(userId);
+		Region region = regionService.findByIdOrThrow(regionId);
+		user.updateSelectedRegion(region);
 	}
 
 	public void removeMyRegion(Long userId, Long regionId) {
