@@ -3,7 +3,7 @@ package com.codesquad.secondhand.item.application.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.codesquad.secondhand.Image.application.dto.ImageResponse;
+import com.codesquad.secondhand.image.application.dto.ImageResponse;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.category.application.dto.CategoryItemDetailResponse;
 import com.codesquad.secondhand.category.domain.Category;
@@ -24,7 +24,7 @@ public class ItemDetailResponse {
 	private int numChat;
 	private int numLikes;
 	private int numViews;
-	private boolean isWishlisted;
+	private boolean isLiked;
 	private LocalDateTime updatedAt;
 	private StatusItemDetailResponse status;
 	private CategoryItemDetailResponse category;
@@ -69,8 +69,8 @@ public class ItemDetailResponse {
 		return numViews;
 	}
 
-	public boolean getIsWishlisted() {
-		return isWishlisted;
+	public boolean getIsLiked() {
+		return isLiked;
 	}
 
 	public LocalDateTime getUpdatedAt() {
@@ -90,6 +90,6 @@ public class ItemDetailResponse {
 	}
 
 	public List<ImageResponse> getImageResponse() {
-		return imageResponse;
+		return imageResponse.isEmpty() ? null : imageResponse;
 	}
 }

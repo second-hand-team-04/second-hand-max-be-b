@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.common.exception.user.UserEmailAndProviderDuplicationException;
 import com.codesquad.secondhand.common.exception.user.UserNicknameDuplicationException;
 import com.codesquad.secondhand.common.exception.user.UserNotFoundException;

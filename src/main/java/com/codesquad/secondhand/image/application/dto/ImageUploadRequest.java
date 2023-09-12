@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.Image.application.dto;
+package com.codesquad.secondhand.image.application.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

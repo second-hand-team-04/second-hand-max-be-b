@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import com.codesquad.secondhand.Image.application.dto.ImageResponse;
+import com.codesquad.secondhand.image.application.dto.ImageResponse;
 import com.codesquad.secondhand.util.AcceptanceTest;
 
 import io.restassured.builder.MultiPartSpecBuilder;

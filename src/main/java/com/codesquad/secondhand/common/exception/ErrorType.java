@@ -38,7 +38,8 @@ public enum ErrorType {
 	ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다"),
 	ITEM_IMAGE_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "상품 이미지 등록 수가 최대 제한을 초과했습니다. 상품 등록 요청이 거부되었습니다"),
 	ITEM_IMAGE_EMPTY(HttpStatus.BAD_REQUEST, "이미지가 최소 1장 이상 포함되어야 합니다"),
-	ITEM_UNAUTHORIZED(HttpStatus.BAD_REQUEST, "해당 상품을 변경하거나 삭제할 권한이 없습니다.");
+	ITEM_UNAUTHORIZED(HttpStatus.BAD_REQUEST, "해당 상품을 변경하거나 삭제할 권한이 없습니다."),
+	ITEM_NOT_MY_REGION(HttpStatus.BAD_REQUEST, "나의 동네에 등록 되지 않았습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

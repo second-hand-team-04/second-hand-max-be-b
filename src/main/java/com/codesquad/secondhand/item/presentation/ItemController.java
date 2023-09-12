@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
 import com.codesquad.secondhand.item.application.ItemFacade;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
+import com.codesquad.secondhand.item.application.dto.ItemUpdateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemUpdateStatusRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -65,6 +67,16 @@ public class ItemController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
 				itemFacade.updateStatus(itemUpdateStatusRequest),
+				ResponseMessage.ITEM_CREATE));
+	}
+
+	@PutMapping("{id}")
+	public ResponseEntity<CommonResponse> update(@RequestBody ItemUpdateRequest itemUpdateRequest,
+		@PathVariable Long id, @AccountPrincipal Account account) {
+		itemUpdateRequest.injectIdAndUserId(id, account.getId());
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				itemFacade.update(itemUpdateRequest),
 				ResponseMessage.ITEM_CREATE));
 	}
 

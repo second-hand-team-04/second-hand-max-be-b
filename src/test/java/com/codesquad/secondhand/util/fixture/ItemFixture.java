@@ -8,7 +8,7 @@ import static com.codesquad.secondhand.util.fixture.UserFixture.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.codesquad.secondhand.Image.application.dto.ImageResponse;
+import com.codesquad.secondhand.image.application.dto.ImageResponse;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionResponse;

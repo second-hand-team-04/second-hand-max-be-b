@@ -1,8 +1,13 @@
 package com.codesquad.secondhand.util;
 
 import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
 import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.Image.domain;
+package com.codesquad.secondhand.image.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

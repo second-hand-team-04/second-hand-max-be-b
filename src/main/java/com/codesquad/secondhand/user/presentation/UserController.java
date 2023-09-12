@@ -24,7 +24,6 @@ import com.codesquad.secondhand.auth.domain.ProviderType;
 import com.codesquad.secondhand.common.resolver.AccountPrincipal;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
-import com.codesquad.secondhand.region.application.RegionFacade;
 import com.codesquad.secondhand.user.application.UserFacade;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
 import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
@@ -37,8 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserFacade userFacade;
-	private final RegionFacade regionFacade;
+	private final UserFacade userFacade;;
 
 	@PostMapping
 	public ResponseEntity<CommonResponse> signUp(@RequestPart @Valid UserCreateRequest request,

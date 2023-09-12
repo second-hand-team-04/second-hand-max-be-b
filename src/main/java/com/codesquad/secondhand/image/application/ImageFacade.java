@@ -1,10 +1,10 @@
-package com.codesquad.secondhand.Image.application;
+package com.codesquad.secondhand.image.application;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.codesquad.secondhand.Image.application.dto.ImageUploadResponse;
+import com.codesquad.secondhand.image.application.dto.ImageUploadResponse;
 
 import lombok.RequiredArgsConstructor;
 

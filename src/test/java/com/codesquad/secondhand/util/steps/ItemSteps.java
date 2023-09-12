@@ -3,6 +3,7 @@ package com.codesquad.secondhand.util.steps;
 import org.springframework.http.MediaType;
 
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
+import com.codesquad.secondhand.item.application.dto.ItemUpdateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemUpdateStatusRequest;
 
 import io.restassured.RestAssured;
@@ -22,12 +23,12 @@ public class ItemSteps {
 			.extract();
 	}
 
-	public static ExtractableResponse<Response> 상품_상세_조회_요청(String accessToken, long itemId) {
+	public static ExtractableResponse<Response> 상품_상세_조회_요청(String accessToken, long id) {
 		return RestAssured.given().log().all()
 			.auth().oauth2(accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.when().get("/api/items/{id}", itemId)
+			.when().get("/api/items/{id}", id)
 			.then().log().all()
 			.extract();
 	}
@@ -43,13 +44,24 @@ public class ItemSteps {
 			.extract();
 	}
 
-	public static ExtractableResponse<Response> 상품_상태_수정_요청(String accessToken, long itemId, long statusId) {
+	public static ExtractableResponse<Response> 상품_상태_수정_요청(String accessToken, long id, long statusId) {
 		return RestAssured.given().log().all()
 			.auth().oauth2(accessToken)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.body(new ItemUpdateStatusRequest(statusId))
-			.when().patch("/api/items/{id}", itemId)
+			.when().patch("/api/items/{id}", id)
+			.then().log().all()
+			.extract();
+	}
+
+	public static ExtractableResponse<Response> 상품_수정_요청(String accessToken, Long id, ItemUpdateRequest itemUpdateRequest) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(itemUpdateRequest)
+			.when().put("/api/items/{id}", id)
 			.then().log().all()
 			.extract();
 	}

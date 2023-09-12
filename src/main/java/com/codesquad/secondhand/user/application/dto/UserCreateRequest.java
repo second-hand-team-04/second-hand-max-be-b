@@ -3,7 +3,7 @@ package com.codesquad.secondhand.user.application.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.user.domain.Provider;
 import com.codesquad.secondhand.user.domain.User;
 

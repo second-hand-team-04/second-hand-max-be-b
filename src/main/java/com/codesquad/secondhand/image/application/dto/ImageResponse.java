@@ -1,9 +1,9 @@
-package com.codesquad.secondhand.Image.application.dto;
+package com.codesquad.secondhand.image.application.dto;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

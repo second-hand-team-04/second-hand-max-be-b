@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.codesquad.secondhand.Image.application.dto.ImageResponse;
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.application.dto.ImageResponse;
+import com.codesquad.secondhand.image.domain.Image;
 
 public enum ImageFixture {
 
@@ -50,6 +50,10 @@ public enum ImageFixture {
 	}
 
 	public static List<ImageResponse> findAllImageResponseByIds(List<Long> ids) {
+		if (Objects.isNull(ids) || ids.isEmpty()) {
+			return null;
+		}
+
 		return ids.stream()
 			.distinct()
 			.map(id -> findById(id).toImageResponse())

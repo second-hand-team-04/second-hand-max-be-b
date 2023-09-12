@@ -1,11 +1,11 @@
-package com.codesquad.secondhand.Image.infrastructure;
+package com.codesquad.secondhand.image.infrastructure;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.codesquad.secondhand.Image.domain.ImageFileDetail;
+import com.codesquad.secondhand.image.domain.ImageFileDetail;
 
 @Component
 public class S3Client implements FileClient {
