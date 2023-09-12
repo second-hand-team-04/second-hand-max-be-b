@@ -27,4 +27,8 @@ public class Wishlist {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "item_id")
 	private Item item;
+
+	public boolean equalsUser(User user) {
+		return this.user.equals(user);
+	}
 }

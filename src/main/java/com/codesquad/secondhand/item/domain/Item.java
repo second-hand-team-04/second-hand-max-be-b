@@ -23,8 +23,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
-import com.codesquad.secondhand.common.exception.item.ItemNotMyRegionException;
-import com.codesquad.secondhand.common.exception.item.ItemUnauthorizedException;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
 import com.codesquad.secondhand.user.domain.Wishlist;
@@ -83,6 +81,7 @@ public class Item {
 
 	public Item(String title, Integer price, String content, List<Image> images, Category category, Region region,
 		Status status, User user) {
+		user.validateNotIncludeMyRegion(region);
 		this.title = title;
 		this.price = price;
 		this.content = content;
@@ -102,58 +101,25 @@ public class Item {
 		}
 	}
 
-	public void addImage(Image image) {
-		if (Objects.nonNull(image)) {
-			this.images.addImage(ItemImage.of(this, image));
-		}
-	}
-
 	public void increaseViewCount() {
 		views++;
 	}
 
-	public void updateStatus(Long userId, Status status) {
-		validateUnauthorized(userId);
+	public void updateStatus(User accountUser, Status status) {
+		this.user.validatePermission(accountUser);
 		this.status = status;
 	}
 
-	private void validateUnauthorized(Long userId) {
-		if (!user.equalsId(userId)) {
-			throw new ItemUnauthorizedException();
-		}
-	}
-
-	public void delete(Long userId) {
-		validateUnauthorized(userId);
-		this.isDeleted = true;
-	}
-
-	public int getWishlistCount() {
-		return wishlists.size();
-	}
-
-	public boolean isMyWishlisted(Long accountUserId) {
-		return wishlists.stream()
-			.anyMatch(w -> w.getUser().equalsId(accountUserId));
-	}
-
-	public void update(String title, Integer price, String content, Long userId, List<Image> images, Category category, Region region) {
-		validateUnauthorized(userId);
-		validateUpdateRegion(region);
+	public void update(String title, Integer price, String content, User accountUser, List<Image> images,
+		Category category, Region region) {
+		this.user.validatePermission(accountUser);
+		this.user.validateNotIncludeMyRegion(region);
 		this.title = title;
 		this.price = price;
 		this.content = content;
 		this.category = category;
 		this.region = region;
 		updateImage(images);
-	}
-
-	public void validateUpdateRegion(Region region) {
-		if (user.getRegions()
-			.stream()
-			.noneMatch(r -> r.equals(region))) {
-			throw new ItemNotMyRegionException();
-		}
 	}
 
 	private void updateImage(List<Image> images) {
@@ -179,6 +145,20 @@ public class Item {
 			.filter(i -> !images.contains(i))
 			.collect(Collectors.toUnmodifiableList());
 		this.images.removeAll(removeImages);
+	}
+
+	public void delete(User accountUser) {
+		this.user.validatePermission(accountUser);
+		this.isDeleted = true;
+	}
+
+	public int getWishlistCount() {
+		return wishlists.size();
+	}
+
+	public boolean isMyWishlisted(User user) {
+		return wishlists.stream()
+			.anyMatch(w -> w.equalsUser(user));
 	}
 
 	public int getChatCount() {

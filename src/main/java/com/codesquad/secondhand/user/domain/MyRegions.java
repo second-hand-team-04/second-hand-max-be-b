@@ -48,7 +48,7 @@ public class MyRegions {
 
 	public void removeUserRegion(Region region) {
 		validateMinRemoveCount();
-		userRegions.remove(findByRegionId(region));
+		userRegions.remove(findByRegion(region));
 	}
 
 	private void validateMinRemoveCount() {
@@ -57,9 +57,9 @@ public class MyRegions {
 		}
 	}
 
-	private UserRegion findByRegionId(Region region) {
+	private UserRegion findByRegion(Region region) {
 		return userRegions.stream()
-			.filter(u -> u.equalsRegion(region.getId()))
+			.filter(u -> u.equalsRegion(region))
 			.findAny()
 			.orElse(null);
 	}

@@ -46,7 +46,8 @@ public class ItemFacade {
 	}
 
 	public ItemDetailResponse findDetailById(Long id, Account account) {
-		return itemService.findDetailById(id, account);
+		User user = userService.findByIdOrThrow(account.getId());
+		return itemService.findDetailById(id, user);
 	}
 
 	public void create(ItemCreateRequest request) {
@@ -59,19 +60,22 @@ public class ItemFacade {
 	}
 
 	public ItemUpdateStatusResponse updateStatus(ItemUpdateStatusRequest request) {
+		User user = userService.findByIdOrThrow(request.getUserId());
 		Status status = statusService.findByIdOrThrow(request.getStatus());
-		return itemService.updateStatus(request, status);
+		return itemService.updateStatus(request, user, status);
 	}
 
 	public ItemUpdateResponse update(ItemUpdateRequest request) {
 		List<Image> images = imageService.findAllByIdOrThrow(request.getImageIds());
 		Category category = categoryService.findByIdOrThrow(request.getCategoryId());
 		Region region = regionService.findByIdOrThrow(request.getRegionId());
-		return itemService.update(request, images, category, region);
+		User user = userService.findByIdOrThrow(request.getUserId());
+		return itemService.update(request, user, images, category, region);
 	}
 
 	public void delete(Long id, Long userId) {
-		itemService.delete(id, userId);
+		User user = userService.findByIdOrThrow(userId);
+		itemService.delete(id, user);
 		itemImageService.deleteByItemId(id);
 	}
 }

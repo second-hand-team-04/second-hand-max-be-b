@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.codesquad.secondhand.image.domain.Image;
-import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.common.exception.item.ItemNotFoundException;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
@@ -24,6 +23,7 @@ import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.item.domain.Status;
 import com.codesquad.secondhand.item.infrastructure.ItemRepository;
 import com.codesquad.secondhand.region.domain.Region;
+import com.codesquad.secondhand.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,11 +41,11 @@ public class ItemService {
 	}
 
 	@Transactional
-	public ItemDetailResponse findDetailById(Long id, Account account) {
+	public ItemDetailResponse findDetailById(Long id, User user) {
 		Item item = itemRepository.findDetailById(id)
 			.orElseThrow(ItemNotFoundException::new);
 		item.increaseViewCount();
-		return ItemDetailResponse.from(item, account);
+		return ItemDetailResponse.from(item, user);
 	}
 
 	public Item findByIdOrElseThrow(Long id) {
@@ -55,14 +55,13 @@ public class ItemService {
 
 	@Transactional
 	public void create(Item item) {
-		item.validateUpdateRegion(item.getRegion());
 		itemRepository.save(item);
 	}
 
 	@Transactional
-	public ItemUpdateStatusResponse updateStatus(ItemUpdateStatusRequest itemUpdateStatusRequest, Status status) {
+	public ItemUpdateStatusResponse updateStatus(ItemUpdateStatusRequest itemUpdateStatusRequest, User user, Status status) {
 		Item item = findByIdOrElseThrow(itemUpdateStatusRequest.getId());
-		item.updateStatus(itemUpdateStatusRequest.getUserId(), status);
+		item.updateStatus(user, status);
 		return new ItemUpdateStatusResponse(itemUpdateStatusRequest.getId());
 	}
 
@@ -72,15 +71,15 @@ public class ItemService {
 	}
 
 	@Transactional
-	public ItemUpdateResponse update(ItemUpdateRequest request, List<Image> images, Category category, Region region) {
+	public ItemUpdateResponse update(ItemUpdateRequest request, User accountUser, List<Image> images, Category category, Region region) {
 		Item item = findByIdOrElseThrow(request.getId());
-		item.update(request.getTitle(), request.getPrice(), request.getContent(), request.getUserId(), images, category, region);
+		item.update(request.getTitle(), request.getPrice(), request.getContent(), accountUser, images, category, region);
 		return new ItemUpdateResponse(item.getId());
 	}
 
 	@Transactional
-	public void delete(Long id, Long userId) {
+	public void delete(Long id, User user) {
 		Item item = findByIdOrElseThrow(id);
-		item.delete(userId);
+		item.delete(user);
 	}
 }

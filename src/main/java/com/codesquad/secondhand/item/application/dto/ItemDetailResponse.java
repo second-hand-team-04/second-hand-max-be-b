@@ -31,12 +31,12 @@ public class ItemDetailResponse {
 	private UserItemDetailResponse seller;
 	private List<ImageResponse> imageResponse;
 
-	public static ItemDetailResponse from(Item item, Account account) {
+	public static ItemDetailResponse from(Item item, User accountUser) {
 		Status status = item.getStatus();
 		Category category = item.getCategory();
 		User user = item.getUser();
 		return new ItemDetailResponse(item.getId(), item.getTitle(), item.getContent(), item.getPrice(),
-			item.getChatCount(), item.getWishlistCount(), item.getViews(), item.isMyWishlisted(account.getId()), item.getUpdatedAt(),
+			item.getChatCount(), item.getWishlistCount(), item.getViews(), item.isMyWishlisted(accountUser), item.getUpdatedAt(),
 			StatusItemDetailResponse.from(status), CategoryItemDetailResponse.from(category),
 			UserItemDetailResponse.from(user), ImageResponse.from(item.getImages()));
 	}

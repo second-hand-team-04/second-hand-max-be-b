@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.codesquad.secondhand.common.exception.item.MyRegionNotIncludeException;
+import com.codesquad.secondhand.common.exception.item.PermissionException;
 import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.region.domain.Region;
@@ -103,8 +105,26 @@ public class User {
 		}
 	}
 
+	public void validatePermission(User user) {
+		if (!this.equals(user)) {
+			throw new PermissionException();
+		}
+	}
+
 	public boolean equalsId(Long id) {
 		return Objects.equals(this.id, id);
+	}
+
+	public void validateNotIncludeMyRegion(Region region) {
+		if (getRegions().stream()
+			.noneMatch(r -> r.equals(region))) {
+			throw new MyRegionNotIncludeException();
+		}
+	}
+
+	public boolean nonMatchRegion(Region region) {
+		return getRegions().stream()
+			.noneMatch(r -> r.equals(region));
 	}
 
 	public String getImageUrl() {
