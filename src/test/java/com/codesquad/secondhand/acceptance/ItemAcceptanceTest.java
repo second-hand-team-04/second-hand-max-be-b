@@ -356,7 +356,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		var response = 상품_삭제_요청(유저_만두_액세스_토큰, 1L);
 
 		// then
-		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		응답_상태코드_검증(response, HttpStatus.OK);
 		상품_상셰_조회_시_삭제된_상품을_검증(1L);
 	}
 

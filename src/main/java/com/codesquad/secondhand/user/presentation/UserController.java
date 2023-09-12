@@ -85,8 +85,8 @@ public class UserController {
 	public ResponseEntity<CommonResponse> removeMyRegion(@PathVariable Long id,
 		@AccountPrincipal Account account) {
 		userFacade.removeMyRegion(account.getId(), id);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT)
-			.body(CommonResponse.createNoContent(ResponseMessage.MY_REGION_REMOVE));
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(ResponseMessage.MY_REGION_REMOVE));
 	}
 
 	@GetMapping("/info")

@@ -231,7 +231,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		var response = 나의_동네_삭제_요청(유저_만두_액세스_토큰, 동네_서울_종로구_내자동.getId());
 
 		// then
-		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		응답_상태코드_검증(response, HttpStatus.OK);
 		나의_동네_목록_조회_시_삭제된_나의_동네를_검증(동네_서울_종로구_내자동.getTitle());
 	}
 

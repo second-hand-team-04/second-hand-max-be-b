@@ -1,6 +1,5 @@
 package com.codesquad.secondhand.auth.presentation;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +38,8 @@ public class AuthController {
 	@DeleteMapping
 	public ResponseEntity<CommonResponse> signOut(@AccountPrincipal Account account) {
 		authFacade.signOut(account.getId());
-		return ResponseEntity.status(HttpStatus.NO_CONTENT)
-			.body(CommonResponse.createNoContent(ResponseMessage.SIGN_OUT));
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(ResponseMessage.SIGN_OUT));
 	}
 
 	@GetMapping("/oauth/{provider-name}")
