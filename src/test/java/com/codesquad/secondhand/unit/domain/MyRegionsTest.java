@@ -31,8 +31,8 @@ public class MyRegionsTest {
 	@BeforeEach
 	void init() {
 		myRegions = new MyRegions();
-		user = new User(1L, 공급자_내부.toProvider(), null, 유저_만두.getNickname(), 유저_만두.getEmail(),
-			유저_만두.getPassword(), LocalDateTime.now());
+		user = new User(1L, 공급자_내부.toProvider(), null, 동네_서울_강남구_역삼동.getRegion(),
+			유저_만두.getNickname(), 유저_만두.getEmail(), 유저_만두.getPassword(), LocalDateTime.now());
 		region = 동네_서울_종로구_청운동.getRegion();
 		region2 = 동네_서울_종로구_신교동.getRegion();
 		userRegion = new UserRegion(user, region);

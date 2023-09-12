@@ -10,7 +10,7 @@ import com.codesquad.secondhand.user.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	@Query("select u from User u left join fetch u.myRegions.userRegions m left join fetch m.region r where u.id = :id")
+	@Query("select u from User u left join fetch u.myRegions.userRegions m left join fetch m.region r where u.id = :id order by r.title")
 	Optional<User> findWithMyRegionsById(Long id);
 
 	boolean existsByEmailAndProviderId(String email, Long id);

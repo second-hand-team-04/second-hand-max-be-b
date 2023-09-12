@@ -9,6 +9,7 @@ public enum ErrorType {
 	USER_LOGIN_INFO_DIFFERENT(HttpStatus.BAD_REQUEST, "이메일이나 비밀번호가 다릅니다"),
 	USER_EMAIL_PROVIDER_DUPLICATION(HttpStatus.BAD_REQUEST,  "이미 존재하는 이메일입니다"),
 	USER_NICKNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다"),
+	USER_PERMISSION(HttpStatus.BAD_REQUEST, "해당 유저는 권한이 없습니다."),
 
 	// PROVIDER
 	PROVIDER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 공급자입니다"),
@@ -20,6 +21,7 @@ public enum ErrorType {
 	USER_REGION_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 등록된 동네입니다"),
 	USER_REGION_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "동네 등록 수가 최대 제한을 초과했습니다. 동네 등록 요청이 거부되었습니다"),
 	USER_REGION_MIN_REMOVE_COUNT(HttpStatus.BAD_REQUEST, "최소 1개의 동네는 필수입니다. 동네 삭제 요청이 거부되었습니다"),
+	USER_REGION_NOT_INCLUDE(HttpStatus.BAD_REQUEST, "나의 동네에 등록 되지 않았습니다."),
 
 	// IMAGE
 	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이미지가 없습니다"),
@@ -33,13 +35,11 @@ public enum ErrorType {
 	AUTH_REFRESH_TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Refresh Token이 만료되었습니다"),
 	CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리입니다"),
 
-	// ITEM
+	// ITEM,
 	STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 판매 상태입니다"),
 	ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다"),
 	ITEM_IMAGE_MAX_ADD_COUNT(HttpStatus.BAD_REQUEST, "상품 이미지 등록 수가 최대 제한을 초과했습니다. 상품 등록 요청이 거부되었습니다"),
-	ITEM_IMAGE_EMPTY(HttpStatus.BAD_REQUEST, "이미지가 최소 1장 이상 포함되어야 합니다"),
-	ITEM_UNAUTHORIZED(HttpStatus.BAD_REQUEST, "해당 상품을 변경하거나 삭제할 권한이 없습니다."),
-	ITEM_NOT_MY_REGION(HttpStatus.BAD_REQUEST, "나의 동네에 등록 되지 않았습니다.");
+	ITEM_IMAGE_EMPTY(HttpStatus.BAD_REQUEST, "이미지가 최소 1장 이상 포함되어야 합니다");
 
 	private final HttpStatus httpStatus;
 	private final String message;

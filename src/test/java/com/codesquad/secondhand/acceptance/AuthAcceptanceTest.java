@@ -68,7 +68,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 		var response = 로그아웃_요청(유저_만두_액세스_토큰);
 
 		// then
-		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		응답_상태코드_검증(response, HttpStatus.OK);
 	}
 
 	/**

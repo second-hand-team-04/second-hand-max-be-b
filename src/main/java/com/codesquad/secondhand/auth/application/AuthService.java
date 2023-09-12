@@ -45,7 +45,7 @@ public class AuthService {
 				UserCreateRequest request = new UserCreateRequest(provider.getId(),
 					oauthUserInfomation.getEmail(), oauthUserInfomation.getNickname(), null);
 				validateDuplication(request, provider.getId());
-				User user = authRepository.save(request.toUser(provider, null));
+				User user = authRepository.save(request.toUser(provider, null, region));
 				user.addMyRegion(region);
 				return user;
 			});

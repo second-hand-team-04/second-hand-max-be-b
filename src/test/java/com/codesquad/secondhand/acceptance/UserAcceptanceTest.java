@@ -24,6 +24,7 @@ import static com.codesquad.secondhand.util.steps.ItemSteps.상품_생성_요청
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_목록_조회_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
+import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_선택_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.유저_나의_판매내역_조회_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
 import static com.codesquad.secondhand.util.steps.UserSteps.유저_정보_조회_요청;
@@ -71,7 +72,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		var response = 나의_동네_목록_조회_요청(유저_만두_액세스_토큰);
 
 		// then
-		나의_동네_목록_조회_검증(response, 동네_서울_강남구_역삼동.getTitle(), 동네_서울_종로구_궁정동.getTitle());
+		나의_동네_목록_조회_검증(response, 동네_서울_강남구_역삼동.getId(), 동네_서울_강남구_역삼동.getTitle(), 동네_서울_종로구_궁정동.getTitle());
 	}
 
 	/**
@@ -169,6 +170,54 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
 	/**
 	 * Given 동네들, 카테고리들, 유저를 생성하고
+	 * And 나의 동네를 등록하고
+	 * When 등록된 나의 동네를 선택하면
+	 * Then 나의 동네 목록 조회 시 선택된 나의 동네를 확인할 수 있다.
+	 */
+	@Test
+	void 나의_동네를_선택한다() {
+		// given
+		나의_동네_등록_요청(유저_만두_액세스_토큰, 동네_서울_종로구_내자동.getId());
+
+		// when
+		var response = 나의_동네_선택_요청(유저_만두_액세스_토큰, 동네_서울_종로구_내자동.getId());
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		나의_동네_목록_조회_검증(나의_동네_목록_조회_요청(유저_만두_액세스_토큰), 동네_서울_종로구_내자동.getId(),
+			동네_서울_강남구_역삼동.getTitle(), 동네_서울_종로구_내자동.getTitle());
+	}
+
+	/**
+	 * Given 동네들, 카테고리들, 유저를 생성하고
+	 * When 존재하지 않는 동네로 나의 동네를 선택하면
+	 * Then 요청이 실패한다.
+	 */
+	@Test
+	void 존재하지_않는_동네로_동네를_선택하면_요청이_실패된다() {
+		// when
+		var response = 나의_동네_선택_요청(유저_만두_액세스_토큰, 99999L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 동네들, 카테고리들, 유저를 생성하고
+	 * When 나의 동네에 등록되지 않는 동네로 나의 동네를 선택하면
+	 * Then 요청이 실패한다.
+	 */
+	@Test
+	void 나의_동네에_등록되지_않은_동네로_나의_동네를_선택하면_요청이_실패된다() {
+		// when
+		var response = 나의_동네_선택_요청(유저_만두_액세스_토큰, 동네_서울_종로구_내자동.getId());
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * And 나의 동네를 2개를 등록하고
 	 * When 나의 동네를 삭제하면
 	 * Then 나의 동네 목록 조회 시 삭제된 나의 동네를 조회할 수 없다.
@@ -182,7 +231,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		var response = 나의_동네_삭제_요청(유저_만두_액세스_토큰, 동네_서울_종로구_내자동.getId());
 
 		// then
-		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		응답_상태코드_검증(response, HttpStatus.OK);
 		나의_동네_목록_조회_시_삭제된_나의_동네를_검증(동네_서울_종로구_내자동.getTitle());
 	}
 
@@ -459,20 +508,22 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		);
 	}
 
-	private void 나의_동네_목록_조회_검증(ExtractableResponse<Response> response, String... expectedTitles) {
-		List<String> actualTitles = response.jsonPath().getList("data.title", String.class);
+	private void 나의_동네_목록_조회_검증(ExtractableResponse<Response> response, Long expectedSelectedId, String... expectedTitles) {
+		Long actualSelectedId = response.jsonPath().getLong("data.selectedId");
+		List<String> actualTitles = response.jsonPath().getList("data.regions.title", String.class);
 
+		assertThat(actualSelectedId).isEqualTo(expectedSelectedId);
 		assertThat(actualTitles).contains(expectedTitles);
 	}
 
 	private void 나의_동네_목록_조회_시_등록된_나의_동네를_검증(String regionTitle) {
-		List<String> titles = 나의_동네_목록_조회_요청(유저_만두_액세스_토큰).jsonPath().getList("data.title", String.class);
+		List<String> titles = 나의_동네_목록_조회_요청(유저_만두_액세스_토큰).jsonPath().getList("data.regions.title", String.class);
 
 		assertThat(titles).contains(regionTitle);
 	}
 
 	private void 나의_동네_목록_조회_시_삭제된_나의_동네를_검증(String regionTitle) {
-		List<String> titles = 나의_동네_목록_조회_요청(유저_만두_액세스_토큰).jsonPath().getList("data.title", String.class);
+		List<String> titles = 나의_동네_목록_조회_요청(유저_만두_액세스_토큰).jsonPath().getList("data.regions.title", String.class);
 
 		assertThat(titles).doesNotContain(regionTitle);
 	}

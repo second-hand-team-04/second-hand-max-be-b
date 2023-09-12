@@ -86,6 +86,15 @@ public class UserSteps {
 			.then().log().all().extract();
 	}
 
+	public static ExtractableResponse<Response> 나의_동네_선택_요청(String accessToken, Long regionId) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.when().patch("/api/users/regions/{id}", regionId)
+			.then().log().all().extract();
+	}
+
 	public static ExtractableResponse<Response> 나의_동네_삭제_요청(String accessToken, Long regionId) {
 		return RestAssured.given().log().all()
 			.auth().oauth2(accessToken)

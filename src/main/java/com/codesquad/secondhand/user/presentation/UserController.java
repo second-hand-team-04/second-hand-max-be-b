@@ -60,7 +60,7 @@ public class UserController {
 	public ResponseEntity<CommonResponse> showMyRegions(@AccountPrincipal Account account) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				userFacade.findUserRegions(account.getId()),
+				userFacade.findMyRegions(account.getId()),
 				ResponseMessage.MY_REGION_FIND_ALL));
 	}
 
@@ -73,19 +73,27 @@ public class UserController {
 			.body(CommonResponse.createCreated(ResponseMessage.MY_REGION_ADD));
 	}
 
+	@PatchMapping("/regions/{id}")
+	public ResponseEntity<CommonResponse> selectedMyRegion(@PathVariable Long id,
+		@AccountPrincipal Account account) {
+		userFacade.selectedMyRegion(account.getId(), id);
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(ResponseMessage.MY_REGION_SELECTED));
+	}
+
 	@DeleteMapping("/regions/{id}")
 	public ResponseEntity<CommonResponse> removeMyRegion(@PathVariable Long id,
 		@AccountPrincipal Account account) {
 		userFacade.removeMyRegion(account.getId(), id);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT)
-			.body(CommonResponse.createNoContent(ResponseMessage.MY_REGION_REMOVE));
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(ResponseMessage.MY_REGION_REMOVE));
 	}
 
 	@GetMapping("/info")
 	public ResponseEntity<CommonResponse> showUserInfo(@AccountPrincipal Account account) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				userFacade.findByIdOrThrow(account.getId()),
+				userFacade.findById(account.getId()),
 				ResponseMessage.USER_INFO
 			));
 	}

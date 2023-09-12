@@ -83,8 +83,8 @@ public class ItemController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CommonResponse> delete(@PathVariable Long id, @AccountPrincipal Account account) {
 		itemFacade.delete(id, account.getId());
-		return ResponseEntity.status(HttpStatus.NO_CONTENT)
-			.body(CommonResponse.createNoContent(ResponseMessage.ITEM_CREATE));
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(ResponseMessage.ITEM_CREATE));
 	}
 }
 
