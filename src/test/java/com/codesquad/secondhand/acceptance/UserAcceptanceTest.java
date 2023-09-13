@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -39,14 +38,6 @@ import io.restassured.response.Response;
 import io.restassured.specification.MultiPartSpecification;
 
 public class UserAcceptanceTest extends AcceptanceTest {
-
-	@BeforeEach
-	void init() {
-		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대.getFileName()));
-		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대2.getFileName()));
-		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_도자기_화병_5종.getFileName()));
-		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_잎사귀_포스터.getFileName()));
-	}
 
 	/**
 	 * Given 동네들, 카테고리들, 유저를 생성하고
@@ -104,12 +95,24 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
-	 * TODO  상품 상태 변경 기능 구현 후 테스트 코드 추가
 	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * And   상품을 생성하고
 	 * When  판매완료로 변경 시
 	 * Then  판매완료로 변경된 상품이 나의 판매내역 조회의 판매완료 상태에 조회된다.
 	 * */
+	@Test
+	void 판매완료_상태의_나의_판매내역을_조회한다() throws InterruptedException {
+		// given
+		상품_빈티지_일본_경대_생성();
+		상품_상태_수정_요청(유저_만두_액세스_토큰, 1L, 2L);
+
+		// when
+		var response = 유저_나의_판매내역_조회_요청(유저_만두_액세스_토큰, 0, 10, List.of(2L));
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		나의_판매내역_조회_시_상품_조회_여부_검증(response, 1L);
+	}
 
 	/**
 	 * Given 동네들, 카테고리들, 유저를 생성하고
@@ -749,6 +752,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	}
 
 	private void 상품_빈티지_일본_경대_생성() {
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대.getFileName()));
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대2.getFileName()));
 		long regionId = 나의_동네_목록_조회_요청(유저_만두_액세스_토큰).jsonPath()
 			.getLong("data.selectedId");
 		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_빈티지_일본_경대.getTitle(), 상품_빈티지_일본_경대.getPrice(),
@@ -776,6 +781,15 @@ public class UserAcceptanceTest extends AcceptanceTest {
 				.ignoringFields("updatedAt")
 				.isEqualTo(expectedMyTransactionResponses)
 		);
+	}
+
+	private void 나의_판매내역_조회_시_상품_조회_여부_검증(ExtractableResponse<Response> response,
+		Long... expectedIds) {
+		boolean actualHasMore = response.jsonPath().getBoolean("data.hasMore");
+		List<Long> actual = response.jsonPath()
+			.getList("data.items.id", Long.class);
+
+		assertThat(actual).contains(expectedIds);
 	}
 
 	private void 관심_목록_조회_시_상품이_관심_목록에_없음을_검증(String accessToken, Long... expectedItemIds) {
