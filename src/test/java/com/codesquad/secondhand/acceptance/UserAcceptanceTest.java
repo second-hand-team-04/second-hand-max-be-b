@@ -1,35 +1,16 @@
 package com.codesquad.secondhand.acceptance;
 
-import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_빈티지_일본_경대;
-import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_빈티지_일본_경대2;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_PS5;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_빈티지_일본_경대;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_삼천리_자전거;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_젤다의_전설;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_코렐_접시;
-import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_내자동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누하동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
-import static com.codesquad.secondhand.util.fixture.StatusFixture.예약중;
-import static com.codesquad.secondhand.util.fixture.StatusFixture.판매중;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_지구;
-import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
-import static com.codesquad.secondhand.util.steps.ImageSteps.이미지_업로드_요청;
-import static com.codesquad.secondhand.util.steps.ItemSteps.상품_생성_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_목록_조회_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_선택_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.유저_나의_판매내역_조회_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.유저_정보_조회_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.유저_프로필_수정_요청;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.codesquad.secondhand.util.fixture.ImageFixture.*;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.*;
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.*;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.*;
+import static com.codesquad.secondhand.util.fixture.StatusFixture.*;
+import static com.codesquad.secondhand.util.fixture.UserFixture.*;
+import static com.codesquad.secondhand.util.steps.AuthSteps.*;
+import static com.codesquad.secondhand.util.steps.ImageSteps.*;
+import static com.codesquad.secondhand.util.steps.ItemSteps.*;
+import static com.codesquad.secondhand.util.steps.UserSteps.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,6 +18,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -46,7 +28,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
+import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionResponse;
+import com.codesquad.secondhand.region.application.dto.RegionResponse;
 import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
 import com.codesquad.secondhand.util.AcceptanceTest;
 
@@ -56,6 +40,14 @@ import io.restassured.response.Response;
 import io.restassured.specification.MultiPartSpecification;
 
 public class UserAcceptanceTest extends AcceptanceTest {
+
+	@BeforeEach
+	void init() {
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대.getFileName()));
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대2.getFileName()));
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_도자기_화병_5종.getFileName()));
+		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_잎사귀_포스터.getFileName()));
+	}
 
 	/**
 	 * Given 동네들, 카테고리들, 유저를 생성하고
@@ -255,7 +247,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	 * Then 요청이 실패된다.
 	 */
 	@Test
-	void 나의_동네_삭제_시_해당_유저이_없으면_요청이_실패된다() {
+	void 나의_동네_삭제_시_해당_유저가_없으면_요청이_실패된다() {
 		// given
 		String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6OTk5OTksImlzcyI6ImZpc2hwcmluY2Uuc2l0ZSIsImlhdCI6MTY5Mzg5MDY1OCwiZXhwIjoxNjk0ODkwNjU4fQ.qqooXsZoLtMaBilFjM2S2pA05srUn177gDqG80YKghs";
 
@@ -398,6 +390,192 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * When 관심 목록을 조회하면
+	 * Then 요청이 성공한다.
+	 * */
+	@Test
+	void 관심_목록을_조회한다() {
+		// when
+		var response = 관심_목록_조회_요청(유저_만두_액세스_토큰);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+	}
+
+	/**
+	 * Given 상품을 생성하고
+	 * And   상품을 삭제하고
+	 * When  관심 목록을 조회하면
+	 * Then  삭제된 상품은 조회되지 않는다.
+	 */
+	@Test
+	void 관심_목록을_조회하면_삭제된_상품은_조회되지_않는다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+		상품_삭제_요청(유저_만두_액세스_토큰, 1L);
+
+		// when
+		var response = 관심_목록_조회_요청(유저_만두_액세스_토큰);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		관심_목록_조회_시_상품이_관심_목록에_없음을_검증(유저_만두_액세스_토큰, 1L);
+	}
+
+	/**
+	 * Given 상품을 관심 목록에 등록하고
+	 * When  관심 목록을 조회하면
+	 * Then  관심 목록에 추가되고
+	 * And   상품의 관심 수가 1 증가한다.
+	 * */
+	@Test
+	void 상품을_관심_목록에_등록한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+
+		// when
+		var response = 관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.CREATED);
+		관심_목록_조회_시_관심_등록된_상품_검증(유저_만두_액세스_토큰, 1L);
+		상품_상세_조회_시_관심_등록_여부_검증(유저_만두_액세스_토큰, 1L, 1, true);
+	}
+
+	/**
+	 * Given 상품이 존재하지 않을 때
+	 * When  상품을 관심 목록에 등록하면
+	 * Then  요청이 실패한다.
+	 * */
+	@Test
+	void 존재하지_않는_상품을_관심_목록에_등록하면_요청이_실패한다() {
+		// given
+		상품_상세_조회_시_상품이_존재하지_않음을_검증(유저_만두_액세스_토큰, 1L);
+
+		// when
+		var response = 관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 상품을 생성하고
+	 * And   상품을 관심 목록에 등록하고
+	 * When  같은 상품을 관심 목록에 등록하면
+	 * Then  요청이 실패한다.
+	 * */
+	@Test
+	void 이미_관심_목록에_등록된_상품을_관심_목록에_등록하면_요청이_실패한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+		관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
+		관심_목록_조회_시_관심_등록된_상품_검증(유저_만두_액세스_토큰, 1L);
+
+		// when
+		var response = 관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * Given 상품을 생성하고
+	 * And   상품을 삭제했을 때
+	 * When  삭제된 상품을 관심 목록에 등록하면
+	 * Then  요청이 실패한다.
+	 * */
+	@Test
+	void 삭제된_상품을_관심_목록에_등록하면_요청이_실패한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+		상품_삭제_요청(유저_만두_액세스_토큰, 1L);
+
+		// when
+		var response = 관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 상품을 생성하고
+	 * And   상품을 관심 목록에 등록하고
+	 * When  상품을 관심 목록에서 삭제하면
+	 * Then	 나의 관심 목록에서 조회되지 않고
+	 * And   상품의 관심 수가 1 감소한다.
+	 * */
+	@Test
+	void 상품을_관심_목록에서_삭제한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+		관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
+
+		// when
+		var response = 관심_목록_삭제_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		관심_목록_조회_시_상품이_관심_목록에_없음을_검증(유저_만두_액세스_토큰, 1L);
+		상품_상세_조회_시_관심_등록_여부_검증(유저_만두_액세스_토큰, 1L, 0, false);
+	}
+
+	/**
+	 * Given 상품이 존재하지 않을 때
+	 * When  상품을 관심 목록에서 삭제 요청하면
+	 * Then  요청이 실패한다.
+	 * */
+	@Test
+	void 존재하지_않는_상품을_관심_목록에서_삭제하면_요청이_실패한다() {
+		// given
+		상품_상세_조회_시_상품이_존재하지_않음을_검증(유저_만두_액세스_토큰, 1L);
+
+		// when
+		var response = 관심_목록_삭제_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Given 상품이 존재하고
+	 * And   상품이 관심 목록에 등록되어 있지 않을 때
+	 * When  상품을 관심 목록에서 삭제 요청하면
+	 * Then  요청이 실패한다.
+	 * */
+	@Test
+	void 관심_목록에_등록되지_않은_상품을_관심_목록에서_삭제하면_요청이_실패한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+		관심_목록_조회_시_상품이_관심_목록에_없음을_검증(유저_만두_액세스_토큰, 1L);
+
+		// when
+		var response = 관심_목록_삭제_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * Given 상품을 생성하고
+	 * And   상품을 삭제했을 때
+	 * When  삭제된 상품을 관심 목록에 등록 요청하면
+	 * Then  요청이 실패한다.
+	 * */
+	@Test
+	void 삭제된_상품을_관심_목록에서_삭제_요청하면_요청이_실패한다() {
+		// given
+		상품_빈티지_일본_경대_생성();
+		상품_삭제_요청(유저_만두_액세스_토큰, 1L);
+
+		// when
+		var response = 관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
 	private static Stream<Arguments> providerNicknameAndImage() throws FileNotFoundException {
 		return Stream.of(
 			Arguments.of(
@@ -508,7 +686,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		);
 	}
 
-	private void 나의_동네_목록_조회_검증(ExtractableResponse<Response> response, Long expectedSelectedId, String... expectedTitles) {
+	private void 나의_동네_목록_조회_검증(ExtractableResponse<Response> response, Long expectedSelectedId,
+		String... expectedTitles) {
 		Long actualSelectedId = response.jsonPath().getLong("data.selectedId");
 		List<String> actualTitles = response.jsonPath().getList("data.regions.title", String.class);
 
@@ -570,6 +749,22 @@ public class UserAcceptanceTest extends AcceptanceTest {
 			상품_삼천리_자전거.getContent(), null, 상품_삼천리_자전거.getCategoryId(), 상품_삼천리_자전거.getRegionId()));
 	}
 
+	private void 상품_빈티지_일본_경대_생성() {
+		//TODO 선택된 나의 동네 기능 구현 후 선택된 나의 동네 조회로 수정
+		long regionId = 나의_동네_목록_조회_요청(유저_만두_액세스_토큰).jsonPath()
+			.getList("data.regions", RegionResponse.class)
+			.stream()
+			.findFirst()
+			.get()
+			.getId();
+
+		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_빈티지_일본_경대.getTitle(), 상품_빈티지_일본_경대.getPrice(),
+			상품_빈티지_일본_경대.getContent(), List.of(이미지_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId()),
+			상품_빈티지_일본_경대.getCategoryId(), regionId);
+
+		상품_생성_요청(유저_만두_액세스_토큰, itemCreateRequest);
+	}
+
 	private void 나의_동네_청운동_궁정동_수정() {
 		나의_동네_등록_요청(유저_만두_액세스_토큰, 동네_서울_종로구_청운동.getId());
 		나의_동네_삭제_요청(유저_만두_액세스_토큰, 동네_서울_강남구_역삼동.getId());
@@ -588,5 +783,34 @@ public class UserAcceptanceTest extends AcceptanceTest {
 				.ignoringFields("updatedAt")
 				.isEqualTo(expectedMyTransactionResponses)
 		);
+	}
+
+	private void 관심_목록_조회_시_상품이_관심_목록에_없음을_검증(String accessToken, Long... expectedItemIds) {
+		List<Long> actualItemIds = 관심_목록_조회_요청(accessToken).jsonPath().getList("data.items.id", Long.class);
+
+		assertThat(actualItemIds).doesNotContain(expectedItemIds);
+	}
+
+	private void 상품_상세_조회_시_상품이_존재하지_않음을_검증(String accessToken, Long... expectedItemId) {
+		var actual = 상품_상세_조회_요청(accessToken, 1L);
+
+		응답_상태코드_검증(actual, HttpStatus.NOT_FOUND);
+	}
+
+	private void 상품_상세_조회_시_관심_등록_여부_검증(String accessToken, Long itemId, int expectedNumLikes,
+		boolean expectedIsLiked) {
+		ItemDetailResponse actual = 상품_상세_조회_요청(accessToken, itemId).jsonPath()
+			.getObject("data", ItemDetailResponse.class);
+
+		Assertions.assertAll(
+			() -> assertThat(actual.getNumLikes()).isEqualTo(expectedNumLikes),
+			() -> assertThat(actual.getIsLiked()).isEqualTo(expectedIsLiked)
+		);
+	}
+
+	private void 관심_목록_조회_시_관심_등록된_상품_검증(String accessToken, Long... expectedItemIds) {
+		List<Long> actualItemIds = 관심_목록_조회_요청(accessToken).jsonPath().getList("data.items.id", Long.class);
+
+		assertThat(actualItemIds).contains(expectedItemIds);
 	}
 }

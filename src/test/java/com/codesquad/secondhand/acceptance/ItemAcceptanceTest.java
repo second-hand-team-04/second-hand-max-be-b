@@ -1,36 +1,17 @@
 package com.codesquad.secondhand.acceptance;
 
-import static com.codesquad.secondhand.util.fixture.CategoryFixture.카테고리_게임_취미;
-import static com.codesquad.secondhand.util.fixture.CategoryFixture.카테고리_전체보기;
-import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_도자기_화병_5종;
-import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_빈티지_일본_경대;
-import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_빈티지_일본_경대2;
-import static com.codesquad.secondhand.util.fixture.ImageFixture.이미지_잎사귀_포스터;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_PS5;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_빈티지_일본_경대;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_삼천리_자전거;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_젤다의_전설;
-import static com.codesquad.secondhand.util.fixture.ItemFixture.상품_코렐_접시;
-import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_궁정동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_누하동;
-import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
-import static com.codesquad.secondhand.util.fixture.StatusFixture.판매중;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
-import static com.codesquad.secondhand.util.fixture.UserFixture.유저_보노;
-import static com.codesquad.secondhand.util.steps.AuthSteps.로그인_요청;
-import static com.codesquad.secondhand.util.steps.ImageSteps.이미지_업로드_요청;
-import static com.codesquad.secondhand.util.steps.ItemSteps.상품_삭제_요청;
-import static com.codesquad.secondhand.util.steps.ItemSteps.상품_상세_조회_요청;
-import static com.codesquad.secondhand.util.steps.ItemSteps.상품_상태_수정_요청;
-import static com.codesquad.secondhand.util.steps.ItemSteps.상품_생성_요청;
-import static com.codesquad.secondhand.util.steps.ItemSteps.상품_수정_요청;
-import static com.codesquad.secondhand.util.steps.ItemSteps.지역별_카테고리별_상품_목록_조회_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_등록_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.나의_동네_삭제_요청;
-import static com.codesquad.secondhand.util.steps.UserSteps.유저_생성_요청;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.codesquad.secondhand.util.fixture.CategoryFixture.*;
+import static com.codesquad.secondhand.util.fixture.ImageFixture.*;
+import static com.codesquad.secondhand.util.fixture.ItemFixture.*;
+import static com.codesquad.secondhand.util.fixture.ProviderFixture.*;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.*;
+import static com.codesquad.secondhand.util.fixture.StatusFixture.*;
+import static com.codesquad.secondhand.util.fixture.UserFixture.*;
+import static com.codesquad.secondhand.util.steps.AuthSteps.*;
+import static com.codesquad.secondhand.util.steps.ImageSteps.*;
+import static com.codesquad.secondhand.util.steps.ItemSteps.*;
+import static com.codesquad.secondhand.util.steps.UserSteps.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,8 +26,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
-import com.codesquad.secondhand.image.application.dto.ImageResponse;
 import com.codesquad.secondhand.common.exception.ErrorType;
+import com.codesquad.secondhand.image.application.dto.ImageResponse;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemResponse;
@@ -344,20 +325,24 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	/**
 	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 * And 상품을 생성하고
+	 * And 상품을 관심 목록에 등록하고
 	 * When 상품을 삭제하면
-	 * Then 상품 상세 조회 시 조회 할 수가 없다.
+	 * Then 상품 상세 조회 시 조회 할 수가 없고
+	 * And  관심 목록에서도 삭제된다.
 	 */
 	@Test
 	void 상품을_삭제한다() {
 		// given
 		상품_빈티지_일본_경대_생성();
+		관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
 
 		// when
 		var response = 상품_삭제_요청(유저_만두_액세스_토큰, 1L);
 
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);
-		상품_상셰_조회_시_삭제된_상품을_검증(1L);
+		상품_상세_조회_시_삭제된_상품을_검증(1L);
+		관심_목록_조회_시_삭제된_상품을_검증(유저_만두_액세스_토큰, 1L);
 	}
 
 	/**
@@ -632,11 +617,11 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 			),
 			Arguments.of(
 				상품_PS5.getTitle(), null, 상품_PS5.getContent(),
-				List.of(이미지_빈티지_일본_경대.getId()) , 상품_PS5.getCategoryId(), 상품_PS5.getRegionId()
+				List.of(이미지_빈티지_일본_경대.getId()), 상품_PS5.getCategoryId(), 상품_PS5.getRegionId()
 			),
 			Arguments.of(
 				상품_PS5.getTitle(), 상품_PS5.getPrice(), 상품_PS5.getContent(),
-				List.of(이미지_빈티지_일본_경대.getId(), 이미지_잎사귀_포스터.getId()) , 상품_PS5.getCategoryId(), 상품_PS5.getRegionId()
+				List.of(이미지_빈티지_일본_경대.getId(), 이미지_잎사귀_포스터.getId()), 상품_PS5.getCategoryId(), 상품_PS5.getRegionId()
 			)
 		);
 	}
@@ -777,7 +762,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		return 로그인_요청(유저_보노.getEmail(), 유저_보노.getPassword()).jsonPath().getString("data.accessToken");
 	}
 
-	private void 상품_상셰_조회_시_삭제된_상품을_검증(long itemId) {
+	private void 상품_상세_조회_시_삭제된_상품을_검증(long itemId) {
 		var response = 상품_상세_조회_요청(유저_만두_액세스_토큰, itemId);
 		String message = response.jsonPath().getString("message");
 
@@ -807,10 +792,11 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 
 	private ExtractableResponse<Response> 상품_수정(String title, Integer price, String content, List<Long> imageIds,
 		Long categoryId, Long regionId) {
-		ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(title, price, content, imageIds, categoryId, regionId);
+		ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(title, price, content, imageIds, categoryId,
+			regionId);
 		return 상품_수정_요청(유저_만두_액세스_토큰, 1L, itemUpdateRequest);
 	}
-	
+
 	private ExtractableResponse<Response> 존재하지_않는_상품으로_상품_수정() {
 		ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(
 			상품_PS5.getTitle(), 상품_PS5.getPrice(), 상품_PS5.getContent(), List.of(이미지_도자기_화병_5종.getId()),
@@ -847,5 +833,11 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		);
 		var response = 상품_수정_요청(유저_만두_액세스_토큰, 1L, itemUpdateRequest);
 		return response;
+	}
+
+	private void 관심_목록_조회_시_삭제된_상품을_검증(String accessToken, Long expectedId) {
+		List<Long> actual = 관심_목록_조회_요청(accessToken).jsonPath().getList("data.items.id", Long.class);
+
+		assertThat(actual).doesNotContain(expectedId);
 	}
 }

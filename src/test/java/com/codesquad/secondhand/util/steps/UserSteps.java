@@ -128,4 +128,32 @@ public class UserSteps {
 			.when().get("/api/users/transactions")
 			.then().log().all().extract();
 	}
+
+	public static ExtractableResponse<Response> 관심_목록_등록_요청(String accessToken, Long itemId) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(new UserRegionAddRequest(itemId))
+			.when().post("/api/users/wishlist/{itemId}", itemId)
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 관심_목록_조회_요청(String accessToken) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.when().get("/api/users/wishlist")
+			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> 관심_목록_삭제_요청(String accessToken, Long itemId) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(accessToken)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.when().delete("/api/users/wishlist/{itemId}", itemId)
+			.then().log().all().extract();
+	}
 }
