@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.codesquad.secondhand.image.application.ImageService;
-import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.category.application.CategoryService;
 import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.image.application.ImageService;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;
@@ -23,6 +23,7 @@ import com.codesquad.secondhand.item.domain.StatusType;
 import com.codesquad.secondhand.region.application.RegionService;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.application.UserService;
+import com.codesquad.secondhand.user.application.WishlistService;
 import com.codesquad.secondhand.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class ItemFacade {
 	private final StatusService statusService;
 	private final UserService userService;
 	private final ItemImageService itemImageService;
+	private final WishlistService wishlistService;
 
 	@Transactional(readOnly = true)
 	public ItemSliceResponse findItemsByCategoryAndRegion(Long category, Long region, Pageable pageable) {
@@ -77,6 +79,7 @@ public class ItemFacade {
 		User user = userService.findByIdOrThrow(userId);
 		itemService.delete(id, user);
 		itemImageService.deleteByItemId(id);
+		wishlistService.deleteByItemId(id);
 	}
 }
 
