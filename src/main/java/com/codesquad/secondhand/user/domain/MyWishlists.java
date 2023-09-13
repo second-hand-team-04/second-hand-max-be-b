@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 
+import com.codesquad.secondhand.common.exception.item.ItemNotFoundException;
 import com.codesquad.secondhand.common.exception.wishlist.WishlistDuplicationException;
 import com.codesquad.secondhand.common.exception.wishlist.WishlistNotIncludeException;
 import com.codesquad.secondhand.item.domain.Item;
@@ -19,6 +20,7 @@ public class MyWishlists {
 	List<Wishlist> wishlists = new ArrayList<>();
 
 	public void addWishList(Wishlist wishlist) {
+		validateNotDeleted(wishlist.getItem());
 		validateDuplication(wishlist);
 		wishlists.add(wishlist);
 	}
@@ -38,6 +40,12 @@ public class MyWishlists {
 	private void validateDuplication(Wishlist wishlist) {
 		if (wishlists.stream().anyMatch(w -> w.equalsItem(wishlist.getItem()))) {
 			throw new WishlistDuplicationException();
+		}
+	}
+
+	private void validateNotDeleted(Item item) {
+		if (item.isDeleted()) {
+			throw new ItemNotFoundException();
 		}
 	}
 }
