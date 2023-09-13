@@ -42,7 +42,7 @@ public enum ErrorType {
 	ITEM_IMAGE_EMPTY(HttpStatus.BAD_REQUEST, "이미지가 최소 1장 이상 포함되어야 합니다"),
 
 	// USER_WISHLIST
-	USER_WISHLIST_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 상품이 관심 목록에 없습니다"),
+	USER_WISHLIST_NOT_INCLUDE(HttpStatus.BAD_REQUEST, "해당 상품이 관심 목록에 없습니다"),
 	USER_WISHLIST_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 관심 목록에 등록된 상품입니다");
 
 	private final HttpStatus httpStatus;
