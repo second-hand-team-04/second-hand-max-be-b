@@ -15,9 +15,9 @@ import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
 import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.region.application.RegionService;
 import com.codesquad.secondhand.region.domain.Region;
+import com.codesquad.secondhand.user.application.dto.MyRegionResponse;
 import com.codesquad.secondhand.user.application.dto.MyWishlistResponse;
 import com.codesquad.secondhand.user.application.dto.MyWishlistSliceResponse;
-import com.codesquad.secondhand.user.application.dto.MyRegionResponse;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
 import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
 import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
@@ -65,7 +65,7 @@ public class UserFacade {
 		userService.addMyRegion(request, region);
 	}
 
-	public void selectedMyRegion(Long userId, Long regionId) {
+	public void updateSelectedMyRegion(Long userId, Long regionId) {
 		User user = userService.findByIdOrThrow(userId);
 		Region region = regionService.findByIdOrThrow(regionId);
 		user.updateSelectedRegion(region);

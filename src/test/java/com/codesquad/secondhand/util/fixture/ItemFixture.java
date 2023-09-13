@@ -66,9 +66,9 @@ public enum ItemFixture {
 			UserFixture.findById(userId).toUserItemDetailResponse(), imageResponses);
 	}
 
-	public MyTransactionResponse toMyTransactionResponse(String thumbnail) {
+	public MyTransactionResponse toMyTransactionResponse(String thumbnailUrl) {
 		return new MyTransactionResponse(
-			id, title, RegionFixture.findById(regionId).getTitle(), null, price, thumbnail
+			id, title, RegionFixture.findById(regionId).getTitle(), null, price, thumbnailUrl
 		);
 	}
 

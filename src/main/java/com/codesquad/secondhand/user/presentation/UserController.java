@@ -24,7 +24,6 @@ import com.codesquad.secondhand.auth.domain.ProviderType;
 import com.codesquad.secondhand.common.resolver.AccountPrincipal;
 import com.codesquad.secondhand.common.response.CommonResponse;
 import com.codesquad.secondhand.common.response.ResponseMessage;
-import com.codesquad.secondhand.region.application.RegionFacade;
 import com.codesquad.secondhand.user.application.UserFacade;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
 import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
@@ -75,9 +74,9 @@ public class UserController {
 	}
 
 	@PatchMapping("/regions/{id}")
-	public ResponseEntity<CommonResponse> selectedMyRegion(@PathVariable Long id,
+	public ResponseEntity<CommonResponse> updateSelectedMyRegion(@PathVariable Long id,
 		@AccountPrincipal Account account) {
-		userFacade.selectedMyRegion(account.getId(), id);
+		userFacade.updateSelectedMyRegion(account.getId(), id);
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(ResponseMessage.MY_REGION_SELECTED));
 	}
@@ -129,8 +128,8 @@ public class UserController {
 	@DeleteMapping("/wishlist/{itemId}")
 	public ResponseEntity<CommonResponse> deleteWishlist(@AccountPrincipal Account account, @PathVariable Long itemId) {
 		userFacade.removeMyWishlist(account.getId(), itemId);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT)
-			.body(CommonResponse.createNoContent(ResponseMessage.USER_WISHLIST_REMOVE));
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(ResponseMessage.USER_WISHLIST_REMOVE));
 	}
 }
 

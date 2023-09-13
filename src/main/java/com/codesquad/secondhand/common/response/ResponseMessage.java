@@ -19,6 +19,8 @@ public enum ResponseMessage {
 	ITEM_FIND_BY_REGION_AND_CATEGORY("상품 목록 조회를 성공하였습니다."),
 	ITEM_CREATE("상품 등록을 성공하였습니다."),
 	ITEM_DETAIL_FIND("상품 조회를 성공하였습니다"),
+	ITEM_UPDATE_STATUS("상품 상태 수정을 성공하였습니다"),
+	ITEM_UPDATE("상품 수정을 성공하였습니다"),
 	ITEM_DELETE("상품 삭제를 성공하였습니다"),
 
 	// account

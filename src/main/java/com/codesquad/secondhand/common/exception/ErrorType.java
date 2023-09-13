@@ -7,7 +7,7 @@ public enum ErrorType {
 	// USER
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다"),
 	USER_LOGIN_INFO_DIFFERENT(HttpStatus.BAD_REQUEST, "이메일이나 비밀번호가 다릅니다"),
-	USER_EMAIL_PROVIDER_DUPLICATION(HttpStatus.BAD_REQUEST,  "이미 존재하는 이메일입니다"),
+	USER_EMAIL_PROVIDER_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다"),
 	USER_NICKNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다"),
 	USER_PERMISSION(HttpStatus.BAD_REQUEST, "해당 유저는 권한이 없습니다."),
 
