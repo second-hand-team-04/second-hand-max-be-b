@@ -16,6 +16,6 @@ public class MyRegionResponse {
 	private List<RegionResponse> regions;
 
 	public static MyRegionResponse of(Region selectedRegion, List<RegionResponse> regionResponses) {
-		return new MyRegionResponse(selectedRegion.getId(), regionResponses);
+		return new MyRegionResponse(selectedRegion.getId(), regionResponses.isEmpty() ? null : regionResponses);
 	}
 }

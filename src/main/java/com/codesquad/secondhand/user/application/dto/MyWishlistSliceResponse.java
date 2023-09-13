@@ -15,7 +15,7 @@ public class MyWishlistSliceResponse {
 
 	public static MyWishlistSliceResponse of(boolean hasMore, List<MyWishlistResponse> myWishlistResponses) {
 		return new MyWishlistSliceResponse(
-			hasMore, myWishlistResponses
+			hasMore, myWishlistResponses.isEmpty() ? null : myWishlistResponses
 		);
 	}
 }
