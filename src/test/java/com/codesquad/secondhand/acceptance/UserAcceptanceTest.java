@@ -30,7 +30,6 @@ import org.springframework.http.MediaType;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionResponse;
-import com.codesquad.secondhand.region.application.dto.RegionResponse;
 import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
 import com.codesquad.secondhand.util.AcceptanceTest;
 
@@ -750,14 +749,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
 	}
 
 	private void 상품_빈티지_일본_경대_생성() {
-		//TODO 선택된 나의 동네 기능 구현 후 선택된 나의 동네 조회로 수정
 		long regionId = 나의_동네_목록_조회_요청(유저_만두_액세스_토큰).jsonPath()
-			.getList("data.regions", RegionResponse.class)
-			.stream()
-			.findFirst()
-			.get()
-			.getId();
-
+			.getLong("data.selectedId");
 		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_빈티지_일본_경대.getTitle(), 상품_빈티지_일본_경대.getPrice(),
 			상품_빈티지_일본_경대.getContent(), List.of(이미지_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId()),
 			상품_빈티지_일본_경대.getCategoryId(), regionId);
