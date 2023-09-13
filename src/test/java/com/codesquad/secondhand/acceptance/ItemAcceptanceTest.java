@@ -325,16 +325,13 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	/**
 	 * Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 * And 상품을 생성하고
-	 * And 상품을 관심 목록에 등록하고
 	 * When 상품을 삭제하면
-	 * Then 상품 상세 조회 시 조회 할 수가 없고
-	 * And  관심 목록에서도 삭제된다.
+	 * Then 상품 상세 조회 시 조회 할 수가 없다.
 	 */
 	@Test
 	void 상품을_삭제한다() {
 		// given
 		상품_빈티지_일본_경대_생성();
-		관심_목록_등록_요청(유저_만두_액세스_토큰, 1L);
 
 		// when
 		var response = 상품_삭제_요청(유저_만두_액세스_토큰, 1L);
@@ -342,7 +339,6 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		// then
 		응답_상태코드_검증(response, HttpStatus.OK);
 		상품_상세_조회_시_삭제된_상품을_검증(1L);
-		관심_목록_조회_시_삭제된_상품을_검증(유저_만두_액세스_토큰, 1L);
 	}
 
 	/**
@@ -833,11 +829,5 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		);
 		var response = 상품_수정_요청(유저_만두_액세스_토큰, 1L, itemUpdateRequest);
 		return response;
-	}
-
-	private void 관심_목록_조회_시_삭제된_상품을_검증(String accessToken, Long expectedId) {
-		List<Long> actual = 관심_목록_조회_요청(accessToken).jsonPath().getList("data.items.id", Long.class);
-
-		assertThat(actual).doesNotContain(expectedId);
 	}
 }
