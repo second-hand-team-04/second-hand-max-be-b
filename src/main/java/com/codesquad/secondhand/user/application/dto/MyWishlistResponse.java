@@ -1,4 +1,4 @@
-package com.codesquad.secondhand.item.application.dto;
+package com.codesquad.secondhand.user.application.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,30 +11,46 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class MyTransactionResponse {
+public class MyWishlistResponse {
+
 	private Long id;
+
 	private String title;
+
 	private String region;
+
+	private String status;
+
+	private String thumbnailUrl;
+
 	private LocalDateTime updatedAt;
+
 	private Integer price;
-	private String thumbnail;
+
+	private int numChat;
+
+	private int numLikes;
+
 	private Long sellerId;
 
-	public static MyTransactionResponse of(Item item) {
-		return new MyTransactionResponse(
+	public static MyWishlistResponse from(Item item) {
+		return new MyWishlistResponse(
 			item.getId(),
 			item.getTitle(),
 			item.getRegion().getTitle(),
+			item.getStatus().getType(),
+			item.getThumbnailUrl(),
 			item.getUpdatedAt(),
 			item.getPrice(),
-			item.getThumbnailUrl(),
+			item.getChatCount(),
+			item.getWishlistCount(),
 			item.getSellerId()
 		);
 	}
 
-	public static List<MyTransactionResponse> of(List<Item> items) {
+	public static List<MyWishlistResponse> from(List<Item> items) {
 		return items.stream()
-			.map(MyTransactionResponse::of)
+			.map(MyWishlistResponse::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }

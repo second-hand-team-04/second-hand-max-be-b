@@ -14,7 +14,7 @@ public class MyTransactionSliceResponse {
 
 	public static MyTransactionSliceResponse of(boolean hasMore, List<MyTransactionResponse> myTransactionResponse) {
 		return new MyTransactionSliceResponse(
-			hasMore, myTransactionResponse
+			hasMore, myTransactionResponse.isEmpty() ? null : myTransactionResponse
 		);
 	}
 }

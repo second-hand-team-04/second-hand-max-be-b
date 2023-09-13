@@ -82,4 +82,8 @@ public class ItemService {
 		Item item = findByIdOrElseThrow(id);
 		item.delete(user);
 	}
+
+	public Slice<Item> findByUserIdAndCategoryId(Long userId, Long categoryId, Pageable pageable) {
+		return itemRepository.findByUserIdAndCategoryId(userId, categoryId, pageable);
+	}
 }

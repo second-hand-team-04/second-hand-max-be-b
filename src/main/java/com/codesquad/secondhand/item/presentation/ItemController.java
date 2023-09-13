@@ -67,7 +67,7 @@ public class ItemController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
 				itemFacade.updateStatus(itemUpdateStatusRequest),
-				ResponseMessage.ITEM_CREATE));
+				ResponseMessage.ITEM_UPDATE_STATUS));
 	}
 
 	@PutMapping("{id}")
@@ -77,14 +77,14 @@ public class ItemController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
 				itemFacade.update(itemUpdateRequest),
-				ResponseMessage.ITEM_CREATE));
+				ResponseMessage.ITEM_UPDATE));
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CommonResponse> delete(@PathVariable Long id, @AccountPrincipal Account account) {
 		itemFacade.delete(id, account.getId());
 		return ResponseEntity.ok()
-			.body(CommonResponse.createOK(ResponseMessage.ITEM_CREATE));
+			.body(CommonResponse.createOK(ResponseMessage.ITEM_DELETE));
 	}
 }
 

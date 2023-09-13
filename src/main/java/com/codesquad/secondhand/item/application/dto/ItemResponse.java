@@ -31,8 +31,11 @@ public class ItemResponse {
 
 	private Integer numLikes;
 
-	public ItemResponse(Long id, String title, String region, String status, String thumbnailUrl, LocalDateTime createdAt,
-		LocalDateTime updatedAt, Integer price, Integer numChat, Integer numLikes) {
+	private Long sellerId;
+
+	public ItemResponse(Long id, String title, String region, String status, String thumbnailUrl,
+		LocalDateTime createdAt,
+		LocalDateTime updatedAt, Integer price, Integer numChat, Integer numLikes, Long sellerId) {
 		this.id = id;
 		this.title = title;
 		this.region = region;
@@ -43,6 +46,7 @@ public class ItemResponse {
 		this.price = price;
 		this.numChat = numChat;
 		this.numLikes = numLikes;
+		this.sellerId = sellerId;
 	}
 
 	public static ItemResponse of(Item item) {
@@ -56,7 +60,8 @@ public class ItemResponse {
 			item.getUpdatedAt(),
 			item.getPrice(),
 			item.getChatCount(),
-			item.getWishlistCount()
+			item.getWishlistCount(),
+			item.getSellerId()
 		);
 	}
 

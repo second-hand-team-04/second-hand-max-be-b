@@ -19,6 +19,8 @@ public enum ResponseMessage {
 	ITEM_FIND_BY_REGION_AND_CATEGORY("상품 목록 조회를 성공하였습니다."),
 	ITEM_CREATE("상품 등록을 성공하였습니다."),
 	ITEM_DETAIL_FIND("상품 조회를 성공하였습니다"),
+	ITEM_UPDATE_STATUS("상품 상태 수정을 성공하였습니다"),
+	ITEM_UPDATE("상품 수정을 성공하였습니다"),
 	ITEM_DELETE("상품 삭제를 성공하였습니다"),
 
 	// account
@@ -32,7 +34,12 @@ public enum ResponseMessage {
 	USER_FIND_MY_TRANSACTION_BY_STATUS("판매내역 조회를 성공하였습니다"),
 
 	// image
-	IMAGE_UPLOAD("이미지 등록을 성공하였습니다");
+	IMAGE_UPLOAD("이미지 등록을 성공하였습니다"),
+
+	// wishlist
+	USER_WISHLIST_FIND("관심목록 조회를 성공하였습니다"),
+	USER_WISHLIST_ADD("관심목록 추가를 성공하였습니다"),
+	USER_WISHLIST_REMOVE("관심목록 삭제를 성공하였습니다");
 
 	private final String message;
 

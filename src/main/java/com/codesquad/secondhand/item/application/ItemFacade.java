@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.codesquad.secondhand.image.application.ImageService;
-import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.category.application.CategoryService;
 import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.image.application.ImageService;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.ItemSliceResponse;

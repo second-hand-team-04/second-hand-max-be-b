@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserFacade userFacade;;
+	private final UserFacade userFacade;
 
 	@PostMapping
 	public ResponseEntity<CommonResponse> signUp(@RequestPart @Valid UserCreateRequest request,
@@ -74,9 +74,9 @@ public class UserController {
 	}
 
 	@PatchMapping("/regions/{id}")
-	public ResponseEntity<CommonResponse> selectedMyRegion(@PathVariable Long id,
+	public ResponseEntity<CommonResponse> updateSelectedMyRegion(@PathVariable Long id,
 		@AccountPrincipal Account account) {
-		userFacade.selectedMyRegion(account.getId(), id);
+		userFacade.updateSelectedMyRegion(account.getId(), id);
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(ResponseMessage.MY_REGION_SELECTED));
 	}
@@ -106,6 +106,30 @@ public class UserController {
 				userFacade.findAllMyTransactionByStatus(account.getId(), status, pageable),
 				ResponseMessage.USER_FIND_MY_TRANSACTION_BY_STATUS
 			));
+	}
+
+	@GetMapping("/wishlist")
+	public ResponseEntity<CommonResponse> showMyWishlists(@AccountPrincipal Account account,
+		@RequestParam(required = false) Long categoryId, Pageable pageable) {
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				userFacade.findMyWishlistByCategory(account.getId(), categoryId, pageable),
+				ResponseMessage.USER_WISHLIST_FIND
+			));
+	}
+
+	@PostMapping("/wishlist/{itemId}")
+	public ResponseEntity<CommonResponse> addWishlist(@AccountPrincipal Account account, @PathVariable Long itemId) {
+		userFacade.addMyWishlist(account.getId(), itemId);
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(CommonResponse.createCreated(ResponseMessage.USER_WISHLIST_ADD));
+	}
+
+	@DeleteMapping("/wishlist/{itemId}")
+	public ResponseEntity<CommonResponse> deleteWishlist(@AccountPrincipal Account account, @PathVariable Long itemId) {
+		userFacade.removeMyWishlist(account.getId(), itemId);
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(ResponseMessage.USER_WISHLIST_REMOVE));
 	}
 }
 
