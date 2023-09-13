@@ -18,6 +18,7 @@ public class MyTransactionResponse {
 	private LocalDateTime updatedAt;
 	private Integer price;
 	private String thumbnail;
+	private Long sellerId;
 
 	public static MyTransactionResponse of(Item item) {
 		return new MyTransactionResponse(
@@ -26,7 +27,8 @@ public class MyTransactionResponse {
 			item.getRegion().getTitle(),
 			item.getUpdatedAt(),
 			item.getPrice(),
-			item.getThumbnailUrl()
+			item.getThumbnailUrl(),
+			item.getSellerId()
 		);
 	}
 

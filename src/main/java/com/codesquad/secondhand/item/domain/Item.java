@@ -21,8 +21,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
 import com.codesquad.secondhand.user.domain.Wishlist;
@@ -175,5 +175,9 @@ public class Item {
 
 	public boolean equalsId(Long id) {
 		return Objects.equals(this.id, id);
+	}
+
+	public Long getSellerId() {
+		return user.getId();
 	}
 }

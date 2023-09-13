@@ -31,6 +31,8 @@ public class MyWishlistResponse {
 
 	private int numLikes;
 
+	private Long sellerId;
+
 	public static MyWishlistResponse from(Item item) {
 		return new MyWishlistResponse(
 			item.getId(),
@@ -41,7 +43,8 @@ public class MyWishlistResponse {
 			item.getUpdatedAt(),
 			item.getPrice(),
 			item.getChatCount(),
-			item.getWishlistCount()
+			item.getWishlistCount(),
+			item.getSellerId()
 		);
 	}
 
