@@ -90,6 +90,6 @@ public class ItemDetailResponse {
 	}
 
 	public List<ImageResponse> getImages() {
-		return imageResponse.isEmpty() ? null : imageResponse;
+		return images.isEmpty() ? null : images;
 	}
 }
