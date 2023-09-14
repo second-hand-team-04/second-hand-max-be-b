@@ -29,7 +29,7 @@ public class ItemDetailResponse {
 	private StatusItemDetailResponse status;
 	private CategoryItemDetailResponse category;
 	private UserItemDetailResponse seller;
-	private List<ImageResponse> imageResponse;
+	private List<ImageResponse> images;
 
 	public static ItemDetailResponse from(Item item, User accountUser) {
 		Status status = item.getStatus();
@@ -89,7 +89,7 @@ public class ItemDetailResponse {
 		return seller;
 	}
 
-	public List<ImageResponse> getImageResponse() {
+	public List<ImageResponse> getImages() {
 		return imageResponse.isEmpty() ? null : imageResponse;
 	}
 }
