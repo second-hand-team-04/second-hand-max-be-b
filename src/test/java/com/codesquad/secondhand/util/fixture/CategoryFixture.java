@@ -77,7 +77,7 @@ public enum CategoryFixture {
 	}
 
 	public CategoryItemDetailResponse toCategoryItemDetailResponse() {
-		return new CategoryItemDetailResponse(title);
+		return new CategoryItemDetailResponse(id, title);
 	}
 
 	public Long getId() {

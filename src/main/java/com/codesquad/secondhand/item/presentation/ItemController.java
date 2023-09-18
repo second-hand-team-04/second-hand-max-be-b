@@ -47,9 +47,10 @@ public class ItemController {
 	public ResponseEntity<CommonResponse> create(@AccountPrincipal Account account,
 		@Valid @RequestBody ItemCreateRequest request) {
 		request.injectUserId(account.getId());
-		itemFacade.create(request);
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(CommonResponse.createCreated(ResponseMessage.ITEM_CREATE));
+			.body(CommonResponse.createCreated(
+				itemFacade.create(request),
+				ResponseMessage.ITEM_CREATE));
 	}
 
 	@GetMapping("{id}")

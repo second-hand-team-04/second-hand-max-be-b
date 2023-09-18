@@ -3,10 +3,9 @@ package com.codesquad.secondhand.item.application.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.codesquad.secondhand.image.application.dto.ImageResponse;
-import com.codesquad.secondhand.auth.domain.Account;
 import com.codesquad.secondhand.category.application.dto.CategoryItemDetailResponse;
 import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.image.application.dto.ImageResponse;
 import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.item.domain.Status;
 import com.codesquad.secondhand.user.application.dto.UserItemDetailResponse;
@@ -36,7 +35,8 @@ public class ItemDetailResponse {
 		Category category = item.getCategory();
 		User user = item.getUser();
 		return new ItemDetailResponse(item.getId(), item.getTitle(), item.getContent(), item.getPrice(),
-			item.getChatCount(), item.getWishlistCount(), item.getViews(), item.isMyWishlisted(accountUser), item.getUpdatedAt(),
+			item.getChatCount(), item.getWishlistCount(), item.getViews(), item.isMyWishlisted(accountUser),
+			item.getUpdatedAt(),
 			StatusItemDetailResponse.from(status), CategoryItemDetailResponse.from(category),
 			UserItemDetailResponse.from(user), ImageResponse.from(item.getImages()));
 	}
@@ -81,8 +81,8 @@ public class ItemDetailResponse {
 		return status.getStatus();
 	}
 
-	public String getCategory() {
-		return category.getCategory();
+	public CategoryItemDetailResponse getCategory() {
+		return category;
 	}
 
 	public UserItemDetailResponse getSeller() {
