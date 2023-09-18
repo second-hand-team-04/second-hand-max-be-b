@@ -54,8 +54,8 @@ public class ItemService {
 	}
 
 	@Transactional
-	public void create(Item item) {
-		itemRepository.save(item);
+	public Item create(Item item) {
+		return itemRepository.save(item);
 	}
 
 	@Transactional

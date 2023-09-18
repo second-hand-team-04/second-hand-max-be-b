@@ -9,9 +9,10 @@ import lombok.Getter;
 @Getter
 public class CategoryItemDetailResponse {
 
-	private String category;
+	private Long id;
+	private String title;
 
 	public static CategoryItemDetailResponse from(Category category) {
-		return new CategoryItemDetailResponse(category.getTitle());
+		return new CategoryItemDetailResponse(category.getId(), category.getTitle());
 	}
 }
