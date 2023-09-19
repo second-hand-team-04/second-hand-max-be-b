@@ -53,6 +53,6 @@ public class AuthController {
 	public ResponseEntity<CommonResponse> showAccessToken(@RequestHeader("Authorization") String authorizationHeader) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(tokenService.generateAccessToken(authorizationHeader),
-				ResponseMessage.SIGN_OUT));
+				ResponseMessage.ACCESS_TOKEN));
 	}
 }

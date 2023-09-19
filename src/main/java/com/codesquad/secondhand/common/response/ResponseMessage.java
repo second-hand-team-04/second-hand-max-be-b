@@ -27,6 +27,7 @@ public enum ResponseMessage {
 	SIGN_IN("로그인을 성공하였습니다."),
 	SIGN_OUT("로그아웃을 성공하였습니다."),
 	UPDATE_PROFILE("사용자 정보 수정을 성공하였습니다"),
+	ACCESS_TOKEN("Access Token 재발급을 성공하였습니다"),
 
 	// user
 	SIGN_UP("회원가입을 성공하였습니다."),

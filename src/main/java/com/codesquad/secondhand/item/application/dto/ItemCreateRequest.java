@@ -44,8 +44,6 @@ public class ItemCreateRequest {
 	@NotNull(message = "지역이 선택되지 않았습니다")
 	private Long regionId;
 
-	private Long userId;
-
 	public ItemCreateRequest(String title, Integer price, String content, List<Long> imageIds, Long categoryId,
 		Long regionId) {
 		this.title = title;

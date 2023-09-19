@@ -1,13 +1,14 @@
 package com.codesquad.secondhand.item.application.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import com.codesquad.secondhand.item.domain.Item;
+import com.codesquad.secondhand.category.domain.Category;
+import com.codesquad.secondhand.user.domain.User;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class ItemResponse {
 
@@ -33,9 +34,11 @@ public class ItemResponse {
 
 	private Long sellerId;
 
+	private Category category;
+
 	public ItemResponse(Long id, String title, String region, String status, String thumbnailUrl,
-		LocalDateTime createdAt,
-		LocalDateTime updatedAt, Integer price, Integer numChat, Integer numLikes, Long sellerId) {
+		LocalDateTime createdAt, LocalDateTime updatedAt, Integer price, Integer numChat, Integer numLikes,
+		Long sellerId, Category category) {
 		this.id = id;
 		this.title = title;
 		this.region = region;
@@ -47,27 +50,6 @@ public class ItemResponse {
 		this.numChat = numChat;
 		this.numLikes = numLikes;
 		this.sellerId = sellerId;
-	}
-
-	public static ItemResponse of(Item item) {
-		return new ItemResponse(
-			item.getId(),
-			item.getTitle(),
-			item.getRegion().getTitle(),
-			item.getStatus().getType(),
-			item.getThumbnailUrl(),
-			item.getCreatedAt(),
-			item.getUpdatedAt(),
-			item.getPrice(),
-			item.getChatCount(),
-			item.getWishlistCount(),
-			item.getSellerId()
-		);
-	}
-
-	public static List<ItemResponse> of(List<Item> items) {
-		return items.stream()
-			.map(ItemResponse::of)
-			.collect(Collectors.toUnmodifiableList());
+		this.category = category;
 	}
 }

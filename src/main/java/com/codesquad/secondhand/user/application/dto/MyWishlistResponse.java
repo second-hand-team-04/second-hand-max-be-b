@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.codesquad.secondhand.category.application.dto.CategoryInfoResponse;
-import com.codesquad.secondhand.item.domain.Item;
+import com.codesquad.secondhand.item.application.dto.ItemResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,24 +36,24 @@ public class MyWishlistResponse {
 
 	private CategoryInfoResponse category;
 
-	public static MyWishlistResponse from(Item item) {
+	public static MyWishlistResponse from(ItemResponse itemResponse) {
 		return new MyWishlistResponse(
-			item.getId(),
-			item.getTitle(),
-			item.getRegion().getTitle(),
-			item.getStatus().getType(),
-			item.getThumbnailUrl(),
-			item.getUpdatedAt(),
-			item.getPrice(),
-			item.getChatCount(),
-			item.getWishlistCount(),
-			item.getSellerId(),
-			CategoryInfoResponse.from(item.getCategory())
+			itemResponse.getId(),
+			itemResponse.getTitle(),
+			itemResponse.getRegion(),
+			itemResponse.getStatus(),
+			itemResponse.getThumbnailUrl(),
+			itemResponse.getUpdatedAt(),
+			itemResponse.getPrice(),
+			itemResponse.getNumChat(),
+			itemResponse.getNumLikes(),
+			itemResponse.getSellerId(),
+			CategoryInfoResponse.from(itemResponse.getCategory())
 		);
 	}
 
-	public static List<MyWishlistResponse> from(List<Item> items) {
-		return items.stream()
+	public static List<MyWishlistResponse> from(List<ItemResponse> itemResponses) {
+		return itemResponses.stream()
 			.map(MyWishlistResponse::from)
 			.collect(Collectors.toUnmodifiableList());
 	}

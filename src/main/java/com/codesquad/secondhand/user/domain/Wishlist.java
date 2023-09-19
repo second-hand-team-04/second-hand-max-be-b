@@ -31,10 +31,6 @@ public class Wishlist {
 	@JoinColumn(name = "item_id")
 	private Item item;
 
-	public boolean equalsUser(User user) {
-		return this.user.equals(user);
-	}
-
 	public Wishlist(User user, Item item) {
 		this.user = user;
 		this.item = item;

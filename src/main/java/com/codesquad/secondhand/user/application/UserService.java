@@ -1,7 +1,11 @@
 package com.codesquad.secondhand.user.application;
 
+import static com.codesquad.secondhand.common.util.RedisUtil.MY_REGION;
+
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +14,7 @@ import com.codesquad.secondhand.common.exception.user.UserNicknameDuplicationExc
 import com.codesquad.secondhand.common.exception.user.UserNotFoundException;
 import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.item.domain.Item;
+import com.codesquad.secondhand.user.infrastructure.dto.WishItem;
 import com.codesquad.secondhand.region.application.dto.RegionResponse;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.application.dto.MyRegionResponse;
@@ -18,6 +23,7 @@ import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
 import com.codesquad.secondhand.user.application.dto.UserUpdateRequest;
 import com.codesquad.secondhand.user.domain.Provider;
 import com.codesquad.secondhand.user.domain.User;
+
 import com.codesquad.secondhand.user.infrastructure.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -65,6 +71,7 @@ public class UserService {
 			.orElseThrow(UserNotFoundException::new);
 	}
 
+	@Cacheable(cacheNames = MY_REGION, key = "#id")
 	public MyRegionResponse findUserRegions(Long id) {
 		User user = userRepository.findWithMyRegionsById(id)
 			.orElseThrow(UserNotFoundException::new);
@@ -73,12 +80,14 @@ public class UserService {
 	}
 
 	@Transactional
+	@CacheEvict(cacheNames = MY_REGION, key = "#request.userId")
 	public void addMyRegion(UserRegionAddRequest request, Region region) {
 		User user = findByIdOrThrow(request.getUserId());
 		user.addMyRegion(region);
 	}
 
 	@Transactional
+	@CacheEvict(cacheNames = MY_REGION, key = "#userId")
 	public void removeMyRegion(Long userId, Region region) {
 		User user = findByIdOrThrow(userId);
 		user.removeMyRegion(region);
@@ -87,14 +96,28 @@ public class UserService {
 	@Transactional
 	public void addMyWishlist(Long id, Item item) {
 		User user = findByIdOrThrow(id);
-
+		WishItem wishItem = findWishItem(id, item.getId());
 		user.addMyWishlist(item);
+		boolean isLiked = wishItem.isLiked() || item.isSeller(user);
+		userRepository.incrementNumLikes(item.getId(), isLiked);
 	}
 
 	@Transactional
 	public void removeMyWishlist(Long id, Item item) {
 		User user = findByIdOrThrow(id);
-
+		WishItem wishItem = findWishItem(id, item.getId());
 		user.removeWishlist(item);
+		boolean isLiked = wishItem.isLiked() && !item.isSeller(user);
+		userRepository.decrementNumLikes(item.getId(), isLiked);
+	}
+
+	public WishItem findWishItem(Long id, Long itemId) {
+		return userRepository.findRedisWishItemByItemId(itemId)
+			.orElseGet(() -> {
+				WishItem wishItem = userRepository.findWishItemByIdAndItemId(id, itemId).orElseThrow();
+				userRepository.createRedisWishItem(itemId, wishItem);
+				return wishItem;
+			}
+		);
 	}
 }
