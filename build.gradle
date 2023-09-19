@@ -1,6 +1,11 @@
 buildscript {
 	ext {
+		awscloudVersion = "2.2.6.RELEASE"
+		parentVersion = "2.7.14"
+		testcontainersVersion = "1.18.3"
+		jjwtVersion = "0.11.5"
 		queryDslVersion = "5.0.0"
+		restassuredVersion = "4.5.1"
 	}
 }
 
@@ -29,27 +34,29 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.testcontainers:mysql:1.18.3'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'org.springframework.boot:spring-boot-starter-parent:2.7.14'
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	implementation "org.springframework.boot:spring-boot-starter-validation"
+	implementation "org.springframework.boot:spring-boot-starter-webflux"
+	implementation "org.springframework.boot:spring-boot-starter-data-redis"
+	implementation "org.springframework.boot:spring-boot-starter-cache"
+	implementation "org.springframework.cloud:spring-cloud-starter-aws:${awscloudVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-parent:${parentVersion}"
+	implementation "org.testcontainers:mysql:${testcontainersVersion}"
+	implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly "org.projectlombok:lombok"
+	runtimeOnly "com.mysql:mysql-connector-j"
+	runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+	runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+	annotationProcessor "org.projectlombok:lombok"
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.rest-assured:rest-assured:4.5.1'
-	testImplementation "org.testcontainers:junit-jupiter:1.18.3"
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	testImplementation "io.rest-assured:rest-assured:${restassuredVersion}"
+	testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
@@ -57,12 +64,15 @@ querydsl {
 	jpa = true
 	querydslSourcesDir = querydslDir
 }
+
 sourceSets {
 	main.java.srcDir querydslDir
 }
+
 configurations {
 	querydsl.extendsFrom compileClasspath
 }
+
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }

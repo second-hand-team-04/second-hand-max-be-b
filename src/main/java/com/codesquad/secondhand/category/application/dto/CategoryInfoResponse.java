@@ -7,12 +7,12 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CategoryItemDetailResponse {
+public class CategoryInfoResponse {
 
 	private Long id;
 	private String title;
 
-	public static CategoryItemDetailResponse from(Category category) {
-		return new CategoryItemDetailResponse(category.getId(), category.getTitle());
+	public static CategoryInfoResponse from(Category category) {
+		return new CategoryInfoResponse(category.getId(), category.getTitle());
 	}
 }

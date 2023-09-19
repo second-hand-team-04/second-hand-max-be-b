@@ -13,8 +13,6 @@ public class MyTransactionSliceResponse {
 	private List<MyTransactionResponse> items;
 
 	public static MyTransactionSliceResponse of(boolean hasMore, List<MyTransactionResponse> myTransactionResponse) {
-		return new MyTransactionSliceResponse(
-			hasMore, myTransactionResponse.isEmpty() ? null : myTransactionResponse
-		);
+		return new MyTransactionSliceResponse(hasMore, myTransactionResponse);
 	}
 }
