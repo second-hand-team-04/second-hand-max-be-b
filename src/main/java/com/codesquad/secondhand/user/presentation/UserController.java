@@ -110,10 +110,10 @@ public class UserController {
 
 	@GetMapping("/wishlist")
 	public ResponseEntity<CommonResponse> showMyWishlists(@AccountPrincipal Account account,
-		@RequestParam(required = false) Long categoryId, Pageable pageable) {
+		@RequestParam(required = false) Long category, Pageable pageable) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				userFacade.findMyWishlistByCategory(account.getId(), categoryId, pageable),
+				userFacade.findMyWishlistByCategory(account.getId(), category, pageable),
 				ResponseMessage.USER_WISHLIST_FIND
 			));
 	}
