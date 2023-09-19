@@ -13,8 +13,6 @@ public class ItemSliceResponse {
 	private List<ItemResponse> items;
 
 	public static ItemSliceResponse of(boolean hasNext, List<ItemResponse> itemResponses) {
-		return new ItemSliceResponse(
-			hasNext, itemResponses.isEmpty() ? null : itemResponses
-		);
+		return new ItemSliceResponse(hasNext, itemResponses);
 	}
 }
