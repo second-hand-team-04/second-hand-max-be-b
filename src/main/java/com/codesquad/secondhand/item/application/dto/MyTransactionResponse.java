@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.codesquad.secondhand.category.application.dto.CategoryInfoResponse;
 import com.codesquad.secondhand.item.domain.Item;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +23,6 @@ public class MyTransactionResponse {
 	private Long sellerId;
 	private int numChat;
 	private int numLikes;
-	private CategoryInfoResponse category;
 
 	public static MyTransactionResponse of(Item item) {
 		return new MyTransactionResponse(
@@ -37,8 +35,7 @@ public class MyTransactionResponse {
 			item.getThumbnailUrl(),
 			item.getSellerId(),
 			item.getChatCount(),
-			item.getWishlistCount(),
-			CategoryInfoResponse.from(item.getCategory())
+			item.getWishlistCount()
 		);
 	}
 

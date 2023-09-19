@@ -77,8 +77,7 @@ public enum ItemFixture {
 			thumbnailUrl,
 			userId,
 			0,
-			0,
-			CategoryFixture.findById(categoryId).toCategoryInfoResponse()
+			0
 		);
 	}
 

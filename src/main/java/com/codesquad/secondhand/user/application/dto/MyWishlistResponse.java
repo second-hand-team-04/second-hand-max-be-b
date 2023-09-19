@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.codesquad.secondhand.category.application.dto.CategoryInfoResponse;
 import com.codesquad.secondhand.item.domain.Item;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +34,8 @@ public class MyWishlistResponse {
 
 	private Long sellerId;
 
+	private CategoryInfoResponse category;
+
 	public static MyWishlistResponse from(Item item) {
 		return new MyWishlistResponse(
 			item.getId(),
@@ -44,7 +47,8 @@ public class MyWishlistResponse {
 			item.getPrice(),
 			item.getChatCount(),
 			item.getWishlistCount(),
-			item.getSellerId()
+			item.getSellerId(),
+			CategoryInfoResponse.from(item.getCategory())
 		);
 	}
 
