@@ -18,15 +18,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Region {
 
-	public static final long DEFAULT_REGION_YEOKSAM_DONG = 432L;
+	public static final long DEFAULT_REGION = 432L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String title;
-
-	public boolean equalsId(Long id) {
-		return Objects.equals(this.id, id);
-	}
 }

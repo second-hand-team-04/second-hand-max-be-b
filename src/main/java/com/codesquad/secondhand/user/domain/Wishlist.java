@@ -45,10 +45,6 @@ public class Wishlist {
 	}
 
 	public boolean equalsItem(Item item) {
-		return this.item.equalsId(item.getId());
-	}
-
-	public boolean equalsItem(Long itemId) {
-		return item.equalsId(itemId);
+		return this.item.equals(item);
 	}
 }

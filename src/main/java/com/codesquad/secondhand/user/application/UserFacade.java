@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.codesquad.secondhand.category.application.CategoryService;
+import com.codesquad.secondhand.category.application.dto.CategoriesInfoResponse;
+import com.codesquad.secondhand.category.application.dto.CategoryInfoResponse;
 import com.codesquad.secondhand.image.application.ImageService;
 import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.item.application.ItemService;
@@ -37,11 +40,12 @@ public class UserFacade {
 	private final RegionService regionService;
 	private final ImageService imageService;
 	private final ItemService itemService;
+	private final CategoryService categoryService;
 
 	public void signUp(UserCreateRequest request, MultipartFile profileImage) {
 		Provider provider = providerService.findByIdOrElseThrow(request.getProviderId());
 		Image image = imageService.uploadOrElseNull(profileImage);
-		Region region = regionService.findByIdOrThrow(Region.DEFAULT_REGION_YEOKSAM_DONG);
+		Region region = regionService.findByIdOrThrow(Region.DEFAULT_REGION);
 		userService.signUp(request, provider, image, region);
 	}
 
@@ -95,5 +99,12 @@ public class UserFacade {
 	public MyWishlistSliceResponse findMyWishlistByCategory(Long id, Long categoryId, Pageable pageable) {
 		Slice<Item> itemSlice = itemService.findByUserIdAndCategoryId(id, categoryId, pageable);
 		return MyWishlistSliceResponse.of(itemSlice.hasNext(), MyWishlistResponse.from(itemSlice.getContent()));
+	}
+
+	@Transactional(readOnly = true)
+	public CategoriesInfoResponse findCategoriesOnMyWishlist(Long id) {
+		List<CategoryInfoResponse> categoryInfoResponses = CategoryInfoResponse.from(
+			categoryService.findCategoriesOnMyWishlistByUserId(id));
+		return new CategoriesInfoResponse(categoryInfoResponses);
 	}
 }
