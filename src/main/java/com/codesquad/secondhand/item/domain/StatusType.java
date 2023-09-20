@@ -17,11 +17,4 @@ public enum StatusType {
 	StatusType(Long id) {
 		this.id = id;
 	}
-
-	public static boolean existsById(Long id) {
-		return Arrays.stream(values())
-			.map(StatusType::getId)
-			.collect(Collectors.toList())
-			.contains(id);
-	}
 }

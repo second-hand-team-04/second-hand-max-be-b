@@ -63,7 +63,7 @@ public class User {
 	private MyRegions myRegions = new MyRegions();
 
 	@Embedded
-	private MyWishlists myWishlists;
+	private MyWishlists myWishlists = new MyWishlists();
 
 	public User(Long id, Provider provider, Image image, Region selectedRegion, String nickname, String email,
 		String password, LocalDateTime createdAt) {
@@ -121,20 +121,11 @@ public class User {
 		}
 	}
 
-	public boolean equalsId(Long id) {
-		return Objects.equals(this.id, id);
-	}
-
 	public void validateNotIncludeMyRegion(Region region) {
 		if (getRegions().stream()
 			.noneMatch(r -> r.equals(region))) {
 			throw new MyRegionNotIncludeException();
 		}
-	}
-
-	public boolean nonMatchRegion(Region region) {
-		return getRegions().stream()
-			.noneMatch(r -> r.equals(region));
 	}
 
 	public String getImageUrl() {

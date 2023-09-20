@@ -33,7 +33,7 @@ public class MyWishlists {
 
 	private Optional<Wishlist> findByItem(Item item) {
 		return wishlists.stream()
-			.filter(i -> i.equalsItem(item.getId()))
+			.filter(i -> i.equalsItem(item))
 			.findAny();
 	}
 

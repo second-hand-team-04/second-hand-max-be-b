@@ -52,12 +52,12 @@ public class ItemFacade {
 		return itemService.findDetailById(id, user);
 	}
 
-	public ItemCreateResponse create(ItemCreateRequest request) {
+	public ItemCreateResponse create(ItemCreateRequest request, Long userId) {
 		List<Image> images = imageService.findAllByIdOrThrow(request.getImageIds());
 		Category category = categoryService.findByIdOrThrow(request.getCategoryId());
 		Region region = regionService.findByIdOrThrow(request.getRegionId());
 		Status status = statusService.findByIdOrThrow(StatusType.FOR_SALE.getId());
-		User user = userService.findByIdOrThrow(request.getUserId());
+		User user = userService.findByIdOrThrow(userId);
 		Item item = itemService.create(request.toItem(images, category, region, status, user));
 		return new ItemCreateResponse(item.getId());
 	}

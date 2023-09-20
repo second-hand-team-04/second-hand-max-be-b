@@ -63,8 +63,4 @@ public class ItemCreateRequest {
 	public List<Long> getImageIds() {
 		return Objects.isNull(imageIds) ? Collections.emptyList() : imageIds;
 	}
-
-	public void injectUserId(Long userId) {
-		this.userId = userId;
-	}
 }

@@ -173,10 +173,6 @@ public class Item {
 		return images.getImages();
 	}
 
-	public boolean equalsId(Long id) {
-		return Objects.equals(this.id, id);
-	}
-
 	public Long getSellerId() {
 		return user.getId();
 	}

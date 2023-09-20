@@ -34,7 +34,7 @@ public class AuthFacade {
 		ProviderType providerType = ProviderType.findByName(providerName);
 		OauthUserInfomation oauthUserInfomation = authService.findOauthUserInfomation(providerType, code);
 		Provider provider = providerService.findByIdOrElseThrow(providerType.getId());
-		Region region = regionService.findByIdOrThrow(Region.DEFAULT_REGION_YEOKSAM_DONG);
+		Region region = regionService.findByIdOrThrow(Region.DEFAULT_REGION);
 		User user = authService.oauthSignIn(oauthUserInfomation, provider, region);
 		return tokenService.createToken(user.toAccount());
 	}

@@ -41,7 +41,7 @@ public class UserFacade {
 	public void signUp(UserCreateRequest request, MultipartFile profileImage) {
 		Provider provider = providerService.findByIdOrElseThrow(request.getProviderId());
 		Image image = imageService.uploadOrElseNull(profileImage);
-		Region region = regionService.findByIdOrThrow(Region.DEFAULT_REGION_YEOKSAM_DONG);
+		Region region = regionService.findByIdOrThrow(Region.DEFAULT_REGION);
 		userService.signUp(request, provider, image, region);
 	}
 
