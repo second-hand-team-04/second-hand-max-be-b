@@ -94,8 +94,7 @@ public class UserController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
 				userFacade.findById(account.getId()),
-				ResponseMessage.USER_INFO
-			));
+				ResponseMessage.USER_INFO));
 	}
 
 	@GetMapping("/transactions")
@@ -104,8 +103,7 @@ public class UserController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
 				userFacade.findAllMyTransactionByStatus(account.getId(), status, pageable),
-				ResponseMessage.USER_FIND_MY_TRANSACTION_BY_STATUS
-			));
+				ResponseMessage.USER_FIND_MY_TRANSACTION_BY_STATUS));
 	}
 
 	@GetMapping("/wishlist")
@@ -114,22 +112,29 @@ public class UserController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
 				userFacade.findMyWishlistByCategory(account.getId(), category, pageable),
-				ResponseMessage.USER_WISHLIST_FIND
-			));
+				ResponseMessage.WISHLIST_FIND));
+	}
+
+	@GetMapping("/wishlist/categories")
+	public ResponseEntity<CommonResponse> showCategoriesOnMyWishlist(@AccountPrincipal Account account) {
+		return ResponseEntity.ok()
+			.body(CommonResponse.createOK(
+				userFacade.findCategoriesOnMyWishlist(account.getId()),
+				ResponseMessage.WISHLIST_CATEGORIES));
 	}
 
 	@PostMapping("/wishlist/{itemId}")
 	public ResponseEntity<CommonResponse> addWishlist(@AccountPrincipal Account account, @PathVariable Long itemId) {
 		userFacade.addMyWishlist(account.getId(), itemId);
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(CommonResponse.createCreated(ResponseMessage.USER_WISHLIST_ADD));
+			.body(CommonResponse.createCreated(ResponseMessage.WISHLIST_ADD));
 	}
 
 	@DeleteMapping("/wishlist/{itemId}")
 	public ResponseEntity<CommonResponse> deleteWishlist(@AccountPrincipal Account account, @PathVariable Long itemId) {
 		userFacade.removeMyWishlist(account.getId(), itemId);
 		return ResponseEntity.ok()
-			.body(CommonResponse.createOK(ResponseMessage.USER_WISHLIST_REMOVE));
+			.body(CommonResponse.createOK(ResponseMessage.WISHLIST_REMOVE));
 	}
 }
 

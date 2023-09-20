@@ -10,6 +10,7 @@ import static com.codesquad.secondhand.util.steps.AuthSteps.*;
 import static com.codesquad.secondhand.util.steps.ImageSteps.*;
 import static com.codesquad.secondhand.util.steps.ItemSteps.*;
 import static com.codesquad.secondhand.util.steps.UserSteps.*;
+import static com.codesquad.secondhand.util.steps.UserSteps.관심_목록_등록_요청;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.FileInputStream;
@@ -26,11 +27,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import com.codesquad.secondhand.category.application.dto.CategoriesInfoResponse;
 import com.codesquad.secondhand.item.application.dto.ItemCreateRequest;
 import com.codesquad.secondhand.item.application.dto.ItemDetailResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionResponse;
 import com.codesquad.secondhand.user.application.dto.UserInfoResponse;
 import com.codesquad.secondhand.util.AcceptanceTest;
+import com.codesquad.secondhand.util.steps.UserSteps;
 
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
@@ -578,6 +581,38 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
 	}
 
+	/**
+	 * Given 동네들, 카테고리들, 유저를 생성하고
+	 * And   삼품들, 생성된 상품들을 관심목록에 등록하고
+	 * When  관심목록 카테고리 조회를 하면
+	 * Then  관심목록에 있는 카테고리들을 조회 할 수 있다.
+	 */
+	@Test
+	void 관심_목록_카테고리들을_조회한다() throws InterruptedException {
+		// given
+		상품들_생성_후_관심목록_등록();
+
+		// when
+		var response = 관심_목록_카테고리_조회_요청(유저_만두_액세스_토큰);
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.OK);
+		관심_목록_카테고리_조회_검증(response);
+	}
+
+	private void 관심_목록_카테고리_조회_검증(ExtractableResponse<Response> response) {
+		List<Long> actual = response.jsonPath()
+			.getList("data.categories.id", Long.class);
+
+		assertThat(actual).containsExactly(1L, 6L, 9L, 13L, 18L);
+	}
+
+	private void 상품들_생성_후_관심목록_등록() throws InterruptedException {
+		나의_동네_청운동_궁정동_수정();
+		List<Long> itemIds = 상품들_생성_요청();
+		itemIds.forEach(i -> 관심_목록_등록_요청(유저_만두_액세스_토큰, i));
+	}
+
 	private static Stream<Arguments> providerNicknameAndImage() throws FileNotFoundException {
 		return Stream.of(
 			Arguments.of(
@@ -730,25 +765,38 @@ public class UserAcceptanceTest extends AcceptanceTest {
 		return 로그인_요청(유저_보노.getEmail(), 유저_보노.getPassword()).jsonPath().getString("data.accessToken");
 	}
 
-	private void 상품들_생성_요청() throws InterruptedException {
+	private List<Long> 상품들_생성_요청() throws InterruptedException {
 		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대.getFileName()));
 		이미지_업로드_요청(유저_만두_액세스_토큰, "item", createFile(이미지_빈티지_일본_경대2.getFileName()));
-		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(
+		long itemId1 = 상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(
 			상품_빈티지_일본_경대.getTitle(), 상품_빈티지_일본_경대.getPrice(),
 			상품_빈티지_일본_경대.getContent(), List.of(이미지_빈티지_일본_경대.getId(), 이미지_빈티지_일본_경대2.getId()),
-			상품_빈티지_일본_경대.getCategoryId(), 상품_빈티지_일본_경대.getRegionId()));
+			상품_빈티지_일본_경대.getCategoryId(), 상품_빈티지_일본_경대.getRegionId())).jsonPath().getLong("data.id");
 		Thread.sleep(1000);
-		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_PS5.getTitle(), 상품_PS5.getPrice(),
-			상품_PS5.getContent(), null, 상품_PS5.getCategoryId(), 상품_PS5.getRegionId()));
+		long itemId2 = 상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(
+				상품_PS5.getTitle(), 상품_PS5.getPrice(), 상품_PS5.getContent(), null,
+				상품_PS5.getCategoryId(), 상품_PS5.getRegionId()))
+			.jsonPath()
+			.getLong("data.id");
 		Thread.sleep(1000);
-		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_젤다의_전설.getTitle(), 상품_젤다의_전설.getPrice(),
-			상품_젤다의_전설.getContent(), null, 상품_젤다의_전설.getCategoryId(), 상품_젤다의_전설.getRegionId()));
+		long itemId3 = 상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(
+				상품_젤다의_전설.getTitle(), 상품_젤다의_전설.getPrice(), 상품_젤다의_전설.getContent(), null,
+				상품_젤다의_전설.getCategoryId(), 상품_젤다의_전설.getRegionId()))
+			.jsonPath()
+			.getLong("data.id");
 		Thread.sleep(1000);
-		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_코렐_접시.getTitle(), 상품_코렐_접시.getPrice(),
-			상품_코렐_접시.getContent(), null, 상품_코렐_접시.getCategoryId(), 상품_코렐_접시.getRegionId()));
+		long itemId4 = 상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(
+				상품_코렐_접시.getTitle(), 상품_코렐_접시.getPrice(), 상품_코렐_접시.getContent(), null,
+				상품_코렐_접시.getCategoryId(), 상품_코렐_접시.getRegionId()))
+			.jsonPath()
+			.getLong("data.id");
 		Thread.sleep(1000);
-		상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(상품_삼천리_자전거.getTitle(), 상품_삼천리_자전거.getPrice(),
-			상품_삼천리_자전거.getContent(), null, 상품_삼천리_자전거.getCategoryId(), 상품_삼천리_자전거.getRegionId()));
+		long itemId5 = 상품_생성_요청(유저_만두_액세스_토큰, new ItemCreateRequest(
+				상품_삼천리_자전거.getTitle(), 상품_삼천리_자전거.getPrice(), 상품_삼천리_자전거.getContent(), null,
+				상품_삼천리_자전거.getCategoryId(), 상품_삼천리_자전거.getRegionId()))
+			.jsonPath()
+			.getLong("data.id");
+		return List.of(itemId1, itemId2, itemId3, itemId4, itemId5);
 	}
 
 	private void 상품_빈티지_일본_경대_생성() {

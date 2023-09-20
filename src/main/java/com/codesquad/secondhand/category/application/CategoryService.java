@@ -26,4 +26,8 @@ public class CategoryService {
 	public Category findByIdOrThrow(Long categoryId) {
 		return categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
 	}
+
+	public List<Category> findCategoriesOnMyWishlistByUserId(Long userId) {
+		return categoryRepository.findCategoriesOnMyWishlistByUserId(userId);
+	}
 }

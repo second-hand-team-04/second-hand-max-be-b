@@ -37,9 +37,10 @@ public enum ResponseMessage {
 	IMAGE_UPLOAD("이미지 등록을 성공하였습니다"),
 
 	// wishlist
-	USER_WISHLIST_FIND("관심목록 조회를 성공하였습니다"),
-	USER_WISHLIST_ADD("관심목록 추가를 성공하였습니다"),
-	USER_WISHLIST_REMOVE("관심목록 삭제를 성공하였습니다");
+	WISHLIST_FIND("관심목록 조회를 성공하였습니다"),
+	WISHLIST_ADD("관심목록 추가를 성공하였습니다"),
+	WISHLIST_REMOVE("관심목록 삭제를 성공하였습니다"),
+	WISHLIST_CATEGORIES("관심목록 카테고리 조회를 성공하였습니다");
 
 	private final String message;
 
