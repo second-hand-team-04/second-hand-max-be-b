@@ -51,8 +51,8 @@ public class ItemFacade {
 	public ItemDetailResponse findDetailById(Long id, Long userId) {
 		ItemDetailDto itemDetailDto = itemService.findDetailById(id);
 		int itemViewCount = itemService.incrementViewCount(id);
-		WishItem wishItem = userService.findWishItem(userId, id);
-		return ItemDetailResponse.of(itemDetailDto, itemViewCount, wishItem);
+		WishItem wishItem = userService.findWishItem(id);
+		return ItemDetailResponse.of(itemDetailDto, itemViewCount, wishItem, userId);
 	}
 
 	public ItemCreateResponse create(ItemCreateRequest request, Long userId) {
@@ -85,4 +85,3 @@ public class ItemFacade {
 		itemImageService.deleteByItemId(id);
 	}
 }
-

@@ -5,7 +5,6 @@ import static com.codesquad.secondhand.common.util.RedisUtil.ITEM_VIEW_COUNT;
 import static com.codesquad.secondhand.common.util.RedisUtil.WISH_ITEM;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,7 +32,6 @@ import com.codesquad.secondhand.item.infrastructure.ItemRepository;
 import com.codesquad.secondhand.item.infrastructure.dto.ItemDetailDto;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
-import com.codesquad.secondhand.user.infrastructure.dto.WishItem;
 
 import lombok.RequiredArgsConstructor;
 

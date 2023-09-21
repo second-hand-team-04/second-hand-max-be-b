@@ -6,11 +6,7 @@ import com.codesquad.secondhand.user.infrastructure.dto.WishItem;
 
 public interface WishlistCustomRepository {
 
-	Optional<WishItem> findRedisWishItemByItemId(Long id);
+	Optional<WishItem> findRedisWishItemByItemId(Long itemId);
 
-	void incrementNumLikes(Long itemId, boolean isLiked);
-
-	void decrementNumLikes(Long itemId, boolean isLiked);
-
-	void createRedisWishItem(Long itemId, WishItem wishItem);
+	WishItem findWishItemByItemId(Long itemId);
 }

@@ -1,22 +1,33 @@
 package com.codesquad.secondhand.user.infrastructure.dto;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class WishItem implements Serializable {
 
-	private int numLike;
-	private boolean isLiked;
+	private List<Long> wishUserId;
 
-	public WishItem(int numLike, boolean isLiked) {
-		this.numLike = numLike;
-		this.isLiked = isLiked;
+	public WishItem(List<Long> wishUserId) {
+		this.wishUserId = wishUserId;
 	}
 
-	public WishItem(long numLike, long isLiked) {
-		this.numLike = (int) numLike;
-		this.isLiked = isLiked > 0;
+	public static WishItem createNonNullInstance(WishItem wishItem) {
+		return Objects.isNull(wishItem) ? new WishItem(Collections.emptyList()) : wishItem;
+	}
+
+	public int getNumLike() {
+		return wishUserId.size();
+	}
+
+	public boolean isLiked(Long userId) {
+		return wishUserId.stream()
+			.anyMatch(u -> u.equals(userId));
 	}
 }

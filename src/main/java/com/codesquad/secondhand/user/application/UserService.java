@@ -1,6 +1,7 @@
 package com.codesquad.secondhand.user.application;
 
 import static com.codesquad.secondhand.common.util.RedisUtil.MY_REGION;
+import static com.codesquad.secondhand.common.util.RedisUtil.WISH_ITEM;
 
 import java.util.List;
 
@@ -94,30 +95,22 @@ public class UserService {
 	}
 
 	@Transactional
+	@CacheEvict(cacheNames = WISH_ITEM, key = "#item.id")
 	public void addMyWishlist(Long id, Item item) {
 		User user = findByIdOrThrow(id);
-		WishItem wishItem = findWishItem(id, item.getId());
 		user.addMyWishlist(item);
-		boolean isLiked = wishItem.isLiked() || item.isSeller(user);
-		userRepository.incrementNumLikes(item.getId(), isLiked);
 	}
 
 	@Transactional
+	@CacheEvict(cacheNames = WISH_ITEM, key = "#item.id")
 	public void removeMyWishlist(Long id, Item item) {
 		User user = findByIdOrThrow(id);
-		WishItem wishItem = findWishItem(id, item.getId());
 		user.removeWishlist(item);
-		boolean isLiked = wishItem.isLiked() && !item.isSeller(user);
-		userRepository.decrementNumLikes(item.getId(), isLiked);
 	}
 
-	public WishItem findWishItem(Long id, Long itemId) {
+	@Cacheable(cacheNames = WISH_ITEM, key = "#itemId")
+	public WishItem findWishItem(Long itemId) {
 		return userRepository.findRedisWishItemByItemId(itemId)
-			.orElseGet(() -> {
-				WishItem wishItem = userRepository.findWishItemByIdAndItemId(id, itemId).orElseThrow();
-				userRepository.createRedisWishItem(itemId, wishItem);
-				return wishItem;
-			}
-		);
+			.orElseGet(() -> userRepository.findWishItemByItemId(itemId));
 	}
 }

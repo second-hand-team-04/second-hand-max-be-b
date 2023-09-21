@@ -23,12 +23,8 @@ public class RedisUtil {
 	public static final String CATEGORY = "category";
 	public static final String ITEM = "item";
 	public static final String ITEM_VIEW_COUNT = "itemViewCount";
-	public static final String WISH_ITEM = "wishItem";
-	public static final String WISH_ITEM_NUM_LIKES = "numLikes";
-	public static final String WISH_ITEM_IS_LIKED = "isLiked";
 	public static final String MY_REGION = "myRegion";
-
-	public static final Duration WISH_ITEM_EXPIRE = Duration.ofDays(1);
+	public static final String WISH_ITEM = "wishItem";
 
 	private final RedisTemplate<String, String> redisValueStringTemplate;
 	private final RedisTemplate<String, Object> redisValueObjectTemplate;
@@ -92,6 +88,11 @@ public class RedisUtil {
 		}
 
 		return result;
+	}
+
+	public <T> T getCacheObject(String cacheType, Long key, Class<T> valueType) {
+		return cacheManager.getCache(cacheType)
+			.get(key, valueType);
 	}
 
 	private String createCacheKey(String cacheType, Long key) {

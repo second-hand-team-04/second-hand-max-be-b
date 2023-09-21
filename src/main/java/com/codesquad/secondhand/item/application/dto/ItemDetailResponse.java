@@ -32,11 +32,10 @@ public class ItemDetailResponse implements Serializable {
 	private UserItemDetailResponse seller;
 	private List<ImageResponse> images;
 
-	public static ItemDetailResponse of(ItemDetailDto item, int itemViewCount, WishItem wishItem) {
+	public static ItemDetailResponse of(ItemDetailDto item, int itemViewCount, WishItem wishItem, Long userId) {
 		return new ItemDetailResponse(item.getId(), item.getTitle(), item.getContent(), item.getPrice(),
-			0, wishItem.getNumLike(), itemViewCount, wishItem.isLiked(), item.getUpdatedAt(),
-			item.getStatus(), item.getCategory(),
-			item.getSeller(), ImageResponse.from(item.getImages()));
+			0, wishItem.getNumLike(), itemViewCount, wishItem.isLiked(userId), item.getUpdatedAt(),
+			item.getStatus(), item.getCategory(), item.getSeller(), ImageResponse.from(item.getImages()));
 	}
 
 	public Long getId() {

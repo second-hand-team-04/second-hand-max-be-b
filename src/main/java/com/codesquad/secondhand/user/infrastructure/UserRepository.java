@@ -19,7 +19,4 @@ public interface UserRepository extends JpaRepository<User, Long>, WishlistCusto
 	boolean existsByNickname(String nickname);
 
 	boolean existsByIdIsNotAndNickname(Long id, String nickname);
-
-	@Query("select new com.codesquad.secondhand.user.infrastructure.dto.WishItem(count(w.id),  COALESCE(sum(case when w.user.id = :id then 0 else 1 end), 0)) from Wishlist w where w.item.id = :itemId")
-	Optional<WishItem> findWishItemByIdAndItemId(Long id, Long itemId);
 }

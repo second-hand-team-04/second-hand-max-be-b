@@ -4,6 +4,7 @@ import static com.codesquad.secondhand.common.util.RedisUtil.CATEGORY;
 import static com.codesquad.secondhand.common.util.RedisUtil.ITEM;
 import static com.codesquad.secondhand.common.util.RedisUtil.ITEM_VIEW_COUNT;
 import static com.codesquad.secondhand.common.util.RedisUtil.MY_REGION;
+import static com.codesquad.secondhand.common.util.RedisUtil.WISH_ITEM;
 
 import java.time.Duration;
 
@@ -64,6 +65,8 @@ public class RedisCacheConfig {
 			.withCacheConfiguration(ITEM_VIEW_COUNT,
 				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(2)))
 			.withCacheConfiguration(MY_REGION,
+				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(2)))
+			.withCacheConfiguration(WISH_ITEM,
 				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(2)));
 	}
 }
