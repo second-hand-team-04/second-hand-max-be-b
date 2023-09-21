@@ -268,6 +268,34 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
+	 *  When 상품 생성 시 가격이 0원 미만이면
+	 *  Then 요청이 실패한다.
+	 */
+	@Test
+	void 상품_생성_시_가격이_0원_미만이면_요청이_실패한다() {
+		// when
+		var response = 가격이_0원_미만인_상품_생성();
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
+	 *  When 상품 생성 시 가격이 999_999_999이 초과되면
+	 *  Then 요청이 실패한다.
+	 */
+	@Test
+	void 상품_생성_시_가격이_999_999_999원이_초과되면_요청이_실패한다() {
+		// when
+		var response = 가격이_999_999_999원_초과인_상품_생성();
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
 	 *  Given 동네들, 카테고리들, 유저, 이미지들, 상품을 생성하고
 	 *  When 상품 상태를 수정하면
 	 *  Then 상품 상세 조회 시 상태를 확인 할 수 있다.
@@ -763,6 +791,18 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 
 	private ExtractableResponse<Response> 내용이_3000자를_초과하는_상품_생성() {
 		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_PS5.getTitle(), null, "a".repeat(3001),
+			List.of(이미지_잎사귀_포스터.getId()), 카테고리_게임_취미.getId(), 동네_서울_종로구_청운동.getId());
+		return 상품_생성_요청(유저_만두_액세스_토큰, itemCreateRequest);
+	}
+
+	private ExtractableResponse<Response> 가격이_0원_미만인_상품_생성() {
+		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_PS5.getTitle(), -1, "a".repeat(3001),
+			List.of(이미지_잎사귀_포스터.getId()), 카테고리_게임_취미.getId(), 동네_서울_종로구_청운동.getId());
+		return 상품_생성_요청(유저_만두_액세스_토큰, itemCreateRequest);
+	}
+
+	private ExtractableResponse<Response> 가격이_999_999_999원_초과인_상품_생성() {
+		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_PS5.getTitle(), 1_000_000_000, "a".repeat(3001),
 			List.of(이미지_잎사귀_포스터.getId()), 카테고리_게임_취미.getId(), 동네_서울_종로구_청운동.getId());
 		return 상품_생성_요청(유저_만두_액세스_토큰, itemCreateRequest);
 	}
