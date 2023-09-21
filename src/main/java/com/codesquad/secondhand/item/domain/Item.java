@@ -142,19 +142,7 @@ public class Item {
 		this.isDeleted = true;
 	}
 
-	public String getThumbnailUrl() {
-		return images.getThumbnailUrl();
-	}
-
 	public List<Image> getImages() {
 		return images.getImages();
-	}
-
-	public Long getSellerId() {
-		return user.getId();
-	}
-
-	public boolean isSeller(User user) {
-		return this.user.equals(user);
 	}
 }
