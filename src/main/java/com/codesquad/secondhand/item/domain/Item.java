@@ -101,10 +101,6 @@ public class Item {
 		}
 	}
 
-	public void increaseViewCount() {
-		views++;
-	}
-
 	public void updateStatus(User accountUser, Status status) {
 		this.user.validatePermission(accountUser);
 		this.status = status;

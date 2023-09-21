@@ -42,9 +42,9 @@ public class ItemService {
 
 	@Transactional
 	public ItemDetailResponse findDetailById(Long id, User user) {
+		itemRepository.incrementViewCount(id);
 		Item item = itemRepository.findDetailById(id)
 			.orElseThrow(ItemNotFoundException::new);
-		item.increaseViewCount();
 		return ItemDetailResponse.from(item, user);
 	}
 
