@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Category implements Serializable {
 
+	public static final Long CATEGORY_ALL = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

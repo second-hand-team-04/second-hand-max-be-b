@@ -1,5 +1,6 @@
 package com.codesquad.secondhand.category.application;
 
+import static com.codesquad.secondhand.category.domain.Category.CATEGORY_ALL;
 import static com.codesquad.secondhand.common.util.RedisUtil.CATEGORY;
 
 import java.util.List;
@@ -28,7 +29,12 @@ public class CategoryService {
 	}
 
 	public Category findByIdOrThrow(Long categoryId) {
-		return categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+		if (categoryId.equals(CATEGORY_ALL)) {
+			throw new CategoryNotFoundException();
+		}
+
+		return categoryRepository.findById(categoryId)
+			.orElseThrow(CategoryNotFoundException::new);
 	}
 
 	public List<Category> findCategoriesOnMyWishlistByUserId(Long userId) {

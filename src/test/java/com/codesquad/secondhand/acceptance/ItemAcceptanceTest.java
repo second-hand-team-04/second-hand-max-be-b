@@ -181,6 +181,19 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
+	 *  When 상품 생성 시 카테고리가 전체이면
+	 *  Then 요청이 실패한다.
+	 */
+	@Test
+	void 상품_생성_시_카테고리가_전체이면_요청이_실패한다() {
+		// when
+		var response = 카테고리가_전체인_상품_생성();
+
+		// then
+		응답_상태코드_검증(response, HttpStatus.NOT_FOUND);
+	}
+
+	/**
 	 *  Given 동네들, 카테고리들, 유저, 이미지들을 생성하고
 	 *  When 상품 생성 시 존재하지 않는 카테고리면
 	 *  Then 요청이 실패한다.
@@ -732,6 +745,12 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_PS5.getTitle(), null, 상품_PS5.getContent(),
 			List.of(이미지_잎사귀_포스터.getId()),
 			null, 동네_서울_종로구_청운동.getId());
+		return 상품_생성_요청(유저_만두_액세스_토큰, itemCreateRequest);
+	}
+
+	private ExtractableResponse<Response> 카테고리가_전체인_상품_생성() {
+		ItemCreateRequest itemCreateRequest = new ItemCreateRequest(상품_PS5.getTitle(), null, 상품_PS5.getContent(),
+			List.of(이미지_잎사귀_포스터.getId()), 1L, 동네_서울_종로구_청운동.getId());
 		return 상품_생성_요청(유저_만두_액세스_토큰, itemCreateRequest);
 	}
 
