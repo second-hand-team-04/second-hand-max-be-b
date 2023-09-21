@@ -8,14 +8,12 @@ import static com.codesquad.secondhand.common.util.RedisUtil.MY_REGION;
 import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.connection.RedisConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -31,7 +29,8 @@ public class RedisCacheConfig {
 
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
-		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
+		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(
+			redisProperties.getHost(), redisProperties.getPort());
 		redisStandaloneConfiguration.setPassword(redisProperties.getPassword());
 		return new LettuceConnectionFactory(redisStandaloneConfiguration);
 	}
@@ -59,12 +58,12 @@ public class RedisCacheConfig {
 	public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
 		return (builder) -> builder
 			.withCacheConfiguration(ITEM,
-				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(7)))
+				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(3)))
 			.withCacheConfiguration(CATEGORY,
-				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(7)))
+				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(2)))
 			.withCacheConfiguration(ITEM_VIEW_COUNT,
-				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(7)))
+				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(2)))
 			.withCacheConfiguration(MY_REGION,
-				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(7)));
+				RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(2)));
 	}
 }

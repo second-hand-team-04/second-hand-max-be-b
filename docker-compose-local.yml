@@ -18,7 +18,7 @@ services:
     restart: always
 
   cache:
-    image: "redis:7.2.1"
+    image: ${REDIS_IMAGE_NAME}
     container_name: cache-redis
     hostname: cache-redis
     volumes:
