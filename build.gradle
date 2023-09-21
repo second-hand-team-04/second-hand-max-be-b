@@ -1,86 +1,89 @@
 buildscript {
-	ext {
-		awscloudVersion = "2.2.6.RELEASE"
-		parentVersion = "2.7.14"
-		testcontainersVersion = "1.18.3"
-		jjwtVersion = "0.11.5"
-		queryDslVersion = "5.0.0"
-		restassuredVersion = "4.5.1"
-	}
+    ext {
+        awscloudVersion = "2.2.6.RELEASE"
+        parentVersion = "2.7.14"
+        testcontainersVersion = "1.18.3"
+        jjwtVersion = "0.11.5"
+        queryDslVersion = "5.0.0"
+        restassuredVersion = "4.5.1"
+    }
 }
 
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.14'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+    id 'java'
+    id 'org.springframework.boot' version '2.7.14'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.codesquad'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '11'
+    sourceCompatibility = '11'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-	implementation "org.springframework.boot:spring-boot-starter-web"
-	implementation "org.springframework.boot:spring-boot-starter-validation"
-	implementation "org.springframework.boot:spring-boot-starter-webflux"
-	implementation "org.springframework.boot:spring-boot-starter-data-redis"
-	implementation "org.springframework.boot:spring-boot-starter-cache"
-	implementation "org.springframework.cloud:spring-cloud-starter-aws:${awscloudVersion}"
-	implementation "org.springframework.boot:spring-boot-starter-parent:${parentVersion}"
-	implementation "org.testcontainers:mysql:${testcontainersVersion}"
-	implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.springframework.boot:spring-boot-starter-cache"
+    implementation "org.springframework.cloud:spring-cloud-starter-aws:${awscloudVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-parent:${parentVersion}"
+    implementation "org.testcontainers:mysql:${testcontainersVersion}"
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.kafka:spring-kafka'
 
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-	compileOnly "org.projectlombok:lombok"
-	runtimeOnly "com.mysql:mysql-connector-j"
-	runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
-	runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
-	annotationProcessor "org.projectlombok:lombok"
+    compileOnly "org.projectlombok:lombok"
+    runtimeOnly "com.mysql:mysql-connector-j"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+    annotationProcessor "org.projectlombok:lombok"
 
-	testImplementation "org.springframework.boot:spring-boot-starter-test"
-	testImplementation "io.rest-assured:rest-assured:${restassuredVersion}"
-	testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "io.rest-assured:rest-assured:${restassuredVersion}"
+    testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
-	jpa = true
-	querydslSourcesDir = querydslDir
+    jpa = true
+    querydslSourcesDir = querydslDir
 }
 
 sourceSets {
-	main.java.srcDir querydslDir
+    main.java.srcDir querydslDir
 }
 
 configurations {
-	querydsl.extendsFrom compileClasspath
+    querydsl.extendsFrom compileClasspath
 }
 
 compileQuerydsl {
-	options.annotationProcessorPath = configurations.querydsl
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 tasks.jar {
-	enabled = false
+    enabled = false
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
