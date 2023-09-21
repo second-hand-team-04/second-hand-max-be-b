@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -163,8 +164,25 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
 	}
 
 	@Override
-	public Long incrementViewCount(Long id) {
-		return redisUtil.incrementForValue(ITEM_VIEW_COUNT, id, 1L);
+	public int incrementViewCount(Long id) {
+		String redisViewCount = redisUtil.getForString(ITEM_VIEW_COUNT, id);
+
+		if (Objects.isNull(redisViewCount)) {
+			int viewCount = findViewCount(id) + 1;
+			redisUtil.putForString(ITEM_VIEW_COUNT, id, String.valueOf(viewCount));
+			return viewCount;
+		}
+
+		return redisUtil.incrementForValue(ITEM_VIEW_COUNT, id, 1L)
+			.intValue();
+	}
+
+	private int findViewCount(Long id) {
+		Integer viewCount = jpaQueryFactory.select(item.views)
+			.from(item)
+			.where(item.id.eq(id))
+			.fetchOne();
+		return Objects.isNull(viewCount) ? 0 : viewCount;
 	}
 
 	@Override

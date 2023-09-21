@@ -16,8 +16,8 @@ public abstract class DockerContainer {
 	static {
 		MY_SQL_CONTAINER.start();
 		REDIS_CACHE_CONTAINER.start();
-		System.setProperty("spring.redis.host", REDIS_CACHE_CONTAINER.getHost());
-		System.setProperty("spring.redis.port", REDIS_CACHE_CONTAINER.getMappedPort(6379).toString());
-		System.setProperty("spring.redis.password", "");
+		//System.setProperty("spring.redis.host", REDIS_CACHE_CONTAINER.getHost());
+		//System.setProperty("spring.redis.port", REDIS_CACHE_CONTAINER.getMappedPort(6379).toString());
+		//System.setProperty("spring.redis.password", "");
 	}
 }

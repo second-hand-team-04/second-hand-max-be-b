@@ -22,7 +22,7 @@ public interface ItemCustomRepository {
 
 	Optional<ItemDetailDto> findDetailById(Long id);
 
-	Long incrementViewCount(Long id);
+	int incrementViewCount(Long id);
 
 	Map<Long, Integer> findAllRedisItemViewCount();
 }

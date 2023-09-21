@@ -87,6 +87,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 		상품_빈티지_일본_경대_생성();
 
 		// when
+		상품_상세_조회_요청(유저_만두_액세스_토큰, 상품_빈티지_일본_경대.getId());
 		var response = 상품_상세_조회_요청(유저_만두_액세스_토큰, 상품_빈티지_일본_경대.getId());
 
 		// then
@@ -671,7 +672,7 @@ public class ItemAcceptanceTest extends AcceptanceTest {
 
 	private void 상품_상세_조회_시_생성된_상품을_검증한다(ExtractableResponse<Response> response) {
 		List<ImageResponse> expectedImage = List.of(이미지_빈티지_일본_경대.toImageResponse(), 이미지_빈티지_일본_경대2.toImageResponse());
-		상품_상세_조회_시_생성된_상품을_검증(response, 상품_빈티지_일본_경대.toItemDetailResponse(1, 0, 0, expectedImage));
+		상품_상세_조회_시_생성된_상품을_검증(response, 상품_빈티지_일본_경대.toItemDetailResponse(2, 0, 0, expectedImage));
 	}
 
 	private ExtractableResponse<Response> 상품_생성(String title, Integer price, String content, List<Long> imageIds,

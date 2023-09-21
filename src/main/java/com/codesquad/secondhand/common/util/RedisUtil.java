@@ -49,9 +49,9 @@ public class RedisUtil {
 		operations.put(createCacheKey(cacheType, key), hashKey, value);
 	}
 
-	public void putForString(String cacheType, String value) {
+	public void putForString(String cacheType, Long key, String value) {
 		ValueOperations<String, String> operations = redisValueStringTemplate.opsForValue();
-		operations.set(cacheType, value);
+		operations.set(createCacheKey(cacheType, key), value);
 	}
 
 	public <T> T getForHash(String cacheType, Long key, String hashKey, Class<T> returnType) {
@@ -63,9 +63,9 @@ public class RedisUtil {
 		return (T) hashOperations.get(createCacheKey(cacheType, key), hashKey);
 	}
 
-	public String getForString(String cacheType) {
+	public String getForString(String cacheType, Long key) {
 		ValueOperations<String, String> operations = redisValueStringTemplate.opsForValue();
-		return operations.get(cacheType);
+		return operations.get(createCacheKey(cacheType, key));
 	}
 
 	public void expiredForObject(String cacheType, Long key, Duration duration) {

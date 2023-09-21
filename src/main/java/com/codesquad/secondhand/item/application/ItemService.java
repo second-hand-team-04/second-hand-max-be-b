@@ -33,6 +33,7 @@ import com.codesquad.secondhand.item.infrastructure.ItemRepository;
 import com.codesquad.secondhand.item.infrastructure.dto.ItemDetailDto;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
+import com.codesquad.secondhand.user.infrastructure.dto.WishItem;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,15 +55,8 @@ public class ItemService {
 			.orElseThrow(ItemNotFoundException::new);
 	}
 
-	@Cacheable(cacheNames = ITEM_VIEW_COUNT, key = "#id")
 	public int incrementViewCount(Long id) {
-		Long viewCount = itemRepository.incrementViewCount(id);
-
-		if (Objects.isNull(viewCount)) {
-			return itemRepository.findViewsById(id) + 1;
-		}
-
-		return viewCount.intValue();
+		return itemRepository.incrementViewCount(id);
 	}
 
 	public Item findByIdOrElseThrow(Long id) {
