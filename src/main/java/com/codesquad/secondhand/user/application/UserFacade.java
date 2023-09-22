@@ -68,9 +68,9 @@ public class UserFacade {
 		return userService.findUserRegions(id);
 	}
 
-	public void addMyRegion(UserRegionAddRequest request) {
-		Region region = regionService.findByIdOrThrow(request.getRegionId());
-		userService.addMyRegion(request, region);
+	public void addMyRegion(UserRegionAddRequest request, Long id) {
+		Region region = regionService.findByIdOrThrow(request.getId());
+		userService.addMyRegion(id, region);
 	}
 
 	@CacheEvict(cacheNames = MY_REGION, key = "#userId")

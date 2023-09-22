@@ -67,8 +67,7 @@ public class UserController {
 	@PostMapping("/regions")
 	public ResponseEntity<CommonResponse> addMyRegion(@RequestBody UserRegionAddRequest request,
 		@AccountPrincipal Account account) {
-		request.injectUserId(account.getId());
-		userFacade.addMyRegion(request);
+		userFacade.addMyRegion(request, account.getId());
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(CommonResponse.createCreated(ResponseMessage.MY_REGION_ADD));
 	}

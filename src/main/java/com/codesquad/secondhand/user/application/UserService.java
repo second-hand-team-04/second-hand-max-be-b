@@ -81,9 +81,9 @@ public class UserService {
 	}
 
 	@Transactional
-	@CacheEvict(cacheNames = MY_REGION, key = "#request.userId")
-	public void addMyRegion(UserRegionAddRequest request, Region region) {
-		User user = findByIdOrThrow(request.getUserId());
+	@CacheEvict(cacheNames = MY_REGION, key = "#userId")
+	public void addMyRegion(Long userId, Region region) {
+		User user = findByIdOrThrow(userId);
 		user.addMyRegion(region);
 	}
 
