@@ -1,7 +1,10 @@
 package com.codesquad.secondhand.user.application;
 
+import static com.codesquad.secondhand.common.util.RedisUtil.MY_REGION;
+
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
@@ -14,6 +17,7 @@ import com.codesquad.secondhand.category.application.dto.CategoryInfoResponse;
 import com.codesquad.secondhand.image.application.ImageService;
 import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.item.application.ItemService;
+import com.codesquad.secondhand.item.application.dto.ItemResponse;
 import com.codesquad.secondhand.item.application.dto.MyTransactionSliceResponse;
 import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.region.application.RegionService;
@@ -64,11 +68,12 @@ public class UserFacade {
 		return userService.findUserRegions(id);
 	}
 
-	public void addMyRegion(UserRegionAddRequest request) {
+	public void addMyRegion(UserRegionAddRequest request, Long id) {
 		Region region = regionService.findByIdOrThrow(request.getId());
-		userService.addMyRegion(request, region);
+		userService.addMyRegion(id, region);
 	}
 
+	@CacheEvict(cacheNames = MY_REGION, key = "#userId")
 	public void updateSelectedMyRegion(Long userId, Long regionId) {
 		User user = userService.findByIdOrThrow(userId);
 		Region region = regionService.findByIdOrThrow(regionId);
@@ -97,7 +102,7 @@ public class UserFacade {
 
 	@Transactional(readOnly = true)
 	public MyWishlistSliceResponse findMyWishlistByCategory(Long id, Long categoryId, Pageable pageable) {
-		Slice<Item> itemSlice = itemService.findByUserIdAndCategoryId(id, categoryId, pageable);
+		Slice<ItemResponse> itemSlice = itemService.findByUserIdAndCategoryId(id, categoryId, pageable);
 		return MyWishlistSliceResponse.of(itemSlice.hasNext(), MyWishlistResponse.from(itemSlice.getContent()));
 	}
 

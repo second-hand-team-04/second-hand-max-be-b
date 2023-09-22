@@ -1,5 +1,7 @@
 package com.codesquad.secondhand.category.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,10 +13,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Category {
+public class Category implements Serializable {
+
+	public static final Long CATEGORY_ALL = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

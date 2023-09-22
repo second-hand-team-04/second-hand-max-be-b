@@ -1,13 +1,17 @@
 package com.codesquad.secondhand.item.application.dto;
 
+import java.io.Serializable;
+
 import com.codesquad.secondhand.item.domain.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class StatusItemDetailResponse {
+public class StatusItemDetailResponse implements Serializable {
 
 	private String status;
 

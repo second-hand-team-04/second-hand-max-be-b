@@ -56,7 +56,7 @@ public class ItemController {
 	public ResponseEntity<CommonResponse> showItemDetail(@PathVariable Long id, @AccountPrincipal Account account) {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(
-				itemFacade.findDetailById(id, account),
+				itemFacade.findDetailById(id, account.getId()),
 				ResponseMessage.ITEM_DETAIL_FIND));
 	}
 

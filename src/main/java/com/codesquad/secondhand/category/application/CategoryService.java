@@ -1,7 +1,11 @@
 package com.codesquad.secondhand.category.application;
 
+import static com.codesquad.secondhand.category.domain.Category.CATEGORY_ALL;
+import static com.codesquad.secondhand.common.util.RedisUtil.CATEGORY;
+
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +23,18 @@ public class CategoryService {
 
 	private final CategoryRepository categoryRepository;
 
+	@Cacheable(cacheNames = CATEGORY, key = "'all'")
 	public List<CategoryResponse> findAll() {
 		return CategoryResponse.from(categoryRepository.findAll());
 	}
 
 	public Category findByIdOrThrow(Long categoryId) {
-		return categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+		if (categoryId.equals(CATEGORY_ALL)) {
+			throw new CategoryNotFoundException();
+		}
+
+		return categoryRepository.findById(categoryId)
+			.orElseThrow(CategoryNotFoundException::new);
 	}
 
 	public List<Category> findCategoriesOnMyWishlistByUserId(Long userId) {

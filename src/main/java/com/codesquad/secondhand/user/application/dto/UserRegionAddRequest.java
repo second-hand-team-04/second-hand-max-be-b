@@ -8,14 +8,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserRegionAddRequest {
 
-	private Long userId;
 	private Long id;
 
 	public UserRegionAddRequest(Long id) {
 		this.id = id;
 	}
 
-	public void injectUserId(Long userId) {
-		this.userId = userId;
-	}
 }

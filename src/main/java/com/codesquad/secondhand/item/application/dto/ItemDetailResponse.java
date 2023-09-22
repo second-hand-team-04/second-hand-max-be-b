@@ -1,20 +1,22 @@
 package com.codesquad.secondhand.item.application.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.codesquad.secondhand.category.application.dto.CategoryInfoResponse;
-import com.codesquad.secondhand.category.domain.Category;
 import com.codesquad.secondhand.image.application.dto.ImageResponse;
-import com.codesquad.secondhand.item.domain.Item;
-import com.codesquad.secondhand.item.domain.Status;
+import com.codesquad.secondhand.item.infrastructure.dto.ItemDetailDto;
 import com.codesquad.secondhand.user.application.dto.UserItemDetailResponse;
-import com.codesquad.secondhand.user.domain.User;
+import com.codesquad.secondhand.user.infrastructure.dto.WishItem;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ItemDetailResponse {
+public class ItemDetailResponse implements Serializable {
 
 	private Long id;
 	private String title;
@@ -30,15 +32,10 @@ public class ItemDetailResponse {
 	private UserItemDetailResponse seller;
 	private List<ImageResponse> images;
 
-	public static ItemDetailResponse from(Item item, User accountUser) {
-		Status status = item.getStatus();
-		Category category = item.getCategory();
-		User user = item.getUser();
+	public static ItemDetailResponse of(ItemDetailDto item, int itemViewCount, WishItem wishItem, Long userId) {
 		return new ItemDetailResponse(item.getId(), item.getTitle(), item.getContent(), item.getPrice(),
-			item.getChatCount(), item.getWishlistCount(), item.getViews(), item.isMyWishlisted(accountUser),
-			item.getUpdatedAt(),
-			StatusItemDetailResponse.from(status), CategoryInfoResponse.from(category),
-			UserItemDetailResponse.from(user), ImageResponse.from(item.getImages()));
+			0, wishItem.getNumLike(), itemViewCount, wishItem.isLiked(userId), item.getUpdatedAt(),
+			item.getStatus(), item.getCategory(), item.getSeller(), ImageResponse.from(item.getImages()));
 	}
 
 	public Long getId() {

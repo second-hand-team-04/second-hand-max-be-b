@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.codesquad.secondhand.item.domain.Item;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,24 +22,24 @@ public class MyTransactionResponse {
 	private int numChat;
 	private int numLikes;
 
-	public static MyTransactionResponse of(Item item) {
+	public static MyTransactionResponse from(ItemResponse itemResponse) {
 		return new MyTransactionResponse(
-			item.getId(),
-			item.getTitle(),
-			item.getRegion().getTitle(),
-			item.getStatus().getType(),
-			item.getUpdatedAt(),
-			item.getPrice(),
-			item.getThumbnailUrl(),
-			item.getSellerId(),
-			item.getChatCount(),
-			item.getWishlistCount()
+			itemResponse.getId(),
+			itemResponse.getTitle(),
+			itemResponse.getRegion(),
+			itemResponse.getStatus(),
+			itemResponse.getUpdatedAt(),
+			itemResponse.getPrice(),
+			itemResponse.getThumbnailUrl(),
+			itemResponse.getSellerId(),
+			itemResponse.getNumChat(),
+			itemResponse.getNumLikes()
 		);
 	}
 
-	public static List<MyTransactionResponse> of(List<Item> items) {
-		return items.stream()
-			.map(MyTransactionResponse::of)
+	public static List<MyTransactionResponse> from(List<ItemResponse> itemResponses) {
+		return itemResponses.stream()
+			.map(MyTransactionResponse::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }
