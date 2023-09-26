@@ -29,7 +29,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
+		Exception {
 		if (CorsUtils.isPreFlightRequest(request)) {
 			return true;
 		}
@@ -51,7 +52,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 	enum WhiteList {
 		SIGN_UP("/api/users", HttpMethod.POST),
-		SIGN_IN("/api/auth", HttpMethod.POST);
+		SIGN_IN("/api/auth", HttpMethod.POST),
+		CHAT("/fish-chat", HttpMethod.GET);
 
 		private final String url;
 		private final HttpMethod httpMethod;
@@ -60,6 +62,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			this.url = url;
 			this.httpMethod = httpMethod;
 		}
+
 		public static boolean contains(HttpServletRequest request) {
 			return Arrays.stream(values())
 				.anyMatch(w -> w.url.equals(request.getRequestURI()) &&

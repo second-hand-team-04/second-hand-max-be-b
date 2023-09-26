@@ -39,7 +39,8 @@ public enum ResponseMessage {
 	// wishlist
 	USER_WISHLIST_FIND("관심목록 조회를 성공하였습니다"),
 	USER_WISHLIST_ADD("관심목록 추가를 성공하였습니다"),
-	USER_WISHLIST_REMOVE("관심목록 삭제를 성공하였습니다");
+	USER_WISHLIST_REMOVE("관심목록 삭제를 성공하였습니다"),
+	CHAT_ROOM_CREATE("채팅방을 생성했습니다");
 
 	private final String message;
 

@@ -8,10 +8,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.codesquad.secondhand.auth.domain.Account;
+import com.codesquad.secondhand.common.exception.ErrorType;
+import com.codesquad.secondhand.common.exception.auth.AuthForbiddenException;
+import com.codesquad.secondhand.common.exception.auth.AuthUnauthorizedException;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 
 @Component
 public class JwtTokenProvider {
@@ -55,7 +62,7 @@ public class JwtTokenProvider {
 		return new Account(getClaims(token).get("id", Long.class));
 	}
 
-	private Claims getClaims(String token) {
+	public Claims getClaims(String token) {
 		return Jwts.parserBuilder()
 			.setSigningKey(key)
 			.build()
@@ -69,6 +76,16 @@ public class JwtTokenProvider {
 			return false;
 		} catch (RuntimeException e) {
 			return true;
+		}
+	}
+
+	public void validateToken(String token) {
+		try {
+			getClaims(token);
+		} catch (ExpiredJwtException e) {
+			throw new AuthForbiddenException();
+		} catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e2) {
+			throw new AuthUnauthorizedException(ErrorType.AUTH_ACCESS_TOKEN_UNAUTHORIZED);
 		}
 	}
 }

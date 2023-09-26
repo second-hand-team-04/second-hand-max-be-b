@@ -43,7 +43,11 @@ public enum ErrorType {
 
 	// USER_WISHLIST
 	USER_WISHLIST_NOT_INCLUDE(HttpStatus.BAD_REQUEST, "해당 상품이 관심 목록에 없습니다"),
-	USER_WISHLIST_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 관심 목록에 등록된 상품입니다");
+	USER_WISHLIST_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 관심 목록에 등록된 상품입니다"),
+
+	// CHAT
+	CHAT_ROOM_PARTICIPANT_NOT_INCLUDE(HttpStatus.NOT_FOUND, "해당 사용자는 이 채팅방에 참여 중이지 않습니다"),
+	CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다");
 
 	private final HttpStatus httpStatus;
 	private final String message;

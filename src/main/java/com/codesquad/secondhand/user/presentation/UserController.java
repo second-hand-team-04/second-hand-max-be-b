@@ -131,5 +131,6 @@ public class UserController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(ResponseMessage.USER_WISHLIST_REMOVE));
 	}
+
 }
 

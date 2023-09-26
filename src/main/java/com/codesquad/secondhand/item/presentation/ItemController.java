@@ -87,5 +87,11 @@ public class ItemController {
 		return ResponseEntity.ok()
 			.body(CommonResponse.createOK(ResponseMessage.ITEM_DELETE));
 	}
+
+	/**
+	 * TODO 채팅 UI의 채팅 상대 정보 조회
+	 * 닉네임, 상품명, 상품가격
+	 *
+	 */
 }
 

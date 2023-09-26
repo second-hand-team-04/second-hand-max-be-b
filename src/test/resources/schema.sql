@@ -120,3 +120,35 @@ CREATE TABLE `refresh_token`
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
+
+CREATE TABLE `chat_room`
+(
+    `id` BIGINT AUTO_INCREMENT,
+    `item_id` BIGINT NOT NULL,
+    PRIMARY KEY KEY (`id`),
+    FOREIGN KEY (`item_id`) REFERENCES `item` (`id`)
+);
+
+CREATE TABLE `chat_message`
+(
+    `id` BIGINT AUTO_INCREMENT,
+    `room_id` BIGINT NOT NULL,
+    `sender_id` BIGINT NOT NULL,
+    `content` VARCHAR(300) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT now(),
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`room_id`) REFERENCES `chat_room` (`id`),
+    FOREIGN KEY (`sender_id`) REFERENCES `user` (`id`)
+);
+
+CREATE TABLE `chat_user`
+(
+    `id` BIGINT AUTO_INCREMENT,
+    `room_id` BIGINT NOT NULL,
+    `user_id` BIGINT NOT NULL,
+    `is_read` BOOLEAN NOT NULL DEFAUILT false,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`room_id`) REFERENCES `chat_room` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+);
+

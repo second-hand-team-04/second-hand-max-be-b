@@ -1,7 +1,9 @@
 package com.codesquad.secondhand.chat.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -11,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoom {
+public class ChatRoom implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,19 +37,15 @@ public class ChatRoom {
 	@JoinColumn(name = "item_id")
 	private Item item;
 
-	@OneToOne
-	@JoinColumn(name = "buyer_id")
-	private User buyer;
-
 	@OneToMany
 	private List<ChatMessage> chatMessages;
 
-	@OneToMany
-	private List<ChatRoomUser> participants;
+	@Embedded
+	private ChatRoomParticipants chatRoomParticipants = new ChatRoomParticipants();
 
-	public ChatRoom(Item item, User buyer) {
+	public ChatRoom(Item item, User user) {
 		this.item = item;
-		this.buyer = buyer;
+		this.chatRoomParticipants.addParticipant(ChatRoomUser.of(this, user));
 	}
 
 	public static ChatRoom of(Item item, User buyer) {

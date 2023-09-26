@@ -10,9 +10,11 @@ import javax.persistence.ManyToOne;
 import com.codesquad.secondhand.user.domain.User;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class ChatRoomUser {
 
 	@Id
@@ -20,10 +22,19 @@ public class ChatRoomUser {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "chatroom_id")
+	@JoinColumn(name = "room_id")
 	private ChatRoom chatRoom;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	public ChatRoomUser(ChatRoom chatRoom, User user) {
+		this.chatRoom = chatRoom;
+		this.user = user;
+	}
+
+	public static ChatRoomUser of(ChatRoom chatRoom, User user) {
+		return new ChatRoomUser(chatRoom, user);
+	}
 }

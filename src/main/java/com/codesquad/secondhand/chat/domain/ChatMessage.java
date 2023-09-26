@@ -1,5 +1,6 @@
 package com.codesquad.secondhand.chat.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -23,14 +25,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatMessage {
+public class ChatMessage implements Serializable {
 
-	//FIXME entity 로 하는 것이 최선??
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private MessageType type;
+	@ManyToOne
+	@JoinColumn(name = "room_id")
+	private ChatRoom chatRoom;
 
 	@OneToOne
 	@JoinColumn(name = "sender_id")
@@ -41,15 +44,15 @@ public class ChatMessage {
 	@CreatedDate
 	private LocalDateTime createdAt;
 
-	private Boolean isRead;
+	private boolean isRead;
 
-	public ChatMessage(MessageType type, User sender, String content) {
-		this.type = type;
+	public ChatMessage(ChatRoom chatRoom, User sender, String content) {
+		this.chatRoom = chatRoom;
 		this.sender = sender;
 		this.content = content;
 	}
 
-	public static ChatMessage of(MessageType type, User sender, String content) {
-		return new ChatMessage(type, sender, content);
+	public static ChatMessage of(ChatRoom chatRoom, User sender, String content) {
+		return new ChatMessage(chatRoom, sender, content);
 	}
 }
