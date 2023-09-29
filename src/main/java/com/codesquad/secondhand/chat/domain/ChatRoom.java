@@ -41,14 +41,23 @@ public class ChatRoom implements Serializable {
 	private List<ChatMessage> chatMessages;
 
 	@Embedded
-	private ChatRoomParticipants chatRoomParticipants = new ChatRoomParticipants();
+	private ChatRoomMembers chatRoomMembers = new ChatRoomMembers();
 
 	public ChatRoom(Item item, User user) {
 		this.item = item;
-		this.chatRoomParticipants.addParticipant(ChatRoomUser.of(this, user));
+		this.chatRoomMembers.addParticipant(ChatRoomUser.of(this, user));
 	}
 
 	public static ChatRoom of(Item item, User buyer) {
 		return new ChatRoom(item, buyer);
+	}
+
+	public void enterByUser(User user) {
+		// TODO
+		// 1. 사용자가 채팅방의 참여자인지 검증한다
+		// 2. 채팅방에 접속한다
+		// (3.) 채팅방의 메세지를 읽음처리한다
+		// chatRoomMembers.contains(user);
+		// chatMessages.readByUser(user);
 	}
 }

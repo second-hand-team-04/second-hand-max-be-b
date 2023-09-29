@@ -8,4 +8,11 @@ import lombok.Getter;
 public class Account {
 
 	private Long id;
+
+	@Override
+	public String toString() {
+		return "Account{" +
+			"id=" + id +
+			'}';
+	}
 }

@@ -7,29 +7,31 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import com.codesquad.secondhand.chat.interceptor.ChatAuthChannelInterceptor;
-import com.codesquad.secondhand.chat.interceptor.ChatAuthHandshakeInterceptor;
+import com.codesquad.secondhand.chat.handler.StompErrorHandler;
+import com.codesquad.secondhand.chat.interceptor.AuthChannelInterceptor;
+import com.codesquad.secondhand.chat.interceptor.ChatRoomInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
-public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class InMemoryMessageBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
-	private final ChatAuthChannelInterceptor chatAuthChannelInterceptor;
-	private final ChatAuthHandshakeInterceptor chatAuthHandshakeInterceptor;
+	private final AuthChannelInterceptor authChannelInterceptor;
+	private final ChatRoomInterceptor chatValidationChannelInterceptor;
+	private final StompErrorHandler stompErrorHandler;
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/fish-chat")
-			.setAllowedOrigins("*")
-			.addInterceptors(chatAuthHandshakeInterceptor);
+			.setAllowedOrigins("*");
+		registry.setErrorHandler(stompErrorHandler);
 	}
 
 	@Override
 	public void configureClientInboundChannel(ChannelRegistration registration) {
-		registration.interceptors(chatAuthChannelInterceptor);
+		registration.interceptors(authChannelInterceptor);
 	}
 
 	@Override

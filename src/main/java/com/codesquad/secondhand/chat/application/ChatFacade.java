@@ -2,10 +2,12 @@ package com.codesquad.secondhand.chat.application;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import com.codesquad.secondhand.chat.application.dto.ChatMessageRequest;
 import com.codesquad.secondhand.chat.application.dto.ChatRoomCreateResponse;
 import com.codesquad.secondhand.chat.domain.ChatRoom;
+import com.codesquad.secondhand.chat.util.StompHeaderUtil;
 import com.codesquad.secondhand.item.application.ItemService;
 import com.codesquad.secondhand.item.domain.Item;
 import com.codesquad.secondhand.user.application.UserService;
@@ -38,4 +40,17 @@ public class ChatFacade {
 
 		return chatRoomService.create(buyer, item);
 	}
+
+	@Transactional
+	public void enterRoom(SessionSubscribeEvent event) {
+		long roomId = StompHeaderUtil.getRoomId(event.getMessage());
+		long userId = StompHeaderUtil.getAccount(event.getMessage()).getId();
+		User user = userService.findByIdOrThrow(userId);
+		chatRoomService.enter(roomId, user);
+	}
+
+	public void leaveRoom() {
+		
+	}
+
 }

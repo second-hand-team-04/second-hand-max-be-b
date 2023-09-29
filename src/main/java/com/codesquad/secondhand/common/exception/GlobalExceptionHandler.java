@@ -1,6 +1,6 @@
 package com.codesquad.secondhand.common.exception;
 
-import static com.codesquad.secondhand.common.response.ResponseMessage.NO_HANDLER_FOUND;
+import static com.codesquad.secondhand.common.response.ResponseMessage.*;
 
 import java.util.stream.Collectors;
 
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.codesquad.secondhand.common.exception.chat.ChatException;
 import com.codesquad.secondhand.common.exception.image.MaxUploadSizeException;
 import com.codesquad.secondhand.common.response.CommonResponse;
 
@@ -61,5 +62,10 @@ public class GlobalExceptionHandler {
 		LOGGER.error("Exception: ", e);
 		return ResponseEntity.internalServerError()
 			.body(CommonResponse.createInternalServer(e));
+	}
+
+	@ExceptionHandler(ChatException.class)
+	public void chatExceptionHandler() {
+		System.out.println("------chatExceptionHandler--------");
 	}
 }

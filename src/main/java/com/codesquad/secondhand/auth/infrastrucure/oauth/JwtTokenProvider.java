@@ -62,7 +62,7 @@ public class JwtTokenProvider {
 		return new Account(getClaims(token).get("id", Long.class));
 	}
 
-	public Claims getClaims(String token) {
+	private Claims getClaims(String token) {
 		return Jwts.parserBuilder()
 			.setSigningKey(key)
 			.build()

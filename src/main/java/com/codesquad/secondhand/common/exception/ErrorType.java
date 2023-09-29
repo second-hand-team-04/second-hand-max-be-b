@@ -47,7 +47,11 @@ public enum ErrorType {
 
 	// CHAT
 	CHAT_ROOM_PARTICIPANT_NOT_INCLUDE(HttpStatus.NOT_FOUND, "해당 사용자는 이 채팅방에 참여 중이지 않습니다"),
-	CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다");
+	CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다"),
+	CHAT_INVALID_SUBSCRIBE_DESTINATION(HttpStatus.BAD_REQUEST, "유효하지 않은 구독 요청입니다"),
+	CHAT_INVALID_ACCOUNT(HttpStatus.BAD_REQUEST, "사용자 정보가 유효하지 않습니다"),
+	CHAT_INVALID_ROOM_ID(HttpStatus.BAD_REQUEST, "채팅방 정보가 유효하지 않습니다"),
+	CHAT_INVALID_SESSION(HttpStatus.BAD_REQUEST, "세션 정보가 유효하지 않습니다");
 
 	private final HttpStatus httpStatus;
 	private final String message;

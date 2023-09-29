@@ -11,7 +11,7 @@ import com.codesquad.secondhand.common.exception.chat.ChatRoomParticipantNotIncl
 import com.codesquad.secondhand.user.domain.User;
 
 @Embeddable
-public class ChatRoomParticipants {
+public class ChatRoomMembers {
 
 	private static final int MAX_CHATTER_COUNT = 2;
 

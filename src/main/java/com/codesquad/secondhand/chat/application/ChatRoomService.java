@@ -25,7 +25,16 @@ public class ChatRoomService {
 
 	public ChatRoomCreateResponse create(User buyer, Item item) {
 		ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.of(item, buyer));
-
 		return ChatRoomCreateResponse.from(chatRoom.getId());
 	}
+
+	public void enter(long id, User user) {
+		ChatRoom chatRoom = findByIdOrThrow(id);
+		chatRoom.enterByUser(user);
+	}
+
+	public void unsubscribe() {
+
+	}
+
 }
