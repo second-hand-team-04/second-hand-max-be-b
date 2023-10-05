@@ -1,7 +1,7 @@
 package com.codesquad.secondhand.category.application;
 
 import static com.codesquad.secondhand.category.domain.Category.CATEGORY_ALL;
-import static com.codesquad.secondhand.common.util.RedisUtil.CATEGORY;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.CATEGORY;
 
 import java.util.List;
 

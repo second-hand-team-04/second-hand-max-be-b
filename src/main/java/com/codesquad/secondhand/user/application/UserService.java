@@ -1,7 +1,7 @@
 package com.codesquad.secondhand.user.application;
 
-import static com.codesquad.secondhand.common.util.RedisUtil.MY_REGION;
-import static com.codesquad.secondhand.common.util.RedisUtil.WISH_ITEM;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.MY_REGION;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.WISH_ITEM;
 
 import java.util.List;
 
@@ -20,7 +20,6 @@ import com.codesquad.secondhand.region.application.dto.RegionResponse;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.application.dto.MyRegionResponse;
 import com.codesquad.secondhand.user.application.dto.UserCreateRequest;
-import com.codesquad.secondhand.user.application.dto.UserRegionAddRequest;
 import com.codesquad.secondhand.user.application.dto.UserUpdateRequest;
 import com.codesquad.secondhand.user.domain.Provider;
 import com.codesquad.secondhand.user.domain.User;

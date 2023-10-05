@@ -1,8 +1,8 @@
 package com.codesquad.secondhand.item.application;
 
-import static com.codesquad.secondhand.common.util.RedisUtil.ITEM;
-import static com.codesquad.secondhand.common.util.RedisUtil.ITEM_VIEW_COUNT;
-import static com.codesquad.secondhand.common.util.RedisUtil.WISH_ITEM;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.ITEM;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.ITEM_VIEW_COUNT;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.WISH_ITEM;
 
 import java.util.List;
 

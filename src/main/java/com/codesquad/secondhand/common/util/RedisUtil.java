@@ -20,37 +20,31 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RedisUtil {
 
-	public static final String CATEGORY = "category";
-	public static final String ITEM = "item";
-	public static final String ITEM_VIEW_COUNT = "itemViewCount";
-	public static final String MY_REGION = "myRegion";
-	public static final String WISH_ITEM = "wishItem";
-
 	private final RedisTemplate<String, String> redisValueStringTemplate;
 	private final RedisTemplate<String, Object> redisValueObjectTemplate;
 	private final CacheManager cacheManager;
 
-	public Long incrementForValue(String cacheType, Long key, long incrementValue) {
+	public Long incrementForValue(CacheType cacheType, Long key, long incrementValue) {
 		ValueOperations<String, String> operations = redisValueStringTemplate.opsForValue();
 		return operations.increment(createCacheKey(cacheType, key), incrementValue);
 	}
 
-	public Long incrementForHash(String cacheType, Long key, String hashKey, long incrementValue) {
+	public Long incrementForHash(CacheType cacheType, Long key, String hashKey, long incrementValue) {
 		HashOperations<String, String, Object> operations = redisValueObjectTemplate.opsForHash();
 		return operations.increment(createCacheKey(cacheType, key), hashKey, incrementValue);
 	}
 
-	public void putForHash(String cacheType, Long key, String hashKey, Object value) {
+	public void putForHash(CacheType cacheType, Long key, String hashKey, Object value) {
 		HashOperations<String, String, Object> operations = redisValueObjectTemplate.opsForHash();
 		operations.put(createCacheKey(cacheType, key), hashKey, value);
 	}
 
-	public void putForString(String cacheType, Long key, String value) {
+	public void putForString(CacheType cacheType, Long key, String value) {
 		ValueOperations<String, String> operations = redisValueStringTemplate.opsForValue();
 		operations.set(createCacheKey(cacheType, key), value);
 	}
 
-	public <T> T getForHash(String cacheType, Long key, String hashKey, Class<T> returnType) {
+	public <T> T getForHash(CacheType cacheType, Long key, String hashKey, Class<T> returnType) {
 		if (Objects.isNull(returnType)) {
 			throw new IllegalArgumentException();
 		}
@@ -59,26 +53,26 @@ public class RedisUtil {
 		return (T) hashOperations.get(createCacheKey(cacheType, key), hashKey);
 	}
 
-	public String getForString(String cacheType, Long key) {
+	public String getForString(CacheType cacheType, Long key) {
 		ValueOperations<String, String> operations = redisValueStringTemplate.opsForValue();
 		return operations.get(createCacheKey(cacheType, key));
 	}
 
-	public void expiredForObject(String cacheType, Long key, Duration duration) {
+	public void expiredForObject(CacheType cacheType, Long key, Duration duration) {
 		redisValueObjectTemplate.expire(createCacheKey(cacheType, key), duration);
 	}
 
-	public <T> Map<Long, T> getKeyValueMapForObjectAndCacheManager(String key, Class<T> valueType) {
+	public <T> Map<Long, T> getKeyValueMapForObjectAndCacheManager(CacheType cacheType, Class<T> valueType) {
 		if (Objects.isNull(valueType)) {
 			throw new IllegalArgumentException();
 		}
 
 		ScanOptions scanOptions = ScanOptions.scanOptions()
-			.match(String.format("%s*", key))
+			.match(String.format("%s*", cacheType.getCacheType()))
 			.count(100)
 			.build();
 		Cursor<String> cursor = redisValueObjectTemplate.scan(scanOptions);
-		Cache cache = cacheManager.getCache(key);
+		Cache cache = cacheManager.getCache(cacheType.getCacheType());
 		Map<Long, T> result = new HashMap<>();
 
 		while (cursor.hasNext()) {
@@ -90,13 +84,13 @@ public class RedisUtil {
 		return result;
 	}
 
-	public <T> T getCacheObject(String cacheType, Long key, Class<T> valueType) {
-		return cacheManager.getCache(cacheType)
+	public <T> T getCacheObject(CacheType cacheType, Long key, Class<T> valueType) {
+		return cacheManager.getCache(cacheType.getCacheType())
 			.get(key, valueType);
 	}
 
-	private String createCacheKey(String cacheType, Long key) {
-		return String.format("%s::%d", cacheType, key);
+	private String createCacheKey(CacheType cacheType, Long key) {
+		return String.format("%s::%d", cacheType.getCacheType(), key);
 	}
 }
 
