@@ -1,10 +1,10 @@
 package com.codesquad.secondhand.common.config;
 
-import static com.codesquad.secondhand.common.util.RedisUtil.CATEGORY;
-import static com.codesquad.secondhand.common.util.RedisUtil.ITEM;
-import static com.codesquad.secondhand.common.util.RedisUtil.ITEM_VIEW_COUNT;
-import static com.codesquad.secondhand.common.util.RedisUtil.MY_REGION;
-import static com.codesquad.secondhand.common.util.RedisUtil.WISH_ITEM;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.CATEGORY;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.ITEM;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.ITEM_VIEW_COUNT;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.MY_REGION;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.WISH_ITEM;
 
 import java.time.Duration;
 

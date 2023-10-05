@@ -1,6 +1,6 @@
 package com.codesquad.secondhand.user.infrastructure;
 
-import static com.codesquad.secondhand.common.util.RedisUtil.WISH_ITEM;
+import static com.codesquad.secondhand.common.util.CacheType.WISH_ITEM;
 import static com.codesquad.secondhand.item.domain.QItem.item;
 import static com.codesquad.secondhand.user.domain.QWishlist.wishlist;
 import static com.querydsl.core.group.GroupBy.groupBy;

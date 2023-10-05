@@ -1,6 +1,6 @@
 package com.codesquad.secondhand.user.application;
 
-import static com.codesquad.secondhand.common.util.RedisUtil.MY_REGION;
+import static com.codesquad.secondhand.common.util.CacheType.CacheName.MY_REGION;
 
 import java.util.List;
 

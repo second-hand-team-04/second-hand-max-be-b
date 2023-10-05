@@ -1,7 +1,7 @@
 package com.codesquad.secondhand.item.infrastructure;
 
 import static com.codesquad.secondhand.category.domain.QCategory.category;
-import static com.codesquad.secondhand.common.util.RedisUtil.ITEM_VIEW_COUNT;
+import static com.codesquad.secondhand.common.util.CacheType.ITEM_VIEW_COUNT;
 import static com.codesquad.secondhand.image.domain.QImage.image;
 import static com.codesquad.secondhand.item.domain.QItem.item;
 import static com.codesquad.secondhand.item.domain.QItemImage.itemImage;
