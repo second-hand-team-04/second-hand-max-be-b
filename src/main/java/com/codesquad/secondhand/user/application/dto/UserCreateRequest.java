@@ -3,7 +3,8 @@ package com.codesquad.secondhand.user.application.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
+import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.Provider;
 import com.codesquad.secondhand.user.domain.User;
 
@@ -33,8 +34,8 @@ public class UserCreateRequest {
 		this.password = password;
 	}
 
-	public User toUser(Provider provider, Image image) {
-		return new User(provider, nickname, email, password, image);
+	public User toUser(Provider provider, Image image, Region region) {
+		return new User(provider, nickname, email, password, image, region);
 	}
 
 	public void injectProviderId(Long providerId) {

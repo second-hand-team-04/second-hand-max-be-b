@@ -3,7 +3,7 @@ package com.codesquad.secondhand.util;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.codesquad.secondhand.Image.infrastructure.FileClient;
+import com.codesquad.secondhand.image.infrastructure.FileClient;
 
 @Configuration
 public class S3Config {

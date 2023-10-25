@@ -2,6 +2,8 @@ package com.codesquad.secondhand.user.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 public class Wishlist {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -27,4 +30,17 @@ public class Wishlist {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "item_id")
 	private Item item;
+
+	public Wishlist(User user, Item item) {
+		this.user = user;
+		this.item = item;
+	}
+
+	public static Wishlist of(User user, Item item) {
+		return new Wishlist(user, item);
+	}
+
+	public boolean equalsItem(Item item) {
+		return this.item.equals(item);
+	}
 }

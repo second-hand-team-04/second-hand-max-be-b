@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  cache:
+    container_name: cache-redis
+    image: ${REDIS_IMAGE_NAME}
+    restart: always
+    hostname: cache-redis
+    ports:
+      - ${REDIS_CACHE_PORT}:6379
+    command: redis-server --requirepass ${REDIS_CACHE_PASSWORD}
+
   app:
     container_name: second-hand-app
     image: ${APP_IMAGE_NAME}
@@ -8,6 +17,8 @@ services:
       - 8080:8080
     environment:
       - TZ=Asia/Seoul
+    depends_on:
+      - cache
 
   nginx:
     container_name: nginx

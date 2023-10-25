@@ -5,8 +5,8 @@ DROP TABLE IF EXISTS `status`;
 DROP TABLE IF EXISTS `user_region`;
 DROP TABLE IF EXISTS `category`;
 DROP TABLE IF EXISTS `refresh_token`;
-DROP TABLE IF EXISTS `region`;
 DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `region`;
 DROP TABLE IF EXISTS `image`;
 DROP TABLE IF EXISTS `provider`;
 
@@ -24,18 +24,27 @@ CREATE TABLE `provider`
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `region`
+(
+    `id`    BIGINT      NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(30) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `user`
 (
-    `id`            BIGINT             NOT NULL AUTO_INCREMENT,
-    `provider_id`   BIGINT             NOT NULL,
-    `image_id`      BIGINT,
-    `email`         VARCHAR(40)        NOT NULL,
-    `nickname`      VARCHAR(20) UNIQUE NOT NULL,
-    `password`      VARCHAR(150),
-    `created_at`    TIMESTAMP          NOT NULL DEFAULT now(),
+    `id`                 BIGINT             NOT NULL AUTO_INCREMENT,
+    `provider_id`        BIGINT             NOT NULL,
+    `image_id`           BIGINT,
+    `selected_region_id` BIGINT             NOT NULL,
+    `email`              VARCHAR(40)        NOT NULL,
+    `nickname`           VARCHAR(20) UNIQUE NOT NULL,
+    `password`           VARCHAR(150),
+    `created_at`         TIMESTAMP          NOT NULL DEFAULT now(),
     PRIMARY KEY (`id`),
     FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`),
-    FOREIGN KEY (`image_id`)    REFERENCES `image` (`id`)
+    FOREIGN KEY (`image_id`)    REFERENCES `image` (`id`),
+    FOREIGN KEY (`selected_region_id`)  REFERENCES `region`  (`id`)
 );
 
 CREATE TABLE `category`
@@ -43,13 +52,6 @@ CREATE TABLE `category`
     `id`        BIGINT       NOT NULL AUTO_INCREMENT,
     `title`     VARCHAR(20)  NOT NULL,
     `image_url` VARCHAR(300) NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `region`
-(
-    `id`    BIGINT      NOT NULL AUTO_INCREMENT,
-    `title` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -74,7 +76,7 @@ CREATE TABLE `item`
 (
     `id`          BIGINT AUTO_INCREMENT,
     `user_id`     BIGINT      NOT NULL,
-    `category_id` BIGINT,
+    `category_id` BIGINT      NOT NULL,
     `region_id`   BIGINT      NOT NULL,
     `status_id`   BIGINT      NOT NULL,
     `title`       VARCHAR(60) NOT NULL,
@@ -83,7 +85,7 @@ CREATE TABLE `item`
     `views`       INT         NOT NULL DEFAULT 0,
     `created_at`  TIMESTAMP   NOT NULL DEFAULT now(),
     `updated_at`  TIMESTAMP   NOT NULL DEFAULT now(),
-    `is_deleted`  BOOLEAN              DEFAULT 0,
+    `is_deleted`  BOOLEAN     NOT NULL DEFAULT false,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
     FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),

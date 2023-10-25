@@ -1,14 +1,17 @@
 package com.codesquad.secondhand.item.infrastructure;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.codesquad.secondhand.item.domain.Item;
 
-public interface ItemRepository extends JpaRepository<Item, Long>, ItemDao {
+public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRepository {
 
-	@Query("SELECT i FROM Item i JOIN FETCH i.user u LEFT JOIN FETCH i.category c JOIN FETCH i.region r JOIN FETCH i.status s LEFT JOIN FETCH i.images ii LEFT JOIN FETCH ii.image WHERE i.isDeleted = false ORDER BY i.createdAt DESC")
-	Slice<Item> findSliceByCategoryIdAndRegionId(Pageable pageable, Long categoryId, Long regionId);
+	@Query("select i.views from Item i where i.id = :id")
+	int findViewsById(Long id);
+
+	@Modifying
+	@Query("update Item i set i.views = :views where i.id = :id")
+	void updateViewsByIdAndViews(Long id, int views);
 }

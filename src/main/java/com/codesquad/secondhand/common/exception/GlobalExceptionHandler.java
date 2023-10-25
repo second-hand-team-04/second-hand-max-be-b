@@ -1,5 +1,6 @@
 package com.codesquad.secondhand.common.exception;
 
+import static com.codesquad.secondhand.common.response.ResponseMessage.JSON_IMPLEMENTATIONS_FAIL;
 import static com.codesquad.secondhand.common.response.ResponseMessage.NO_HANDLER_FOUND;
 
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,10 +52,17 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(NoHandlerFoundException.class)
-	public ResponseEntity<CommonResponse> handleNotFoundException(NoHandlerFoundException e) {
+	public ResponseEntity<CommonResponse> notFoundHandler(NoHandlerFoundException e) {
 		LOGGER.error("NoHandlerFoundException: ", e);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(CommonResponse.createNotFound(NO_HANDLER_FOUND));
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<CommonResponse> jsonImplementationsFailHandler(HttpMessageNotReadableException e) {
+		LOGGER.error("HttpMessageNotReadableException: ", e);
+		return  ResponseEntity.badRequest()
+			.body(CommonResponse.createBadRequest(JSON_IMPLEMENTATIONS_FAIL.getMessage()));
 	}
 
 	@ExceptionHandler(Exception.class)

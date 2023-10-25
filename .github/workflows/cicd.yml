@@ -72,7 +72,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            docker-compose -f docker-compose-deploy.yml down -v
-            docker-compose -f docker-compose-deploy.yml pull
-            docker-compose -f docker-compose-deploy.yml up -d
-            docker image prune -f
+            sudo docker-compose -f docker-compose-deploy.yml down -v
+            sudo docker-compose -f docker-compose-deploy.yml pull
+            sudo docker-compose -f docker-compose-deploy.yml up -d
+            sudo docker image prune -f

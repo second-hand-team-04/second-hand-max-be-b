@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.application.dto.ImageResponse;
+import com.codesquad.secondhand.image.domain.Image;
 
 public enum ImageFixture {
 
@@ -13,7 +14,13 @@ public enum ImageFixture {
 	이미지_빈티지_일본_경대2(2L, "http://www.image.com/vintage_japanese_dressing_table2.jpg"),
 	이미지_도자기_화병_5종(3L, "http://www.image.com/five_vases.jpg"),
 	이미지_잎사귀_포스터(4L, "http://www.image.com/leaf_poster.jpg"),
-	이미지_빈티지_밀크_그래스_램프(5L, "http://www.image.com/vintage_milk_lamp.jpg");
+	이미지_빈티지_밀크_그래스_램프(5L, "http://www.image.com/vintage_milk_lamp.jpg"),
+	이미지_LG_그램(6L, "http://www.image.com/LG_gram.jpg"),
+	이미지_젤다의_전설(7L, "http://www.image.com/legend_of_zelda.jpg"),
+	이미지_모자(8L, "http://www.image.com/hat.jpg"),
+	이미지_프린터(9L, "http://www.image.com/printer.jpg"),
+	이미지_키보드(10L, "http://www.image.com/keyboard.jpg"),
+	이미지_슬라이스_치즈(11L, "http://www.image.com/slice_cheese.jpg");
 
 	private final Long id;
 	private final String imageUrl;
@@ -42,18 +49,19 @@ public enum ImageFixture {
 			.orElseThrow();
 	}
 
-	public static String findThumbnail(Long itemId) {
-		List<ItemImageFixture> ItemImageFixtures = ItemImageFixture.findAllByItemId(itemId);
-
-		if (ItemImageFixtures.isEmpty()) {
+	public static List<ImageResponse> findAllImageResponseByIds(List<Long> ids) {
+		if (Objects.isNull(ids) || ids.isEmpty()) {
 			return null;
 		}
 
-		Long imageId = ItemImageFixtures.stream()
-			.findFirst()
-			.orElseThrow()
-			.getImageId();
-		return findById(imageId).getImageUrl();
+		return ids.stream()
+			.distinct()
+			.map(id -> findById(id).toImageResponse())
+			.collect(Collectors.toUnmodifiableList());
+	}
+
+	public ImageResponse toImageResponse() {
+		return new ImageResponse(id, imageUrl);
 	}
 
 	public Image toImage() {
@@ -62,6 +70,11 @@ public enum ImageFixture {
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getFileName() {
+		int index = imageUrl.lastIndexOf("/");
+		return imageUrl.substring(index + 1);
 	}
 
 	public String getImageUrl() {

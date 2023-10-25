@@ -42,15 +42,6 @@ public class CommonResponse<T> {
 		return createCreated(null, responseMessage);
 	}
 
-	public static <T> CommonResponse createNoContent(ResponseMessage responseMessage) {
-		return new CommonResponse(
-			HttpStatus.NO_CONTENT.value(),
-			HttpStatus.NO_CONTENT.getReasonPhrase(),
-			responseMessage.getMessage(),
-			null
-		);
-	}
-
 	public static <T> CommonResponse createNotFound(ResponseMessage responseMessage) {
 		return new CommonResponse(
 			HttpStatus.NOT_FOUND.value(),
