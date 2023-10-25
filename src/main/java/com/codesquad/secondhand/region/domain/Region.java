@@ -7,8 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.BatchSize;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,15 +18,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Region {
 
-	public static final long YEOKSAM_DONG = 432L;
+	public static final long DEFAULT_REGION = 432L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String title;
-
-	public boolean equalsId(Long id) {
-		return Objects.equals(this.id, id);
-	}
 }

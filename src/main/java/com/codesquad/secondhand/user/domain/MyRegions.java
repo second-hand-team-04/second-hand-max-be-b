@@ -13,9 +13,6 @@ import com.codesquad.secondhand.common.exception.userregion.UserRegionMaxAddCoun
 import com.codesquad.secondhand.common.exception.userregion.UserRegionMinRemoveCountException;
 import com.codesquad.secondhand.region.domain.Region;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 @Embeddable
 public class MyRegions {
 
@@ -49,9 +46,9 @@ public class MyRegions {
 		}
 	}
 
-	public void removeUserRegion(Long regionId) {
+	public void removeUserRegion(Region region) {
 		validateMinRemoveCount();
-		userRegions.remove(findByRegionId(regionId));
+		userRegions.remove(findByRegion(region));
 	}
 
 	private void validateMinRemoveCount() {
@@ -60,9 +57,9 @@ public class MyRegions {
 		}
 	}
 
-	private UserRegion findByRegionId(Long regionId) {
+	private UserRegion findByRegion(Region region) {
 		return userRegions.stream()
-			.filter(u -> u.equalsRegion(regionId))
+			.filter(u -> u.equalsRegion(region))
 			.findAny()
 			.orElse(null);
 	}

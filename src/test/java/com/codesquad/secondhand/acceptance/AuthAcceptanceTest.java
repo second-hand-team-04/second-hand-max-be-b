@@ -27,7 +27,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 	private JwtTokenProvider jwtTokenProvider;
 
 	/**
-	 * Given 유저를 생성하고
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * When 유저가 로그인하면
 	 * Then AccessToken, RefreshToken을 받을 수 있다.
 	 */
@@ -42,7 +42,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
-	 * Given 유저를 생성하고
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * When 해당 유저가 로그인 시 이메일이나 비밀번호가 다르면
 	 * Then 요청이 실패된다.
 	 */
@@ -57,7 +57,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
-	 * Given 유저를 생성하고
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * And 해당 유저가 로그인하고
 	 * When 해당 유저가 로그아웃하면
 	 * Then 요청이 성공한다.
@@ -68,11 +68,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 		var response = 로그아웃_요청(유저_만두_액세스_토큰);
 
 		// then
-		응답_상태코드_검증(response, HttpStatus.NO_CONTENT);
+		응답_상태코드_검증(response, HttpStatus.OK);
 	}
 
 	/**
-	 * Given 유저를 생성하고
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * And 해당 유저가 로그인하고
 	 * When 해당 유저가 로그아웃 시 AccessToken 만료되면
 	 * Then 요청이 실패된다.
@@ -90,7 +90,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
-	 * Given 유저를 생성하고
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * And 해당 유저가 로그인하고
 	 * When AccessToken 발급 요청하면
 	 * Then RefreshToken을 받을 수 있다.
@@ -109,7 +109,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 	}
 
 	/**
-	 * Given 유저를 생성하고
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * And 해당 유저가 로그인하고
 	 * When AccessToken 발급 시 RefreshToken이 만료되거나 DB에 저장 되어있지 않으면
 	 * Then 요청이 실패된다.

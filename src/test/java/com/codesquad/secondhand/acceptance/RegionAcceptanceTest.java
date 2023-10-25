@@ -21,7 +21,7 @@ import io.restassured.response.Response;
 public class RegionAcceptanceTest extends AcceptanceTest {
 
 	/**
-	 * Given 동네를 생성하고
+	 * Given 동네들, 카테고리들, 유저를 생성하고
 	 * When 동네 목록을 조회하면
 	 * Then 생성된 동네 목록을 조회할 수 있다.
 	 */

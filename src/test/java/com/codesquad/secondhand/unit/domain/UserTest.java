@@ -1,13 +1,13 @@
 package com.codesquad.secondhand.unit.domain;
 
 import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
+import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_강남구_역삼동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_신교동;
 import static com.codesquad.secondhand.util.fixture.RegionFixture.동네_서울_종로구_청운동;
 import static com.codesquad.secondhand.util.fixture.UserFixture.유저_만두;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.codesquad.secondhand.Image.domain.Image;
+import com.codesquad.secondhand.image.domain.Image;
 import com.codesquad.secondhand.region.domain.Region;
 import com.codesquad.secondhand.user.domain.User;
 
@@ -30,7 +30,7 @@ public class UserTest {
 	@BeforeEach
 	void init() {
 		user = new User(1L, 공급자_내부.toProvider(), new Image(1L, "http://www.image.com/만두.jpg"),
-			유저_만두.getNickname(), 유저_만두.getEmail(), 유저_만두.getPassword(), LocalDateTime.now());
+			동네_서울_강남구_역삼동.getRegion(), 유저_만두.getNickname(), 유저_만두.getEmail(), 유저_만두.getPassword(), LocalDateTime.now());
 		region = 동네_서울_종로구_청운동.getRegion();
 		region2 = 동네_서울_종로구_신교동.getRegion();
 	}
@@ -51,7 +51,7 @@ public class UserTest {
 		user.addMyRegion(region2);
 
 		// when
-		user.removeMyRegion(region.getId());
+		user.removeMyRegion(region);
 
 		// then
 		assertThat(user.getRegions()).doesNotContain(region);

@@ -3,6 +3,10 @@ package com.codesquad.secondhand.util.fixture;
 import static com.codesquad.secondhand.util.fixture.ProviderFixture.공급자_내부;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Objects;
+
+import com.codesquad.secondhand.user.application.dto.UserItemDetailResponse;
 import com.codesquad.secondhand.user.domain.User;
 
 public enum UserFixture {
@@ -29,6 +33,21 @@ public enum UserFixture {
 		this.email = email;
 		this.password = password;
 		this.createdAt = createdAt;
+	}
+
+	public static UserFixture findById(Long id) {
+		return Arrays.stream(values())
+			.filter(u -> Objects.equals((u.getId()), id))
+			.findAny()
+			.orElseThrow();
+	}
+
+	public static UserItemDetailResponse findUserItemDetailResponseById(Long id) {
+		return findById(id).toUserItemDetailResponse();
+	}
+
+	public UserItemDetailResponse toUserItemDetailResponse() {
+		return new UserItemDetailResponse(id, nickname);
 	}
 
 	public Long getId() {

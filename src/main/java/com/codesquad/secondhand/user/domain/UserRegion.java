@@ -39,8 +39,4 @@ public class UserRegion {
 	public boolean equalsRegion(Region region) {
 		return this.region.equals(region);
 	}
-
-	public boolean equalsRegion(Long regionId) {
-		return region.equalsId(regionId);
-	}
 }

@@ -1,5 +1,6 @@
 package com.codesquad.secondhand.region.application.dto;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class RegionResponse {
+public class RegionResponse implements Serializable {
 
 	private Long id;
 	private String title;

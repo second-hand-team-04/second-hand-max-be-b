@@ -11,10 +11,8 @@ public class ItemSliceResponse {
 
 	private boolean hasMore;
 	private List<ItemResponse> items;
-	
+
 	public static ItemSliceResponse of(boolean hasNext, List<ItemResponse> itemResponses) {
-		return new ItemSliceResponse(
-			hasNext, itemResponses
-		);
+		return new ItemSliceResponse(hasNext, itemResponses);
 	}
 }
